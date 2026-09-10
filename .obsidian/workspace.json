@@ -1,0 +1,191 @@
+{
+  "main": {
+    "id": "5d1ed9209427c833",
+    "type": "split",
+    "children": [
+      {
+        "id": "e0a143434382e0cc",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "da591aeeaae0eccc",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "CSC263/CSC263 - Data Structures and Algorithms.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": false
+              },
+              "icon": "lucide-file",
+              "title": "CSC263 - Data Structures and Algorithms"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "4af61b14877faf90",
+    "type": "split",
+    "children": [
+      {
+        "id": "0f351a121e6159d7",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "9c6af2f771614a1d",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "dfea20a24f3fc422",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "right": {
+    "id": "6d7d298fd7655ff9",
+    "type": "split",
+    "children": [
+      {
+        "id": "fb04b638bbd0f901",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "711646817dcee3aa",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Calculus, Multivariable.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": false
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Calculus, Multivariable"
+            }
+          },
+          {
+            "id": "9a44bd2da04ecc0e",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "f5c0aa51a6d96146",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "CSC263/CSC263 - Data Structures and Algorithms.md",
+                "followCursor": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          },
+          {
+            "id": "ef6fa5950a268de6",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          }
+        ],
+        "currentTab": 2
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "command-palette:Open command palette": false,
+      "workspaces:Manage workspace layouts": true
+    }
+  },
+  "active": "da591aeeaae0eccc",
+  "lastOpenFiles": [
+    "CSC311/CSC311 - Introduction to Machine Learning.md",
+    "MAT235/MAT235 - Multivariable Calculus 1.md",
+    "CSC263/CSC263 - Data Structures and Algorithms.md",
+    "CSC263/A0 Q2.md",
+    "CSC263/A0 Q2.pdf",
+    "CSC263/A0 Q1.pdf",
+    "CSC311 - Introduction to Machine Learning.md",
+    "CSC263 - Data Structures and Algorithms.md",
+    "MAT235 - Multivariable Calculus 1.md",
+    "CSC263.md",
+    "MAT235.md",
+    "theme config.txt",
+    "2/2024-exam-questions.pdf",
+    "2/2024-exam-questions.pdf.crdownload",
+    "CSC236 Notes.md",
+    "CSC236 Notes - 1.md",
+    "data1.json",
+    "data.json",
+    "2/2. Lectures/8 - regular-intro.pdf",
+    "2/2. Lectures/regular-intro.pdf.crdownload",
+    "2/2. Lectures/7 - recursive-runtime-II.pdf",
+    "STA237 Notes.md",
+    "STA238 Notes.md",
+    "Capture1.PNG",
+    "Capture2.PNG",
+    "Capture3.PNG",
+    "Capture.PNG",
+    "Introduction to Probability.md",
+    "Modern Introduction to Probability & Statistics.md",
+    "Calculus, Multivariable.md",
+    "Calculus Multivariable.md"
+  ]
+}
