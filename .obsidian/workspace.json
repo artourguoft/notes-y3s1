@@ -71,7 +71,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 200,
+    "collapsed": true
   },
   "right": {
     "id": "6d7d298fd7655ff9",
@@ -157,6 +158,7 @@
   "active": "da591aeeaae0eccc",
   "lastOpenFiles": [
     "CSC311/CSC311 - Introduction to Machine Learning.md",
+    "CSC311",
     "MAT235/MAT235 - Multivariable Calculus 1.md",
     "CSC263/CSC263 - Data Structures and Algorithms.md",
     "CSC263/A0 Q2.md",
@@ -176,7 +178,6 @@
     "data.json",
     "2/2. Lectures/8 - regular-intro.pdf",
     "2/2. Lectures/regular-intro.pdf.crdownload",
-    "2/2. Lectures/7 - recursive-runtime-II.pdf",
     "STA237 Notes.md",
     "STA238 Notes.md",
     "Capture1.PNG",
