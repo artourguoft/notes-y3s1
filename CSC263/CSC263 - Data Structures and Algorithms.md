@@ -37,6 +37,7 @@ A naive unordered linked list implementation can add items in constant time (sim
 	- Left child of $H[i]$ is at $H[2i]$
 	- Right child of $H[i]$ is at $H[2i+1]$
 	- Parent of $H[i]$ is at $H\left[ \left\lfloor  \frac{i}{2}  \right\rfloor \right]$, given $i>1$ (ie. the root has no parent)
+- **Min-Heap:** the same as a max-heap, except that it satisfies the **min-heap property**; the value of each node is less than or equal to the value of all its descendants, the root is the smallest priority element, etc.
 
 For the max-heap to be a correct implementation of a priority queue, we implement the necessary operations while maintaining completeness and max-heap properties:
 - `insert(H, x)`: to insert, start by appending the new element to the end of the array $H[\text{size }+1]$
@@ -46,7 +47,16 @@ For the max-heap to be a correct implementation of a priority queue, we implemen
 - `find_max(H)`: facilitated by the max-heap property, this simply returns the first element of $H$ (the root of the tree), and thus is $\Theta(1)$
 - `extract_max(H)`: this returns but also removes the first element of $H$
 	- With the root removed, swap the final element into the root $H[1]=H[\text{size}]$; this maintains completeness (and can be done in constant time since we know the size of the heap)
-	- Then, recursively compare the priority of the new root with both its children and swap with the **higher priority** child until both children are such that the max-heap property is restored, or until the element is once again a leaf
+	- Then, recursively compare the priority of the moved node with both its children and swap with the **higher priority** child (if higher priority than the parent) until both children of the moved node are such that the max-heap property is restored, or until the node is once again a leaf
+		- `max_heapify(H, i)`: the recursive algorithm that implements the above specification for a max-heap index `i`, with assumption that the left and right children of node `i` are max-heaps; by the Master Theorem this recurrence is $O(\log_{2}n)$ 
 	- Again, this operation is $\Theta(\log_{2}n)$ since the new element at most has to be swapped from the top all the way to the leaf level, traversing the whole height of the tree (which is $\lfloor \log_{2}n \rfloor$)
 
-**Heapsort:**
+**Heapsort:** given a heap, we can get a sorted list of the elements of the heap by simply repeatedly calling `extract_max()`
+- Like mergesort, but unlike insertion sort, heapsort’s running time is $O(n\log_{2}n)$ as we will show shortly; like insertion sort, but unlike mergesort, heapsort sorts in place (only a constant number of array elements are stored outside the input array at any time); best of both worlds!
+- Heapsort assumes we have a heap; if we first receive an unordered array $A$ of inputs (represent a CBT that does not satisfy the max-heap property), we must first turn the array into a max-heap via a `build_max_heap()` algorithm:
+	- Looping for $i\in[\lfloor \frac{n}{2} \rfloor:1]$, repeatedly call `max_heapify(A, i)
+		- Note that $A[\lfloor \frac{n}{2} \rfloor+1 : n]$ represents the elements of the **leaf level** of a CBT, so those are already valid max-heaps (they have only one element!) to begin with; so we only need to go through the levels one up from that up to the root
+		- Intuitively, `build_max_heap()` is $O(n\log_{2}n)$ since it calls `max_heapify(A, i)` $n$ times; however we can show a **linear** $\Theta(n)$
+			- This involves the fact that each iteration's call of `max_heapify(A, i)` is run on a max-heap of the height of its specific level in the whole max-heap, rather than $\lfloor \log_{2}n \rfloor$
+- Once we have a max-heap, we call `extract_max()` $n$ times, each of which is $\Theta(\log_{2}n)$, for a final result of $\Theta(n\log_{2}n)$ for heapsort
+	- Heapsort can also operate in-place; start by swapping $H[1]$ with $H[n]$ (since $H[1]$ is the known maximum and thus will be the final element), then call `max_heapify(H, 1)` and repeat, to build a sorted list from finish to start

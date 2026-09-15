@@ -1,0 +1,15 @@
+- **Line 1:** `n = A.size` is a one step / constant time assignment regardless of the size of the input
+- **Line 2:** `for i = 1 to n` outer loop runs at most $n$ times by definition; but depends on conditions on Line 4 and Line 5
+- **Line 3:** `for j = 1 to n` inner loop runs at most $n$ times by definition, but depends on condition on Line 4
+- **Line 4:** `if A[n − j + 1] != j − 1`; arithmetic and comparison in condition is constant time
+	- Worst-case the condition is never met; then this inner loop iterates $n$ times with constant work for each iteration, then continues to Line 5
+		- This happens with the input array $A_{a}=[n-1,n-2,\dots,n-n]$, from which we can also can derive that that:
+			- $A_{a}[n]=A_{a}[n-1+1]=1-1=0$
+			- $A_{a}[1]=A_{a}[n-n+1]=n-1$
+	- For any other input array $A\neq A_{a}$ this function would return within $n$ iterations of this inner loop
+		- Any array $A_{b}$ where $A_{b}[1]\neq n-1$ and $A_{b}[2:n]=[n-2,n-3,\dots,n-n]$ is an existential witness for $\Omega(n)$, as the condition would only be satisfied on the $n^{\text{th}}$ iteration, at which point the function would return
+- **Line 5:** `if (A[n] + A[1] = n − 1)`; arithmetic and comparison in condition is constant time
+	- Worst-case is that the condition is never met; then this outer loop iterates $n$ times with constant work for each iteration, **however there is no scenario where this occurs**; instead:
+		- If the worst-case in Line 4 occurs then we have $A_{a}[n]+A_{a}[1]=0+n-1=n-1$, so this condition is satisfied and the function returns, for a total of $n$ inner loops and $1$ outer loop, giving us $O(n)$
+		- For any other input array $A\neq A_{a}$, we already saw that this function would return on Line 4 within $n$ inner loops without reaching this condition, which gave us $\Omega(n)$
+- Finally, since we have shown $T(n)\in O(n)$ and $T(n)\in \Omega(n)$, we by definition have $T(n)\in \Theta(n)$

@@ -21,21 +21,6 @@
               "icon": "lucide-file",
               "title": "CSC263 - Data Structures and Algorithms"
             }
-          },
-          {
-            "id": "9b59dd1762223188",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "CSC263/A1 Question 2.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
-              },
-              "icon": "lucide-file",
-              "title": "A1 Question 2"
-            }
           }
         ]
       }
@@ -172,9 +157,10 @@
   },
   "active": "da591aeeaae0eccc",
   "lastOpenFiles": [
-    "CSC263/A1 Question 2.md",
+    "CSC263/A1/A1 Question 2.md",
+    "CSC263/A1/A1 Question 1.md",
     "CSC263/CSC263 - Data Structures and Algorithms.md",
-    "CSC263/A1 Question 1.md",
+    "CSC263/A1",
     "CSC311/CSC311 - Introduction to Machine Learning.md",
     "CSC311",
     "MAT235/MAT235 - Multivariable Calculus 1.md",
@@ -194,7 +180,6 @@
     "data1.json",
     "data.json",
     "2/2. Lectures/8 - regular-intro.pdf",
-    "2/2. Lectures/regular-intro.pdf.crdownload",
     "STA237 Notes.md",
     "STA238 Notes.md",
     "Capture1.PNG",
