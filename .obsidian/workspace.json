@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CSC263/CSC263 - Data Structures and Algorithms.md",
+                "file": "CSC311/CSC311 - Introduction to Machine Learning.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "CSC263 - Data Structures and Algorithms"
+              "title": "CSC311 - Introduction to Machine Learning"
             }
           }
         ]
@@ -71,8 +71,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "right": {
     "id": "6d7d298fd7655ff9",
@@ -157,15 +156,15 @@
   },
   "active": "9b59dd1762223188",
   "lastOpenFiles": [
-    "CSC263/Tutorial Notes.md",
-    "CSC263/CSC263 - Data Structures and Algorithms.md",
-    "Untitled.md",
+    "MAT235/MAT235 - Multivariable Calculus 1.md",
     "STA237 Notes.md",
+    "CSC263/CSC263 - Data Structures and Algorithms.md",
+    "CSC263/Tutorial Notes.md",
+    "Untitled.md",
     "APM236/APM 236 - Applications of Linear Programming.md",
     "CSC311/CSC311 - Introduction to Machine Learning.md",
     "CSC263/A1/A1 Question 2.md",
     "CSC263/A1/A1 Question 1.md",
-    "MAT235/MAT235 - Multivariable Calculus 1.md",
     "CSC364/Tutorial Notes.md",
     "CSC364",
     "CSC263/A1 Question 2.md",

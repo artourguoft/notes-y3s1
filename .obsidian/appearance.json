@@ -5,7 +5,7 @@
   "textFontFamily": "Times New Roman,Arial,Georgia",
   "interfaceFontFamily": "",
   "monospaceFontFamily": "JetBrains Mono,Ioskeley Mono",
-  "baseFontSize": 28,
+  "baseFontSize": 30,
   "enabledCssSnippets": [
     "obsidian-default-theme"
   ],
