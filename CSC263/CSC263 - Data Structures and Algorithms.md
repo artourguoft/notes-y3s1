@@ -93,4 +93,15 @@ BST deletes, node to be deleted $z$:
 - When $z$ has $0$ children; simply delete the node and set the relevant pointer in its parent to null; this is $\Theta(1)$
 - When $z$ has $1$ child (regardless of left or right); delete the node and set the parent of $z$ to now point directly to the child of $z$; this is $\Theta(1)$
 - When $z$ has $2$ children; find the successor of $z$ (smallest key $>z$); this is done by going to the right child first, then repeatedly going to the left child until leaf 
-	- Swap the successor into what was $z$ (this is still a valid BST at this point, but most use cases will not want duplicate data); then do delete algorithm (with $0\vee1$ child case, since the successor by definition has no left child) on successor; this is $\Theta(h)$
+	- Swap the successor into what was $z$ (this is still a valid BST at this point, but most use cases will not want duplicate data); then do delete algorithm (with $0\vee1$ child case, since the successor by definition has no left child) on successor; this is $\Theta(h)$ where $h=n$ for worst tree
+
+AVL deletes, node to be deleted $z$:
+- Similar to BST delete but with extra logic for rebalancing; deletes in AVL always result in removing a leaf
+- When $z$ has $0$ children; simply delete the node and set the relevant pointer in its parent to null; this is $\Theta(1)$
+- When $z$ has $1$ child (regardless of left or right); that child is necessarily a leaf (if it wasn't the AVL property would be violated since this subtree would then be higher than $1$ while the other is $0$)
+	- Thus, simply delete the node and set the relevant pointer in its parent to null; this is $\Theta(1)$
+		- This will move the parent's balance from $\pm 1$ (depending on left or right child) to $0$, maintaining the AVL property
+- When $z$ has $2$ children; find the successor of $z$ (smallest key $>z$); this is done by going to the right child first, then repeatedly going to the left child until leaf 
+	- Swap the successor into what was $z$; then do delete algorithm (with $0\vee1$ child case, since the successor by definition has no left child) on successor; this is $\Theta(\log_{2}n)$ since AVLs are balanced (compared to $\Theta(n)$ for BST)
+The difference from BSTs hereon is that balance factors have to be updated and rebalancing rotations may be needed after deletion:
+- These algorithms are the same as in inserts; ie. update balance factors up from deleted node and rotate at first imbalance

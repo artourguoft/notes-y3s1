@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "MAT235/MAT235 - Multivariable Calculus 1.md",
+                "file": "CSC263/CSC263 - Data Structures and Algorithms.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "MAT235 - Multivariable Calculus 1"
+              "title": "CSC263 - Data Structures and Algorithms"
             }
           }
         ]
@@ -71,7 +71,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 200,
+    "collapsed": true
   },
   "right": {
     "id": "6d7d298fd7655ff9",
@@ -156,6 +157,7 @@
   },
   "active": "9b59dd1762223188",
   "lastOpenFiles": [
+    "MAT235/MAT235 - Multivariable Calculus 1.md",
     "APM236/APM 236 - Applications of Linear Programming.md",
     "APM236/HW1/HW1 - 3.md",
     "APM236/HW1/3c.png",
@@ -163,7 +165,6 @@
     "APM236/HW1/3a.png",
     "APM236/HW1",
     "CSC311/CSC311 - Introduction to Machine Learning.md",
-    "MAT235/MAT235 - Multivariable Calculus 1.md",
     "STA237 Notes.md",
     "CSC263/CSC263 - Data Structures and Algorithms.md",
     "CSC263/Tutorial Notes.md",
