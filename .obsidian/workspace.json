@@ -71,8 +71,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "right": {
     "id": "6d7d298fd7655ff9",
@@ -117,7 +116,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "CSC263/CSC263 - Data Structures and Algorithms.md",
+                "file": "MAT235/MAT235 - Multivariable Calculus 1.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""

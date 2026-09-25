@@ -257,7 +257,7 @@ Since these partial derivatives **are themselves functions of two variables**, w
 - $(f_{y})_{x}=f_{yx}=\frac{\partial}{\partial x}(\frac{\partial}{\partial y}f)=\frac{\partial^{2}}{\partial x\partial y}f=\frac{\partial^{2}}{\partial x \partial y}z=\lim_{ h \to 0 }\frac{f_{y}(x+h,y)-f_{y}(x,y)}{h}$
 
 **Clairaut's Theorem:** suppose $f$ is defined on a disk that contains the point $(a,b)$, and **all four second order partial derivatives exist and are continuous** on this disk (meaning $f$ is **smooth**), then $f_{xy}(a,b)=f_{yx}(a,b)$
-	- This definition of smoothness gives us the class of functions called $C^2$; note there are other non equivalent definitions!
+- This definition of smoothness gives us the class of functions called $C^2$; note there are other non equivalent definitions!
 
 Partial derivatives can also be defined for functions of three or more variables, but they are still defined as the change of the dependent variable with respect to a **single independent variable** with all other variables held constant.
 
@@ -403,7 +403,7 @@ $$
 This also means the function is **smooth** around $(a,b)$ meaning it is differentiable and thus continuous. As was the case with single variable functions: 
 - Differentiability$\implies$continuity
 - Continuity$\centernot\implies$differentiability 
-A function is differentiable on as region $R$ if it is differentiable at all points on $R$. 
+A function is differentiable on as region $R$ if it is differentiable at all points on $R$
 
 The above also means that a differentiable function at a point **necessarily has both partial derivatives** at that point:
 - Differentiability$\implies f_{x}(a,b), f_{y}(a,b)$ exist
