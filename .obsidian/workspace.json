@@ -71,8 +71,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "right": {
     "id": "6d7d298fd7655ff9",
@@ -157,18 +156,18 @@
   },
   "active": "9b59dd1762223188",
   "lastOpenFiles": [
+    "CSC311/CSC311 - Introduction to Machine Learning.md",
+    "CSC364/CSC364 - Computer Security.md",
     "Midterms.md",
+    "STA237 Notes.md",
     "CSC263/CSC263 - Data Structures and Algorithms.md",
     "MAT235/MAT235 - Multivariable Calculus 1.md",
-    "CSC364/CSC364 - Computer Security.md",
     "APM236/APM 236 - Applications of Linear Programming.md",
     "APM236/HW1/HW1 - 3.md",
     "APM236/HW1/3c.png",
     "APM236/HW1/3b.png",
     "APM236/HW1/3a.png",
     "APM236/HW1",
-    "CSC311/CSC311 - Introduction to Machine Learning.md",
-    "STA237 Notes.md",
     "CSC263/Tutorial Notes.md",
     "CSC263/A1/A1 Question 2.md",
     "CSC263/A1/A1 Question 1.md",
