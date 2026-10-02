@@ -105,3 +105,38 @@ AVL deletes, node to be deleted $z$:
 	- Swap the successor into what was $z$; then do delete algorithm (with $0\vee1$ child case, since the successor by definition has no left child) on successor; this is $\Theta(\log_{2}n)$ since AVLs are balanced (compared to $\Theta(n)$ for BST)
 The difference from BSTs hereon is that balance factors have to be updated and rebalancing rotations may be needed after deletion:
 - These algorithms are the same as in inserts; ie. update balance factors up from deleted node and rotate at first imbalance
+
+Designing augmented data structures:
+1. Choose the base data structure given the requirements
+2. Choose what to use as the key values and what data should be stored
+3. Ensure the augmentations above can be updated in constant time given child nodes, during the supported operations (not necessarily when building the initial structure)
+4. Show how the supported operations work and their runtime
+
+Interval trees:
+- Overlap of two intervals $i,i'$ happens when $lo(i)\leq hi(i')\wedge lo(i')\leq hi(i)$
+- Goal: store a set of intervals, support all 3 dictionary operations (search specifically will just return any overlapping interval) and all in $O(\log_{2}n)$ where $n$ is the number of intervals
+- We choose AVL as the base data structure since we need a dictionary with ordering and $O(\log_{2}n)$ operations
+- We choose the key as $lo(i)$ in each node for each interval $i$
+- We choose to store $hi(i)$ and $\max(i)$ where the max is the largest $hi$ in the $i$ subtree, in each node for each interval $i$
+	- Then updating these is constant time (simply max operation on both subtrees' maxes and the nodes hi, plus any possible rotations) and at most you will have to go thru $\log_{2}n$ nodes from root to leaf doing this
+- Then for search, starting at the root
+```
+search(x)
+	y = root
+	while y != null && x and y do not overlap
+		if y.left = null || max(y.left) < low(x)
+			y = y.right
+		else
+			y = y.left
+	return y
+```
+- When the root is an overlapping interval, we return it
+- Otherwise, the loop takes us closer to an overlapping interval
+	- Loop Invariant: if there is an overlapping interval, there will be one such interval in y subtrees
+		- Base case trivial for root
+		- After a loop iteration
+			- If y.left is null then the answer must be in y.right
+			- If max(y.left) < lo(x) then no interval in the left subtree intersects with x, so again answer must be in y.right
+			- If max(y.left) >= lo(x) then let I be the interval with hi = that max
+				- If I intersects with x then we're fine, if I is entirely greater than x then once we get to it 
+
