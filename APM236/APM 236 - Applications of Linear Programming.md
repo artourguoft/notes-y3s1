@@ -17,7 +17,7 @@ Let $\mathbf{a}$ be some **nonzero** vector in $\mathbb{R}^n$ representing the c
   
 We can also define a line by any **two distinct points** $\mathbf{x}_{1}\neq\mathbf{x}_{2}$ on the line, as the set $\{ \mathbf{x}\in \mathbb{R}^n :\lambda \mathbf{x}_{1}+(1-\lambda)\mathbf{x}_{2}\text{ where }\lambda \in \mathbb{R}\}$
 - Note $\lambda \mathbf{x}_{1}+(1-\lambda)\mathbf{x}_{2}=\mathbf{x}_{2}+\lambda(\mathbf{x}_{1}-\mathbf{x}_{2})$, so the whole line is all scalar multiples of the line segment connecting the two points
-- With a modification to the range of $\lambda$ above to $\{ \mathbf{x}\in \mathbb{R}^n :\lambda \mathbf{x}_{1}+(1-\lambda)\mathbf{x}_{2}\text{ where }\lambda \in [0,1]\}$, we now have $\lambda \mathbf{x}_{1}+(1-\lambda)\mathbf{x}_{2}$ by definition being a weighted average of $\mathbf{x}_{1},\mathbf{x}_{2}$ and thus representing points along $\mathbf{x}_{2}-\mathbf{x}_{1}$ which is **only** the line segment connecting the two points
+- With a modification to the range of $\lambda$ above to $\{ \mathbf{x}\in \mathbb{R}^n :\lambda \mathbf{x}_{1}+(1-\lambda)\mathbf{x}_{2}\text{ where }\lambda \in [0,1]\}$, we now have $\lambda \mathbf{x}_{1}+(1-\lambda)\mathbf{x}_{2}$ by definition being a weighted average of $\mathbf{x}_{1},\mathbf{x}_{2}$ and thus representing points along $\mathbf{x}_{2}-\mathbf{x}_{1}$ which is **only the line segment connecting** the two points
   
 A set $S\subset \mathbb{R}^n$ is a **convex set** if for all $\mathbf{x}_{1}\neq\mathbf{x}_{2}\in S$ and any $\lambda \in[0,1]$, we have $\lambda \mathbf{x}_{1}+(1-\lambda)\mathbf{x}_{2}\in S$
 - Thus the geometric interpretation is that a set is convex if any segment connecting any two of its elements is also contained entirely in the set
@@ -31,28 +31,27 @@ A set $S\subset \mathbb{R}^n$ is a **convex set** if for all $\mathbf{x}_{1}\neq
 	- The **intersection of convex sets** is convex:
 		- Define convex sets $S_{1},\dots,S_{k}\in \mathbb{R}^n$ and let $\mathbf{x}_{1},\mathbf{x}_{2}\in \bigcap_{i=1}^kS_{i}$; then since each $S_{i}$ is convex, for all $i$ we have $\lambda \mathbf{x}_{1}+(1-\lambda)\mathbf{x}_{2}\in S_{i}$ which is directly the definition of $\lambda \mathbf{x}_{1}+(1-\lambda)\mathbf{x}_{2}\in \bigcap_{i=1}^kS_{i}$
 
-Let $\mathbf{x}_{1},\dots,\mathbf{x}_{k}$ be vectors in $\mathbb{R}^n$ and let $a_{1},\dots,a_{k}\in \mathbb{R}_{\geq 0}$ and $\sum_{i=1}^ka_{i}=1$:
-- Then the vector sum $\sum_{i=1}^ka_{i}\mathbf{x}_{i}$ is a **convex combination** of the vectors $\mathbf{x}_{1},\dots,\mathbf{x}_{k}$
-- The set of **all** such convex combinations $\{ \sum_{i=1}^ka_{i}\mathbf{x}_{i} : a_{1},\dots,a_{k}\in \mathbb{R}_{\geq 0}\wedge \sum_{i=1}^ka_{i}=1\}$ defines the **convex hull** of the vectors $\mathbf{x}_{1},\dots,\mathbf{x}_{k}$
-	- The convex hull of the vectors $\mathbf{x}_{1},\dots,\mathbf{x}_{k}$ is the **smallest convex set containing** all of $\mathbf{x}_{1},\dots,\mathbf{x}_{k}$, which means any convex set which contains $\mathbf{x}_{1},\dots,\mathbf{x}_{k}$ must contain the convex hull
+Let $\mathbf{x}_{1},\dots,\mathbf{x}_{k}$ be vectors in $\mathbb{R}^n$ and let $a_{1},\dots,a_{k}\in \mathbb{R}_{\geq 0}$ and $\sum_{i=1}^ka_{i}=1$, then the vector sum $\sum_{i=1}^ka_{i}\mathbf{x}_{i}$ is a **convex combination** of the vectors $\mathbf{x}_{1},\dots,\mathbf{x}_{k}$
+- The set of **all** (ie. all combinations of $a_{i}$) such convex combinations $\{\mathbf{x}\in \mathbb{R}^n: \mathbf{x}=\sum_{i=1}^ka_{i}\mathbf{x}_{i}\wedge a_{1},\dots,a_{k}\in \mathbb{R}_{\geq 0}\wedge \sum_{i=1}^ka_{i}=1\}$ defines the **convex hull** of the vectors $\mathbf{x}_{1},\dots,\mathbf{x}_{k}$
+	- The convex hull of the vectors $\mathbf{x}_{1},\dots,\mathbf{x}_{k}$ is the **smallest convex set containing** all of $\mathbf{x}_{1},\dots,\mathbf{x}_{k}$, which means that any convex set which contains $\mathbf{x}_{1},\dots,\mathbf{x}_{k}$ must contain the convex hull; and that adding more vectors to $\mathbf{x}_{1},\dots,\mathbf{x}_{k}$ will **never** make the convex hull **smaller** (although interior points can be redundant)
 - A **convex polytope** is a convex hull of **finitely** many vectors
-	- Convex polytopes are convex by definition, and they are also **bounded** meaning there exist constants such that every component of every element of the polytope is less than or equal to the corresponding constant; in $\mathbb{R}^2$ and $\mathbb{R}^3$ this is easy to visualize as polytopes being bounded by some **rectangles**
+	- Convex polytopes are convex by definition, and they are also **bounded** meaning there exists a constants such that every component of every element of the polytope is less than or equal to the corresponding constant; in $\mathbb{R}^2$ and $\mathbb{R}^3$ this is easy to visualize as polytopes being bounded by some **rectangles** (although this applies to all dimensions!)
 	- **Rectangle:** a rectangle in $\mathbb{R}^n$ is a set of the form $R:=\{ \mathbf{x}\in \mathbb{R}^n:a_{i}\leq x_{i}\leq b_{i}\text{ where }1\leq i\leq n \}$ meaning for each dimension there is a pair of constants bounding that component of every contained vector
 		- Rectangles are convex polytopes; they are formed by all convex combinations of their finitely many vertices and they are bounded by definition
 		- Formally we define a set $S\subseteq \mathbb{R}^n$ as **bounded** if it can be contained in a rectangle, and **unbounded** if it cannot be contained in any rectangle
 
 **Polyhedron:** a set that can be described as $\bigcap_{i=1}^m \{ \mathbf{x}\in \mathbb{R}^n:\mathbf{a}_{i}'\mathbf{x}\geq b_{i}\}=\{ \mathbf{x}\in \mathbb{R}^n : \mathbf{A}\mathbf{x}\geq \mathbf{b}\}$ where $\mathbf{A}$ is an $m\times n$ matrix and $\mathbf{b}\in \mathbb{R}^m$
-- So polyhedrons are **intersections of finitely many closed halfspaces**, and are sets of solutions to systems of $m$ linear inequalities
+- So polyhedrons are **intersections of finitely many closed halfspaces**, and contain solutions to systems of $m$ linear inequalities
 	- Recall, halfspaces are convex sets, and the intersection of convex sets is convex, therefore; **polyhedrons are convex sets** and we will refer to them as convex polyhedrons henceforth
 - The simplest convex polyhedron is a single closed halfspace where $m=1$
-- Convex polyhedrons that are **bounded** are by definition convex polytopes
+- If a convex polyhedrons is **bounded** then by definition it is also a convex polytope (and convex hull) defined by **all convex combinations of its extreme points**; it if its unbounded (ex. a single closed halfspace) then it is still a convex hull by definition but not a convex polytope
 
 A point in a convex set $S\subseteq \mathbb{R}^n$ is an **extreme point** if its **not an interior point** of any line segment contained in $S$
 - The geometric intuition; you cannot draw a line segment that is entirely contained in $S$, in which an extreme point is contained in the interior
 - Formally a point $\mathbf{x}$ is an extreme point if $\neg \exists \mathbf{x}_{1},\mathbf{x}_{2}\in S,\mathbf{x}=\lambda \mathbf{x}_{1}+(1-\lambda)\mathbf{x}_{2}$ for any $\lambda \in(0,1)$
 - Ex. the unit sphere encasing the unit ball $\{ \mathbf{x}\in \mathbb{R}^3:||\mathbf{x}||\leq 1\}$ is made entirely of extreme points of the ball
 
-**Convex Function:** a function $f:S\subseteq \mathbb{R}^n\to \mathbb{R}$ defined on a convex set $S$ is a convex function if for all $\mathbf{x}_{1},\mathbf{x}_{2}\in S$ and $\lambda \in[0,1]$: $f(\lambda \mathbf{x}_{1}+(1-\lambda)\mathbf{x}_{2})\leq \lambda f(\mathbf{x}_{1})+(1-\lambda)f(\mathbf{x}_{2})$
-- Then consider a standard linear function $f:\mathbb{R}^n\to \mathbb{R}$ of the form $f(\mathbf{x})=\mathbf{a}'\mathbf{x}$ is convex, directly from the definition above
+**Convex Function:** a function $f:S\subseteq \mathbb{R}^n\to \mathbb{R}$ defined on a convex set $S$ is a convex function if for all $\mathbf{x}_{1},\mathbf{x}_{2}\in S$ and $\lambda \in[0,1]$ we have $f(\lambda \mathbf{x}_{1}+(1-\lambda)\mathbf{x}_{2})\leq \lambda f(\mathbf{x}_{1})+(1-\lambda)f(\mathbf{x}_{2})$
+- Then consider that a standard **linear function** $f:\mathbb{R}^n\to \mathbb{R}$ of the form $f(\mathbf{x})=\mathbf{a}'\mathbf{x}$ is convex, directly from the definition above
 # <u>Linear Programming Problems</u>
 A

@@ -15,7 +15,7 @@ Given the formal definitions above:
 - Note the slight difference in the consequents of $O$ and $\Omega$; since $T$ is a maximum, proving an upper bound requires a universal proof over the set of runtimes, whereas proving a lower bound requires only an existential proof (since any runtime is less than or equal to the maximum runtime)
 - Also note that $O$ and $\Omega$ alone are **not necessarily tight** bounds; for $O$ we can just pick any function that grows faster than $T$, and for $\Omega$ we could even take the minimum runtime for each $n$ as a very loose and uninformative lower bound
 	- This is the value of finding an $\Theta$ class; this by definition is a tight upper and lower bound and thus reflects the exact growth rate of the worst-case runtime function, differing only by a constant factor!
-# <u>Priority Queues and Binary Heaps</u>
+# <u>Binary Heaps</u>
 Recall:
 - **Abstract Data Type (ADT):** theoretical model of an entity and a set of operations that can be performed on that entity
 - **Data Structure:** a value in a program which can be used to store and operate on data; an implementation of an ADT
