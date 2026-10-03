@@ -59,7 +59,8 @@ Then, if we extend the XOR operation to bitstrings $a\neq b\neq c$ of any length
 - $(a\oplus b)\oplus c=a\oplus (b\oplus c)$; so XOR is **associative**
 Then from these properties we can also derive some more useful ones:
 - $a\oplus b\oplus a=b$; we can cancel out terms by XORing them by themselves, then $a\oplus 1=0\implies a=0\oplus 1$
-- 
+- A
+- Reusing the same OTP gives the adversary $C_{1}=M_{1}\oplus K$ and $C_{2}=M_{2}\oplus K$, then they can calculate $C_{1}\oplus C_{2}=(M_{1}\oplus K)\oplus(M_{2}\oplus K)=M_{1}\oplus M_{2}$ so they recover the XOR of any two plaintexts - not a full decryption but still a big leak of info (and if they somehow get any one plaintext, it becomes a full decryption since they can easily XOR back into the key)
 
 
 
