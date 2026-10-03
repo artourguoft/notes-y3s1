@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Midterms.md",
+                "file": "CSC364/CSC364 - Computer Security.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "Midterms"
+              "title": "CSC364 - Computer Security"
             }
           }
         ]
@@ -154,12 +154,12 @@
       "workspaces:Manage workspace layouts": true
     }
   },
-  "active": "9b59dd1762223188",
+  "active": "9c6af2f771614a1d",
   "lastOpenFiles": [
+    "Midterms.md",
     "CSC364/CSC364 - Computer Security.md",
     "CSC263/CSC263 - Data Structures and Algorithms.md",
     "CSC311/CSC311 - Introduction to Machine Learning.md",
-    "Midterms.md",
     "STA237 Notes.md",
     "MAT235/MAT235 - Multivariable Calculus 1.md",
     "APM236/APM 236 - Applications of Linear Programming.md",
