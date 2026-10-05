@@ -136,10 +136,42 @@ A better option is a **greedy** strategy where the tree is build as a **local op
 ## <u>Information Theory</u>
 **Information theory**, developed by Claude Shannon in the 1940s, provides a rigorous mathematical framework for quantifying **uncertainty** and **information**
 
-**Entropy:** the entropy of a **discrete** random variable $X$ with probability mass function $p(X)$ is defined as 
+**Entropy:** the entropy of a **discrete** random variable $X$ with probability mass function $p(x)$ is defined as 
 $$
 H(X)=-\mathbb{E}(\log_{2}p(X))=-\sum_{x \in X}\log_{2}p(x)\cdot p(x)
 $$
 This is the expected value of the transformation $\log_{2}p(X)$ on the random variable $X$
 - For this definition, set $\log_{2}0=0$ by convention
 - Entropy is measured in **bits**, because it is a lower bound on the number of bits needed to encode and store a sequence of outcomes of a random variable
+- Entropy represents how much information we gain on average by observing a random draw from the distribution of $X$
+	- If the outcome is completely predictable (one outcome has probability $1$), we gain no information by observing it so the entropy is $0$; ie. when a probability distribution is **concentrated** on a small number of outcomes, the entropy is low (ex. Bernoulli RV where one of the outcomes has probability $0$ and the other $1$ has $H(X)=0$)
+	- If the outcome is completely unpredictable (uniform distribution), we gain a larger amount of information by observing it, so the entropy is larger; ie. when the distribution is spread **more evenly** across many outcomes, the entropy is high (ex. Bernoulli RV where both outcomes have probability $\frac{1}{2}$ has $H(X)=1$)
+
+**Joint Entropy:** the entropy of **bivariate discrete** random variables $X,Y$ with joint probability mass function $p(x,y)$ is defined as 
+$$
+H(X,Y)=-\mathbb{E}(\log_{2}p(X,Y))=-\sum_{y\in Y}\sum_{x \in X}\log_{2}p(x,y)\cdot p(x,y)
+$$
+**Conditional Entropy:** the entropy of a **discrete** random variable $Y$ given the other bivariate random variable $X=x_{0}$ with joint probability mass function $p(x,y)$ is defined as
+$$
+H(Y|X=x_{0})=-\mathbb{E}(\log_{2}p(Y|X=x_{0}))=-\sum_{y\in Y}\log_{2}p(y|x_{0})\cdot p(y|x_{0})
+$$
+**Expected Conditional Entropy:** the entropy of observing $X$ in general (rather than a specific value) with respect to $Y$; the probability weighted average of the conditional entropies of $Y$ for each value of $X$
+$$
+H(Y|X)=\mathbb{E}(H(Y|X=x))=\sum_{x\in X}H(Y|X=x)\cdot p(x)=\sum_{x\in X}\left(p(x)\cdot-\sum_{y \in Y}\log_{2}p(y|x)\cdot p(y|x)\right)=-\sum_{x\in X}\sum_{y \in Y}\log_{2}p(y|x)\cdot p(x,y)
+$$
+Some key algebraic properties of entropy:
+- **Nonnegativity:** entropy is always nonnegative; that is $H(X)\geq 0$ for any RV $X$
+- **The Chain Rule:** joint entropy can be decomposed as the entropy of one RV plus the conditional entropy of another given the first; $H(X,Y)=H(X|Y)+H(Y)=H(Y|X)+H(X)$
+- **Independence:** if RVs $X,Y$ are independent, then they provide no information about each other; that is $H(Y|X)=H(Y)$ and $H(X|Y)=H(X)$, and $H(X,Y)=H(X)+H(Y)$
+- **Information never increases entropy;** that is $H(Y|X)\leq H(Y)$
+- **Perfect Information:** if $X$ completely determines $Y$ (ie. $Y$ is a single variable function of $X$), then $H(Y|X)=0$ as we learn nothing new by observing $Y$ after $X$
+
+**Information Gain:** the information gain of a **discrete** random variable $Y$ with respect to $X$ is defined as
+$$
+IG(Y|X)=H(Y)-H(Y|X)
+$$
+Information gain measures how many bits of information about $Y$ we gain on average by observing $X$; it can also be interpreted as the reduction in uncertainty about $Y$ gained by knowing $X$
+- Information gain is **always nonnegative**, following from the earlier fact that $H(Y|X)\leq H(Y)$
+- If $X,Y$ are **independent** then $IG(Y|X)=0$, following from earlier fact that $H(Y|X)=H(Y)$ if the RVs are independent
+- If $X$ completely determines $Y$ then $IG(Y|X)=H(Y)$, following from earlier fact that $H(Y|X)=0$
+- Information gain is **symmetric**; that is $IG(Y|X)=IG(X|Y)$
