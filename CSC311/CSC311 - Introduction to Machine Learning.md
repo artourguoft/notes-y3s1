@@ -136,4 +136,10 @@ A better option is a **greedy** strategy where the tree is build as a **local op
 ## <u>Information Theory</u>
 **Information theory**, developed by Claude Shannon in the 1940s, provides a rigorous mathematical framework for quantifying **uncertainty** and **information**
 
-**Entropy:** a
+**Entropy:** the entropy of a **discrete** random variable $X$ with probability mass function $p(X)$ is defined as 
+$$
+H(X)=-\mathbb{E}(\log_{2}p(X))=-\sum_{x \in X}\log_{2}p(x)\cdot p(x)
+$$
+This is the expected value of the transformation $\log_{2}p(X)$ on the random variable $X$
+- For this definition, set $\log_{2}0=0$ by convention
+- Entropy is measured in **bits**, because it is a lower bound on the number of bits needed to encode and store a sequence of outcomes of a random variable
