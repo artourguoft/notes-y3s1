@@ -1,7 +1,7 @@
 # <u>Geometry of Linear Programming</u>
 Let $\mathbf{a}$ be some **nonzero** vector in $\mathbb{R}^n$ representing the coefficients of a linear equation, and let $s$ be some scalar: 
 - **Hyperplane:** the set $\{ \mathbf{x}\in \mathbb{R}^n :\mathbf{a}'\mathbf{x}=s\}$ defines a hyperplane; the set of points $\mathbf{x}$ that satisfies the equation equaling $s$
-	- Hyperplanes are necessarily subspaces, so the dimension $n$ here suggests the ambient space is $\mathbb{R}^{m}$ where $n=m-1$, but note by definition of a subspace they are $m-1$ dimensional objects in $m$ dimensional space; they are not the space $\mathbb{R}^{m-1}$ itself
+	- Hyperplanes are necessarily subspaces (linear or affine), so the dimension $n$ here suggests the ambient space is $\mathbb{R}^{m}$ where $n=m-1$, but note by definition of a subspace they are $m-1$ dimensional objects in $m$ dimensional space; they are not the space $\mathbb{R}^{m-1}$ itself
 	- The vector $\mathbf{a}$ is **perpendicular to the hyperplane** itself; consider $\mathbf{x}_{1},\mathbf{x}_{2}$ in the hyperplane, then $\mathbf{a}'\mathbf{x}_{1}=\mathbf{a}'\mathbf{x}_{2}$ from which $\mathbf{a}'(\mathbf{x}_{1}-\mathbf{x}_{2})=0$
 	- Examples:
 		- In $\mathbb{R}$ a hyperplane is a **point** 
