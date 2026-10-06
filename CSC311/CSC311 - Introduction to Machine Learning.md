@@ -64,7 +64,7 @@ Data should be representative of what we want a model to be ultimately applied t
 - There are different definitions of closest, stemming from several options for calculating **distance** between data points $\mathbf{x}^{(a)}$ and $\mathbf{x}^{(b)}$
 	- **Euclidean Distance:** also known as $L_{2}$ distance in $d$-dimensional space, $||\mathbf{x}^{(a)}-\mathbf{x}^{(b)}||_{2}=\sqrt{ \sum_{j=1}^d (x^{(a)}_{j}-x^{(b)}_{j})}$
 	- **Manhattan Distance:** also known as $L_{1}$ distance in $d$-dimensional space, $||\mathbf{x}^{(a)}-\mathbf{x}^{(b)}||_{1}=\left( \sum_{j=1}^d |x^{(a)}_{j}-x^{(b)}_{j}|\right)$
-	- **Cosine Distance:** the angle between two vectors; useful when direction is more important than distance, $\text{cos-dist}(\mathbf{x}^{(a)},\mathbf{x}^{(b)})=1-\frac{\mathbf{x}^{(a)}\cdot \mathbf{x}^{(b)}}{ ||\mathbf{x}^{(a)} ||\cdot||\mathbf{x}^{(b)} ||}$
+	- **Cosine Distance:** the angle between two vectors; useful when direction is more important than distance, $\text{cos-dist}(\mathbf{x}^{(a)},\mathbf{x}^{(b)})=1-\frac{\mathbf{x}^{(a)}\cdot \mathbf{x}^{(b)}}{ ||\mathbf{x}^{(a)} ||_{2}\cdot||\mathbf{x}^{(b)} ||_{2}}$
 - The closest training point is then found at the index $C$ where $\mathbf{x}^{(C)}$ minimizes our chosen distance measure to the test point $\mathbf{x}$ 
 - In practice, measures outside of Euclidean distance and Cosine Similarity are rarely useful; sophistication instead comes from finding or automatically learning good features where simple distance metrics work well
 
@@ -234,9 +234,10 @@ $$
 Wherein:
 - The vector $\mathbf{w}=[\begin{matrix} w_{1} & w_{2} & \dots & w_{D}  \end{matrix}]$ is the **weights vector** and controls the **magnitude** and **direction** of how each input feature affects the resulting prediction
 - The scalar $b$ is the **bias** or **intercept** and is an offset term that shifts the prediction; this allows us to have models that do not necessarily pass through the **origin**
-- Thus, $\mathbf{w}$ and $b$ are the key **parameters** of the model, and learning is the process of determining these values
+- Thus, $\mathbf{w}$ and $b$ are model **parameters**, and learning is the process of determining these values
+So the hypothesis space is defined by the infinitely many choices of weights $\mathbf{w}$, each of which describes a **hyperplane** (line in $\mathbb{R}^2$, plane in $\mathbb{R}^3$, etc.)
 
-Here $f$ is clearly a linear function, and thus describes a **hyperplane** (line in $\mathbb{R}^2$, plane in $\mathbb{R}^3$, etc.); this is easier to work with if we describe $f$ in **vectorized** (using vectors rather than summations of scalars) form:
+Here $f$ is clearly a linear function, but this is easier to work with if we describe $f$ in **vectorized** (using vectors rather than summations of scalars) form:
 $$
 y=f(\mathbf{x})=\mathbf{w}^{\top}\mathbf{x}+b
 $$
@@ -248,7 +249,65 @@ For full vectorization, we set a **dummy feature** $x_{0}=1$ and the correspondi
 $$
 y=f(\mathbf{x})=\mathbf{w}^{\top}\mathbf{x}+b=\mathbf{w}^{\top}\mathbf{x}+1\cdot b=\mathbf{w}^{\top}\mathbf{x}+w_{0}\cdot x_{0}=\mathbf{w}'^{\top}\mathbf{x'}
 $$
-This form is the standard, and thus the primes are dropped from the final expression
-- A
+This form is the standard, and thus the primes are dropped from the final expression, then the **prediction vector** for a training set of size $N$ is $\mathbf{y}\in \mathbb{R}^N$ where $y^{(i)}=(\mathbf{x}^{(i)})^{\top}\mathbf{w}$
+$$
+\mathbf{y}=\left[\begin{matrix} y^{(1)} \\ y^{(2)} \\ \vdots \\ y^{N}\end{matrix}\right]=
+\left[\begin{matrix} (\mathbf{x}^{(1)})^{\top}\mathbf{w} \\ (\mathbf{x}^{(2)})^{\top}\mathbf{w} \\ \vdots \\ (\mathbf{x}^{(N)})^{\top}\mathbf{w}\end{matrix}\right]=
+\left[\begin{matrix} (\mathbf{x}^{(1)})^{\top} \\ (\mathbf{x}^{(2)})^{\top} \\ \vdots \\ (\mathbf{x}^{(N)})^{\top}\end{matrix}\right]\mathbf{w}
+$$
+We define the matrix of inputs as the **data matrix** $\mathbf{X}$, and thus overall:
+- $\mathbf{y}\in \mathbb{R}^{N\times 1}$
+- $\mathbf{X}\in \mathbb{R}^{N\times(D+1)}$, since each $(\mathbf{x}^{(i)})^{\top}\in \mathbb{R}^{1\times (D+1)}$
+- $\mathbf{w}\in \mathbb{R}^{(D+1)\times 1}$
+And finally; $\mathbf{y}=\mathbf{X}\mathbf{w}$
+
+
+To optimize $\mathbf{w}$, we first need a **loss function** which measures the discrepancy between a model’s prediction and the ground-truth target value for any one given example; for regression, we generally use **squared error** loss: 
+$$
+\mathcal{L}^{(i)}(\mathbf{w})=\mathcal{L}(y^{(i)},t^{(i)})=\frac{1}{2}(y^{(i)}-t^{(i)})^2=\frac{1}{2}(\mathbf{w}^{\top}\mathbf{x}^{(i)}-t^{(i)})^2
+$$
+Wherein:
+- We want to minimize the **residual** $y^{(i)}-t^{(i)}$ (the division is done to simplify derivative calculations)
+- We prefer squared error over **absolute error** because the latter allows many shifted functions to achieve the same loss as long as the partition of points remains the same, while the former penalizes larger errors more heavily and pulls the the hyperplane to the 'middle' of the data  
+
+The loss function measures the error for a single prediction and its corresponding target; we define a **cost function** which measures the average loss across all training examples, called **mean squared error (MSE)**:
+$$
+\mathcal{E}(\mathbf{w}) = \frac{1}{N} \sum_{i = 1}^N \mathcal{L}^{(i)}(\mathbf{w}) = \frac{1}{2N} \sum_{i = 1}^N (y^{(i)}-t^{(i)})^2 = \frac{1}{2N} \sum_{i = 1}^N (\mathbf{w}^{\top}\mathbf{x}^{(i)}-t^{(i)})^2
+$$
+We can also vectorize the penultimate form above as:
+$$
+\mathcal{E}(\mathbf{w}) = \frac{1}{2N} \sum_{i = 1}^N (y^{(i)}-t^{(i)})^2 = \frac{1}{2N} (\mathbf{y}-\mathbf{t})^{\top}(\mathbf{y}-\mathbf{t}) = \frac{1}{2N} (\mathbf{X}\mathbf{w}-\mathbf{t})^{\top}(\mathbf{X}\mathbf{w}-\mathbf{t})
+$$
+Finally we identify the last term as the square of the $L_{2}$ norm of the vector $(\mathbf{X}\mathbf{w}-\mathbf{t})$ and thus write:
+$$
+\mathcal{E}(\mathbf{w}) = \frac{1}{2N} (\mathbf{X}\mathbf{w}-\mathbf{t})^{\top}(\mathbf{X}\mathbf{w}-\mathbf{t}) = \frac{1}{2N} ||\mathbf{X}\mathbf{w}-\mathbf{t}||_{2}^2
+$$
+
+
+The goal is to find parameters $\mathbf{w}^*=\text{argmin }\mathcal{E}(\mathbf{w})$; we will first attempt a **direct solution** to find the minimum of the MSE
+- Compute the gradient $\nabla\mathcal{E}(\mathbf{w})$
+- Set $\nabla\mathcal{E}(\mathbf{w})=\mathbf{0}$
+- Solve the system of equations (partial derivatives set to $0$) to determine weights where $\mathcal{E}$ has critical points, one of which may be a global minimum 
+Recall, the gradient is the vector where the components are $\frac{\partial\mathcal{E}}{\partial w_{j}}$ for all $j \in[0,D]$, and since MSE averages out the loss function, we can simplify:
+$$
+\nabla\mathcal{E}(\mathbf{w})= \frac{1}{N} \sum_{i = 1}^N \nabla\mathcal{L}^{(i)}(\mathbf{w})
+$$
+Then, each $\nabla\mathcal{L}^{(i)}(\mathbf{w})$ is the vector where the components are $\frac{\partial\mathcal{L}^{(i)}}{\partial w_{j}}$ for all $j \in[0,D]$; we use the multivariable chain rule to determine each partial:
+$$
+\begin{align}
+\frac{\partial\mathcal{L}^{(i)}}{\partial y^{(i)}}&=\frac{\partial}{\partial y^{(i)}} \frac{1}{2}(y^{(i)}-t^{(i)})^2=(y^{(i)}-t^{(i)})=(\mathbf{w}^{\top}\mathbf{x}^{(i)}-t^{(i)}) \tag{1} \\
+\frac{\partial y^{(i)}}{\partial w_{j}}&=\frac{\partial}{\partial w_{j}}\mathbf{w}^{\top}\mathbf{x}^{(i)}=\frac{\partial}{\partial w_{j}}(w_{0}x^{(i)}_{0}+\dots+w_{j}x^{(i)}_{j}+\dots+w_{D}x^{(i)}_{D})=x^{(i)}_{j} \tag{2} \\
+\frac{\partial\mathcal{L}^{(i)}}{\partial w_{j}}&=\frac{\partial\mathcal{L}^{(i)}}{\partial y^{(i)}}\cdot \frac{\partial y^{(i)}}{\partial w_{j}}=(\mathbf{w}^{\top}\mathbf{x}^{(i)}-t^{(i)})\cdot x^{(i)}_{j} \tag{by 1,2} \\
+\end{align}
+ $$
+Then the entire gradient is the vector with all of these $(\mathbf{w}^{\top}\mathbf{x}^{(i)}-t^{(i)})\cdot x^{(i)}_{j}$ for all $j \in[0,D]$, which can be split out into a **scalar** by vector multiplication:
+$$
+\nabla\mathcal{L}^{(i)}(\mathbf{w})=(\mathbf{w}^{\top}\mathbf{x}^{(i)}-t^{(i)})\mathbf{x}^{(i)}
+$$
+From which we can substitute back:
+$$
+\nabla\mathcal{E}(\mathbf{w})= \frac{1}{N} \sum_{i = 1}^N (\mathbf{w}^{\top}\mathbf{x}^{(i)}-t^{(i)})\mathbf{x}^{(i)}
+$$
+
 
 
