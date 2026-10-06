@@ -3,6 +3,12 @@ Distinguish between:
 - **Artificial Intelligence:** computer behaviour is programmed by hand
 - **Machine Learning:** computer programmatically learns from data, but features, hyperparameters, etc. determined by hand
 	- **Deep Learning:** computer programmatically learns from data and determines the features, etc. programmatically as well
+
+Machine learning can be broken down into three modular components:
+1. A model architecture which specifies the form of the relationship between inputs and outputs; an example is representing the prediction as a linear combination of features.
+2. A loss (or cost) function which measures how well the model fits the data by assigning a numerical penalty to prediction errors; an example is the squared error for regression.
+3. An optimization algorithm which determines how the model’s parameters are learned in order to reduce the loss; gradient descent is an example
+This modular approach is useful because it clearly distinguishes three parts: what we assume about the data, how we measure errors, and how we learn from the data; by keeping some components fixed and changing others, we can construct many different machine learning algorithms within a single framework
 # <u>1: Supervised Learning</u>
 ## <u>Supervised Learning</u>
 The objective of **supervised learning** is to **learn** a function that maps an input to an output based on a **training set**, which will then be used to perform predictions in a **test set**
@@ -257,12 +263,13 @@ $$
 $$
 We define the matrix of inputs as the **data matrix** $\mathbf{X}$, and thus overall:
 - $\mathbf{y}\in \mathbb{R}^{N\times 1}$
+- $\mathbf{t}\in \mathbb{R}^{N\times 1}$
 - $\mathbf{X}\in \mathbb{R}^{N\times(D+1)}$, since each $(\mathbf{x}^{(i)})^{\top}\in \mathbb{R}^{1\times (D+1)}$
 - $\mathbf{w}\in \mathbb{R}^{(D+1)\times 1}$
 And finally; $\mathbf{y}=\mathbf{X}\mathbf{w}$
 
 
-To optimize $\mathbf{w}$, we first need a **loss function** which measures the discrepancy between a model’s prediction and the ground-truth target value for any one given example; for regression, we generally use **squared error** loss: 
+To optimize $\mathbf{w}$, we first need a **loss function** which measures the discrepancy between a model’s prediction and the ground-truth target value for any **one example**; for regression, we generally use **squared error** loss: 
 $$
 \mathcal{L}^{(i)}(\mathbf{w})=\mathcal{L}(y^{(i)},t^{(i)})=\frac{1}{2}(y^{(i)}-t^{(i)})^2=\frac{1}{2}(\mathbf{w}^{\top}\mathbf{x}^{(i)}-t^{(i)})^2
 $$
@@ -300,7 +307,7 @@ $$
 \frac{\partial\mathcal{L}^{(i)}}{\partial w_{j}}&=\frac{\partial\mathcal{L}^{(i)}}{\partial y^{(i)}}\cdot \frac{\partial y^{(i)}}{\partial w_{j}}=(\mathbf{w}^{\top}\mathbf{x}^{(i)}-t^{(i)})\cdot x^{(i)}_{j} \tag{by 1,2} \\
 \end{align}
  $$
-Then the entire gradient is the vector with all of these $(\mathbf{w}^{\top}\mathbf{x}^{(i)}-t^{(i)})\cdot x^{(i)}_{j}$ for all $j \in[0,D]$, which can be split out into a **scalar** by vector multiplication:
+Then the entire gradient is the vector with all of these $(\mathbf{w}^{\top}\mathbf{x}^{(i)}-t^{(i)})\cdot x^{(i)}_{j}$ for all $j \in[0,D]$, which can be split out into a **scalar** by vector multiplication; so the components of the gradient of the loss function for the $i$th prediction are the error times each respective input feature:
 $$
 \nabla\mathcal{L}^{(i)}(\mathbf{w})=(\mathbf{w}^{\top}\mathbf{x}^{(i)}-t^{(i)})\mathbf{x}^{(i)}
 $$
@@ -308,6 +315,18 @@ From which we can substitute back:
 $$
 \nabla\mathcal{E}(\mathbf{w})= \frac{1}{N} \sum_{i = 1}^N (\mathbf{w}^{\top}\mathbf{x}^{(i)}-t^{(i)})\mathbf{x}^{(i)}
 $$
-
-
-
+Then we vectorize this as:
+$$
+\nabla \mathcal{E}(\mathbf{w}) = \frac{1}{N} \mathbf{X}^\top \mathbf{r} = \frac{1}{N} \mathbf{X}^\top (\mathbf{y} - \mathbf{t})=\frac{1}{N} \mathbf{X}^\top (\mathbf{X}\mathbf{w} - \mathbf{t})
+$$
+And finally set it to $\mathbf{0}$ to solve for the optimal $\mathbf{w}$:
+$$
+\mathbf{0}=\frac{1}{N} \mathbf{X}^\top (\mathbf{X}\mathbf{w} - \mathbf{t}) \implies \mathbf{0}=\mathbf{X}^\top \mathbf{X}\mathbf{w} - \mathbf{X}^\top\mathbf{t}\implies \mathbf{X}^\top \mathbf{X}\mathbf{w} = \mathbf{X}^\top\mathbf{t}
+$$
+Which finally implies $\mathbf{w}=(\mathbf{X}^{\top}\mathbf{X})^{-1}\mathbf{X}^{\top}\mathbf{t}$
+- A **unique** closed-form solution **exists** for the optimal weights of a linear regression because the cost over squared-loss objective is **convex** with a **single global minimum**
+- However, there are drawbacks to the direct solution method:
+	- The matrix inversion $(\mathbf{X}^{\top}\mathbf{X})^{-1}$ is $O(D^3)$ which becomes very costly as number of features grows, and doesn't help when the dataset itself is large either
+	- While the unique solution exists for the linear regression with cost over squared-loss objective case, this does not generalize to most other contexts
+## <u>Gradient Descent</u>
+A
