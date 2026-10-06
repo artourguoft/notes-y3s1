@@ -116,7 +116,10 @@ Recall that a **decision boundary** partitions the data space into regions, wher
 - Unlike kNN decision boundaries which can be oriented in any direction, decision tree boundaries are **always axis-aligned** because each split tests a **threshold on a single feature** at a time
 	- In two dimensions, this means every boundary is a horizontal or vertical line segment aligned with the axes; in higher dimensions, each boundary is a hyperplane perpendicular to one of the feature axes (ie. coefficients are all $0$ except for the variable on the axis which is perpendicular to the hyperplane)
 	- To draw the boundaries of a decision tree, trace the splits from the root to the leaves and retain only those boundaries that separate regions of different predicted classes
+A model class is a **universal function approximator** if for any continuous target function $f$ (i.e., any continuous ground-truth mapping from input to output) and for any desired level of approximation error $\epsilon$ (i.e., any degree of training accuracy), there exists some hypothesis $g$ such that $|g(x)-f(x)|<\epsilon$ for all $x$ in the domain (or a sufficiently large subset of the domain)
+
 A decision tree is constructed through a **recursive splitting** procedure; start with all training points at the root node, then at each node choose a feature and a threshold to split the current points into two subsets based on whether they satisfy the condition, and set those subsets as the two subtrees
+- It follows that decision trees are **binary trees**; each split partitions the current set into two
 - Consider that after each split, we want each subset to be more **class-pure** than the original; then the key question is **which feature and threshold we should split on** at each step
 	- Different split orders can produce very different trees, because an early split changes the subset of data seen by every later split
 - Repeat the same procedure on each subset until a **stopping criterion** is reached, at which point each subset becomes a leaf node which is assigned a class label
@@ -125,8 +128,8 @@ To formalize the problem of **choosing the optimal split**, we define:
 - **Hypothesis Space:** the set of all possible splits to consider at each node, and thus the set of all possible trees
 - **Loss Function:** some measure of the quality of each split so we can compare them and pick the best one
 One option is to treat the search for the optimal tree as a **global optimization problem**, where the hypothesis space is the set of all trees we can build from the training data, and the loss function is training error (of the finalized decision tree over the training set), but there are fatal flaws with this approach:
-- Optimizing for training error leads to overfitting and poor generalization, and decision trees are in fact universal function approximators so a sufficiently large tree can classify the training set perfectly
-- Finding the smallest tree that perfectly classifies a training set is **NP-complete**, and thus computationally infeasible
+- Optimizing for training error leads to overfitting and poor generalization, and decision trees are in fact universal function approximators so a sufficiently large tree can classify the training set perfectly (a leaf per each training set point)
+- Finding the **smallest** tree that perfectly classifies a training set is **NP-complete**, and thus computationally infeasible
 A better option is a **greedy** strategy where the tree is build as a **local optimization problem**; aim to choose the locally optimal split at each node given only the data in that subset
 - Since each split is not fully dependent on possible effects on future splits, this method will generally not produce a globally optimal tree
 - Intuitively, we at least want conditions that split the data into two subsets with at least one data point in each subset; therefore, only consider splits that are within the range of values for the feature (a simple heuristic is to use the **midpoints** between consecutive values of a feature)
@@ -155,7 +158,7 @@ $$
 $$
 H(Y|X=x_{0})=-\mathbb{E}(\log_{2}p(Y|X=x_{0}))=-\sum_{y\in Y}\log_{2}p(y|x_{0})\cdot p(y|x_{0})
 $$
-**Expected Conditional Entropy:** the entropy of observing $X$ in general (rather than a specific value) with respect to $Y$; the probability weighted average of the conditional entropies of $Y$ for each value of $X$
+**Expected Conditional Entropy:** the entropy of $Y$ after observing $X$ in general (rather than a specific value); the probability weighted average of the conditional entropies of $Y$ for each value of $X$
 $$
 H(Y|X)=\mathbb{E}(H(Y|X=x))=\sum_{x\in X}H(Y|X=x)\cdot p(x)=\sum_{x\in X}\left(p(x)\cdot-\sum_{y \in Y}\log_{2}p(y|x)\cdot p(y|x)\right)=-\sum_{x\in X}\sum_{y \in Y}\log_{2}p(y|x)\cdot p(x,y)
 $$
@@ -175,3 +178,48 @@ Information gain measures how many bits of information about $Y$ we gain on aver
 - If $X,Y$ are **independent** then $IG(Y|X)=0$, following from earlier fact that $H(Y|X)=H(Y)$ if the RVs are independent
 - If $X$ completely determines $Y$ then $IG(Y|X)=H(Y)$, following from earlier fact that $H(Y|X)=0$
 - Information gain is **symmetric**; that is $IG(Y|X)=IG(X|Y)$
+
+Finally, we use information gain to make **locally optimal splitting decisions** when building decision trees
+- Define $Y$ as an RV that maps to class labels, and $X$ as a binary (recall decision trees are binary) RV that represents which side of the proposed split a piece of data falls in
+- We compute $H(Y)$ at each node, including the root, directly from the training set; with PMF values calculated as the occurrences of the class divided by the size of the training set
+- Define $X_{1},\dots,X_{n}$ for $n$ possible choices of splits, each $X_{i}$ for $i\in[1,n]$ defined as $\{ 0,1 \}$ where $X_{i}=0$ indicates a data point lies in the left subtree and $X_{i}=1$ in the right, then compute:
+	- $H(Y)$
+	- $H(Y|X_{i}=0)$
+	- $H(Y|X_{i}=1)$
+	- $H(Y|X_{i})$ from the two above; where $p(0),p(1)$ are simply defined by the split
+	- $IG(Y|X_{i})$ from the above
+- Repeat the above for all $X_{i}$ and choose the arg maximum for $IG(Y|X_{i})$ as the optimal split
+This is a shift from **deterministic** reasoning (using misclassification rate) to **probabilistic** reasoning (entropy reduction); it treats the **class label as a random variable** and directly measures how much **observing a feature** reduces uncertainty about it
+
+Note even if features are continuous, the number of meaningful **splits we need to consider is finite** for a given dataset
+- For a **binary** feature, there’s only one way to split
+- For a feature with $k$ **categories**, there are $2^{k-1}-1$ ways to partition them into two groups
+- For **continuous** features, use **midpoints between consecutive unique values**
+- Thus, finding the optimal split is a finite task, and happens to be computationally feasible; however this may still be computationally heavy for larger datasets with many splits to consider
+	- This is a significant tradeoff where we accept **training time complexity** to reduce **inference time complexity** (where simply traverse a binary tree); recall, kNNs take the opposite tradeoff
+There are other tradeoffs for decision trees and information gain:
+- **Gini impurity** generally results in similar trees as information gain, but is less computationally demanding (no logs)
+- Information gain treats all misclassifications equally; in some contexts we want certain errors to be penalized more than others
+- For regression tasks where the target variable is **continuous** rather than **discrete**, information gain is not usable as it is defined over discrete RVs 
+
+
+Aside from splitting criteria, we must consider **stopping criteria**; when to stop splitting further and apply a classification to a leaf node
+- Broadly, we want the shortest tree that does not underfit and miss important patterns
+- While splitting criteria are model **parameters** determined by learning, stopping criteria are **hyperparameters** which can include:
+	- Maximum depth
+	- Minimum samples per node (recall, at each level there are less remaining samples)
+	- Minimum samples per leaf (leaves with a single sample are sensitive to erroneous data and noise)
+	- Minimum information gain (ie. stop splitting once uncertainty is no longer meaningfully reduced)
+- Note, any of these hyperparameters may not yet be reached when a subtree becomes **class-pure**, at which point we of course stop splitting regardless
+- Sometimes we **post-prune** trees; evaluate subtrees on the validation set and remove branches that do not improve validation performance
+
+
+The entire algorithm can be summarized as follows:
+1. **Start with all training data** at the root node
+2. **For each node:**
+	- Check if we should stop splitting
+	- If stopping, create a leaf node with a class prediction (likely modal class of the subset)
+    - Otherwise, find the best feature and split point (maximize information gain)
+    - Split the data according to this feature and threshold
+    - Recursively apply the algorithm to each child node
+3. **Continue** until all branches end in leaf nodes
