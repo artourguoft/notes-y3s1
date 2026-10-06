@@ -223,3 +223,32 @@ The entire algorithm can be summarized as follows:
     - Split the data according to this feature and threshold
     - Recursively apply the algorithm to each child node
 3. **Continue** until all branches end in leaf nodes
+# <u>3: Linear Regression</u>
+## <u>Linear Regression</u>
+For regressions, we assume that there is an underlying function $f:\mathbb{R}^D\to \mathbb{R}$ that maps each $D$-dimensional feature vector to its corresponding continuous scalar output, and attempt to learn said model
+
+For **linear models**, the hypothesis space is restricted to functions of the form:
+$$
+y=f(\mathbf{x})=w_{1}x_{1}+w_{2}x_{2}+\dots+w_{D}x_{D}+b=\sum_{j=1}^Dw_{j}x_{j}+b
+$$
+Wherein:
+- The vector $\mathbf{w}=[\begin{matrix} w_{1} & w_{2} & \dots & w_{D}  \end{matrix}]$ is the **weights vector** and controls the **magnitude** and **direction** of how each input feature affects the resulting prediction
+- The scalar $b$ is the **bias** or **intercept** and is an offset term that shifts the prediction; this allows us to have models that do not necessarily pass through the **origin**
+- Thus, $\mathbf{w}$ and $b$ are the key **parameters** of the model, and learning is the process of determining these values
+
+Here $f$ is clearly a linear function, and thus describes a **hyperplane** (line in $\mathbb{R}^2$, plane in $\mathbb{R}^3$, etc.); this is easier to work with if we describe $f$ in **vectorized** (using vectors rather than summations of scalars) form:
+$$
+y=f(\mathbf{x})=\mathbf{w}^{\top}\mathbf{x}+b
+$$
+Vectorization has several benefits:
+- Mathematically elegant and compact way to express operations on high-dimensional data
+- Prerequisite for using parallelized computation on GPUs and ML libraries
+- Allows us to clearly see and use properties of linear algebra, ie.: $\mathbf{w}^{\top}\mathbf{x}=\mathbf{x}^{\top}\mathbf{w}$
+For full vectorization, we set a **dummy feature** $x_{0}=1$ and the corresponding **dummy weight** $w_{0}=b$, then:
+$$
+y=f(\mathbf{x})=\mathbf{w}^{\top}\mathbf{x}+b=\mathbf{w}^{\top}\mathbf{x}+1\cdot b=\mathbf{w}^{\top}\mathbf{x}+w_{0}\cdot x_{0}=\mathbf{w}'^{\top}\mathbf{x'}
+$$
+This form is the standard, and thus the primes are dropped from the final expression
+- A
+
+
