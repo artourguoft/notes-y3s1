@@ -363,6 +363,7 @@ Many datasets show clear nonlinear relationships; we can still use linear regres
 
 A **feature mapping** or basis expansion is a function $f:\mathbb{R}^D\to \mathbb{R}^{M+1}$ that maps each input $\mathbf{x}\in \mathbb{R}^D$ to a new feature vector $f(\mathbf{x})\in \mathbb{R}^{M+1}$
 - To train a linear regression on these new features we replace the original training set with them, ie. $\{f(\mathbf{x})^{(i)},t^{(i)} \}_{i=1}^N$; note the targets remain unchanged
+- Note, a feature mapping adds capacity only when the new features are **not linear combinations of the existing ones**; ie. linear transformations and combinations of existing features are still linear!
 
 The feature mapping can be any function; in practice the most frequently used is **polynomial feature mapping** where for a scalar input $x \in \mathbb{R}$ the map is:
 $$
@@ -397,3 +398,6 @@ A common choice for the regularizer is the $L_{2}$ regularizer:
 $$
 \mathcal{R}(\mathbf{w})=\frac{1}{2}\sum_{j=1}^Dw_{j}^2=\frac{1}{2}\mathbf{w}^{\top}\mathbf{w}=\frac{1}{2}||\mathbf{w}||_{2}^2
 $$
+# <u>4: Linear Classification</u>
+## <u>Logistic Regression</u>
+For regressions
