@@ -319,6 +319,7 @@ Then we vectorize this as:
 $$
 \nabla \mathcal{E}(\mathbf{w}) = \frac{1}{N} \mathbf{X}^\top \mathbf{r} = \frac{1}{N} \mathbf{X}^\top (\mathbf{y} - \mathbf{t})=\frac{1}{N} \mathbf{X}^\top (\mathbf{X}\mathbf{w} - \mathbf{t})
 $$
+
 And finally set it to $\mathbf{0}$ to solve for the optimal $\mathbf{w}$:
 $$
 \mathbf{0}=\frac{1}{N} \mathbf{X}^\top (\mathbf{X}\mathbf{w} - \mathbf{t}) \implies \mathbf{0}=\mathbf{X}^\top \mathbf{X}\mathbf{w} - \mathbf{X}^\top\mathbf{t}\implies \mathbf{X}^\top \mathbf{X}\mathbf{w} = \mathbf{X}^\top\mathbf{t}
@@ -329,4 +330,70 @@ Which finally implies $\mathbf{w}=(\mathbf{X}^{\top}\mathbf{X})^{-1}\mathbf{X}^{
 	- The matrix inversion $(\mathbf{X}^{\top}\mathbf{X})^{-1}$ is $O(D^3)$ which becomes very costly as number of features grows, and doesn't help when the dataset itself is large either
 	- While the unique solution exists for the linear regression with cost over squared-loss objective case, this does not generalize to most other contexts
 ## <u>Gradient Descent</u>
-A
+The **gradient descent** optimization algorithm for minimizing a function $f(\mathbf{w}):\mathbb{R}^D\to \mathbb{R}$ involves the following steps:
+1. Initialize $\mathbf{w}\in \mathbb{R}^D$ to some initial values
+2. Repeatedly apply the following update rule until a **stopping criterion** is met
+$$
+\mathbf{w}\leftarrow \mathbf{w}-\alpha \nabla f(\mathbf{w})
+$$
+Note that all components of $\mathbf{w}$ update simultaneously (not one coordinate at a time, otherwise earlier updates would affect where all other partials would be computed)
+- The negation of the gradient is used, since the gradient points in the direction of steepest ascent
+- The hyperparameter $\alpha>0$ is the **learning rate**
+Recalling the expression for $\nabla \mathcal{E}(\mathbf{w})$, we get:
+$$
+\mathbf{w}\leftarrow \mathbf{w}-\frac{\alpha}{N} \mathbf{X}^\top (\mathbf{X}\mathbf{w} - \mathbf{t})
+$$
+Gradient descent is a simple optimization method, but its use requires several considerations
+- If $\alpha$ is **too small**, gradient descent can become computationally expensive and take too long; if $\alpha$ is **too large**, iterations of gradient descent can overshoot the targeted minimum and jump around it endlessly
+	- In practice $\alpha$ is determined empirically using a **training curve** that simply compares values of $\mathcal{E}$ after each iteration using different $\alpha$
+- Gradient descent uses only local information about the function, thus gradient descent is only able to find **local minima** (which may or may not be a global minimum)
+	- This also depends on the initial vector; different initial points can lead to different local minima
+	- However, this is not a concern for linear regression with squared error; recall, the cost over squared error function is **convex** with a **single global minimum**
+The stopping criterion is used by gradient descent, but is not specified by the algorithm itself; we want to see $\mathcal{E}$ **converge** to the minimum but this is usually not computationally feasible
+- In practice we simply define an **improvement threshold** for $\mathcal{E}$ and stop when iterations of gradient descent reduce $\mathcal{E}$ by less than that
+- We may also set a **fixed cap on number of iterations**
+
+**Feature scaling** through standardization (normalization) is recommended before running gradient descent to make the loss surface "rounder"
+- Otherwise, features on smaller scales may have much larger partial derivatives and create **ravines** (steep on those dimensions, flat on the other dimensions) on the cost surface
+	- This can cause the gradient descent algorithm to oscillate across the narrow dimension without moving much along the valley floor
+- Normalization will not work for features that are **highly correlated** (ie. measure similar underlying characteristics of the data); they will still form a diagonal ravine relative to both features
+- Note normalization is only applied to the data matrix $\mathbf{X}$, not $\mathbf{t}$
+## <u>Feature Mapping</u>
+Many datasets show clear nonlinear relationships; we can still use linear regression to model curves but with new features based on the original ones so that the non-linear relationships becomes linear in the transformed features
+
+A **feature mapping** or basis expansion is a function $f:\mathbb{R}^D\to \mathbb{R}^{M+1}$ that maps each input $\mathbf{x}\in \mathbb{R}^D$ to a new feature vector $f(\mathbf{x})\in \mathbb{R}^{M+1}$
+- To train a linear regression on these new features we replace the original training set with them, ie. $\{f(\mathbf{x})^{(i)},t^{(i)} \}_{i=1}^N$; note the targets remain unchanged
+
+The feature mapping can be any function; in practice the most frequently used is **polynomial feature mapping** where for a scalar input $x \in \mathbb{R}$ the map is:
+$$
+f(x)=\begin{matrix}[1&x&x^2&\dots&x^M]\end{matrix}^{\top}\in \mathbb{R}^{M+1}
+$$
+This mapping produces an $(M+1)$-dimensional feature vector, where $M$ is a hyperparameter called the **degree** of the polynomial
+- The degree $M$ of the polynomial controls the number of input features, and thus the complexity of the resulting regression model
+	- As we increase $M$, the model gains more parameters and becomes capable of fitting increasingly intricate patterns in the training data; however, a more complex model is not always a better model!
+Such mappings lead to **polynomial regression** of degree $M$:
+$$
+y=w_{0}+w_{1}x+w_{2}x^2+\dots+w_{M}x^M=\sum_{j=0}^Mw_{j}x^{j}=\mathbf{w}^{\top}f(x)+w_{0}
+$$
+
+Another common choice for data with periodic structures is **sinusoidal (Fourier) mapping**
+$$
+f(x)=[\begin{matrix}1 & \sin(2\pi x) & \cos(2\pi x) & \sin(4\pi x) & \dots\end{matrix}]
+$$
+## <u>Regularization</u>
+In general, large weights are undesirable because they mean that one feature contributes dominates the prediction; large weights are often a sign of overfitting
+- But the **magnitudes of weights tend to increase with the number of features** in a model, while **MSE simultaneously falls**; so how do we balance between simplicity and loss? 
+
+**Regularization** is a modification of the training procedure that prefers some models over others based on criteria other than the training error
+- Commonly, regularization is used to improve generalization by preferring simpler models that reduce overfitting
+- Performed by adding a penalty term to the MSE
+$$
+\mathcal{E}_{reg}(\mathbf{w})=\mathcal{E}(\mathbf{w})+\lambda \mathcal{R}(\mathbf{w})
+$$
+Wherein:
+- $\mathcal{R}$ is the **regularization function** or **regularizer**; a penalty applied directly to the cost function to encode a preference for some models over others
+- $\lambda$ is a **hyperparameter** that sets the relative importance of the MSE and the regularizer
+A common choice for the regularizer is the $L_{2}$ regularizer:
+$$
+\mathcal{R}(\mathbf{w})=\frac{1}{2}\sum_{j=1}^Dw_{j}^2=\frac{1}{2}\mathbf{w}^{\top}\mathbf{w}=\frac{1}{2}||\mathbf{w}||_{2}^2
+$$
