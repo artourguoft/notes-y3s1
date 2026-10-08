@@ -315,7 +315,7 @@ Then $\nabla\mathcal{L}^{(i)}(\mathbf{w})\in \mathbb{R}^{(D+1)\times 1}$ where e
 $$
 \nabla\mathcal{E}(\mathbf{w})= \frac{1}{N} \sum_{i = 1}^N (\mathbf{w}^{\top}\mathbf{x}^{(i)}-t^{(i)})\mathbf{x}^{(i)}
 $$
-Then since the summation of $\mathbf{x}_{i}$ over $N$ creates the matrix $\mathbf{X}^{\top}\in \mathbb{R}^{(D+1)\times N}$, we vectorize this as:
+Then we vectorize this as:
 $$
 \nabla \mathcal{E}(\mathbf{w}) = \frac{1}{N} \mathbf{X}^\top (\mathbf{y} - \mathbf{t})=\frac{1}{N} \mathbf{X}^\top (\mathbf{X}\mathbf{w} - \mathbf{t})
 $$
