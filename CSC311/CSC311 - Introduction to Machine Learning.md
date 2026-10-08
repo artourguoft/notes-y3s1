@@ -228,7 +228,7 @@ The entire algorithm can be summarized as follows:
     - Otherwise, find the best feature and split point (maximize information gain)
     - Split the data according to this feature and threshold
     - Recursively apply the algorithm to each child node
-3. **Continue** until all branches end in leaf nodes
+3. **Continue** until all branches end in leaf nodes; prediction of each leaf node is its **modal** class
 # <u>3: Linear Regression</u>
 ## <u>Linear Regression</u>
 For regressions, we assume that there is an underlying function $f:\mathbb{R}^D\to \mathbb{R}$ that maps each $D$-dimensional feature vector to its corresponding continuous scalar output, and attempt to learn said model
@@ -311,16 +311,16 @@ Then the entire gradient is the vector with all of these $(\mathbf{w}^{\top}\mat
 $$
 \nabla\mathcal{L}^{(i)}(\mathbf{w})=(\mathbf{w}^{\top}\mathbf{x}^{(i)}-t^{(i)})\mathbf{x}^{(i)}
 $$
-From which we can substitute back:
+Then $\nabla\mathcal{L}^{(i)}(\mathbf{w})\in \mathbb{R}^{(D+1)\times 1}$ where each row entry is the respective $\frac{\partial\mathcal{L}^{(i)}}{\partial w_{j}}$, which we can substitute back into the cost gradient:
 $$
 \nabla\mathcal{E}(\mathbf{w})= \frac{1}{N} \sum_{i = 1}^N (\mathbf{w}^{\top}\mathbf{x}^{(i)}-t^{(i)})\mathbf{x}^{(i)}
 $$
-Then we vectorize this as:
+Then since the summation of $\mathbf{x}_{i}$ over $N$ creates the matrix $\mathbf{X}^{\top}\in \mathbb{R}^{(D+1)\times N}$, we vectorize this as:
 $$
-\nabla \mathcal{E}(\mathbf{w}) = \frac{1}{N} \mathbf{X}^\top \mathbf{r} = \frac{1}{N} \mathbf{X}^\top (\mathbf{y} - \mathbf{t})=\frac{1}{N} \mathbf{X}^\top (\mathbf{X}\mathbf{w} - \mathbf{t})
+\nabla \mathcal{E}(\mathbf{w}) = \frac{1}{N} \mathbf{X}^\top (\mathbf{y} - \mathbf{t})=\frac{1}{N} \mathbf{X}^\top (\mathbf{X}\mathbf{w} - \mathbf{t})
 $$
 
-And finally set it to $\mathbf{0}$ to solve for the optimal $\mathbf{w}$:
+Then $\nabla \mathcal{E}(\mathbf{w})\in \mathbb{R}^{(D+1)\times 1}$ but with each row entry being the respective $\frac{1}{N} \sum_{i = 1}^N\frac{\partial\mathcal{L}^{(i)}}{\partial w_{j}}$; finally set it to $\mathbf{0}$ to solve for the optimal $\mathbf{w}$:
 $$
 \mathbf{0}=\frac{1}{N} \mathbf{X}^\top (\mathbf{X}\mathbf{w} - \mathbf{t}) \implies \mathbf{0}=\mathbf{X}^\top \mathbf{X}\mathbf{w} - \mathbf{X}^\top\mathbf{t}\implies \mathbf{X}^\top \mathbf{X}\mathbf{w} = \mathbf{X}^\top\mathbf{t}
 $$
@@ -363,7 +363,7 @@ Many datasets show clear nonlinear relationships; we can still use linear regres
 
 A **feature mapping** or basis expansion is a function $f:\mathbb{R}^D\to \mathbb{R}^{M+1}$ that maps each input $\mathbf{x}\in \mathbb{R}^D$ to a new feature vector $f(\mathbf{x})\in \mathbb{R}^{M+1}$
 - To train a linear regression on these new features we replace the original training set with them, ie. $\{f(\mathbf{x})^{(i)},t^{(i)} \}_{i=1}^N$; note the targets remain unchanged
-- Note, a feature mapping adds capacity only when the new features are **not linear combinations of the existing ones**; ie. linear transformations and combinations of existing features are still linear!
+- Note, a feature mapping adds capacity only when the new features are **not linear combinations of the existing ones**; ie. linear combinations of linear transformations existing features are still linear!
 
 The feature mapping can be any function; in practice the most frequently used is **polynomial feature mapping** where for a scalar input $x \in \mathbb{R}$ the map is:
 $$
@@ -371,7 +371,7 @@ f(x)=\begin{matrix}[1&x&x^2&\dots&x^M]\end{matrix}^{\top}\in \mathbb{R}^{M+1}
 $$
 This mapping produces an $(M+1)$-dimensional feature vector, where $M$ is a hyperparameter called the **degree** of the polynomial
 - The degree $M$ of the polynomial controls the number of input features, and thus the complexity of the resulting regression model
-	- As we increase $M$, the model gains more parameters and becomes capable of fitting increasingly intricate patterns in the training data; however, a more complex model is not always a better model!
+	- As we increase $M$, the model gains more parameters and becomes capable of fitting increasingly intricate patterns in the training data; however, a more complex model is not always a better model; $M$ too large can lead to overfitting, and too low to underfitting 
 Such mappings lead to **polynomial regression** of degree $M$:
 $$
 y=w_{0}+w_{1}x+w_{2}x^2+\dots+w_{M}x^M=\sum_{j=0}^Mw_{j}x^{j}=\mathbf{w}^{\top}f(x)+w_{0}
@@ -381,9 +381,11 @@ Another common choice for data with periodic structures is **sinusoidal (Fourier
 $$
 f(x)=[\begin{matrix}1 & \sin(2\pi x) & \cos(2\pi x) & \sin(4\pi x) & \dots\end{matrix}]
 $$
+
+The resulting models after feature mapping are still **linear with regards to the weights**, regardless of whether the new features have nonlinear relationships to the original features
 ## <u>Regularization</u>
-In general, large weights are undesirable because they mean that one feature contributes dominates the prediction; large weights are often a sign of overfitting
-- But the **magnitudes of weights tend to increase with the number of features** in a model, while **MSE simultaneously falls**; so how do we balance between simplicity and loss? 
+In general, large weights are undesirable because they mean that one feature contributes dominates the prediction; **large weights are often a sign of overfitting**
+- But the **magnitudes of weights tend to increase with the number of features** in a model, while **MSE simultaneously falls**; we must balance between overfitting and loss
 
 **Regularization** is a modification of the training procedure that prefers some models over others based on criteria other than the training error
 - Commonly, regularization is used to improve generalization by preferring simpler models that reduce overfitting
@@ -398,6 +400,9 @@ A common choice for the regularizer is the $L_{2}$ regularizer:
 $$
 \mathcal{R}(\mathbf{w})=\frac{1}{2}\sum_{j=1}^Dw_{j}^2=\frac{1}{2}\mathbf{w}^{\top}\mathbf{w}=\frac{1}{2}||\mathbf{w}||_{2}^2
 $$
+Adding an $L_{2}$ penalty keeps the feature set (and thus $M$) fixed and instead discourages any weight from growing large by adding a cost for weight magnitude; this shrinks
+the weights continuously toward zero rather than removing features outright
+- The original cost term $\mathcal{E}(\mathbf{w})$ is minimized by **fitting the training data** as closely as possible, while the regularization term $\lambda\frac{1}{2}\mathbf{w}^{\top}\mathbf{w}$ is minimized by **making the weights small**; the hyperparameter $\lambda$ sets the relative importance of the two goals
 # <u>4: Linear Classification</u>
 ## <u>Logistic Regression</u>
 For regressions
