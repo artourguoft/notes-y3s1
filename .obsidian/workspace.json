@@ -8,37 +8,21 @@
         "type": "tabs",
         "children": [
           {
-            "id": "9b59dd1762223188",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "STA237 Notes.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
-              },
-              "icon": "lucide-file",
-              "title": "STA237 Notes"
-            }
-          },
-          {
             "id": "81856258f069fedd",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CSC311/CSC311 - Introduction to Machine Learning.md",
+                "file": "MAT235/MAT235 - Multivariable Calculus 1.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "CSC311 - Introduction to Machine Learning"
+              "title": "MAT235 - Multivariable Calculus 1"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -133,7 +117,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "CSC311/CSC311 - Introduction to Machine Learning.md",
+                "file": "MAT235/MAT235 - Multivariable Calculus 1.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
@@ -173,12 +157,12 @@
   },
   "active": "81856258f069fedd",
   "lastOpenFiles": [
-    "Midterms.md",
-    "CSC311/CSC311 - Introduction to Machine Learning.md",
     "STA237 Notes.md",
-    "CSC263/CSC263 - Data Structures and Algorithms.md",
-    "CSC364/CSC364 - Computer Security.md",
     "MAT235/MAT235 - Multivariable Calculus 1.md",
+    "CSC311/CSC311 - Introduction to Machine Learning.md",
+    "CSC263/CSC263 - Data Structures and Algorithms.md",
+    "Midterms.md",
+    "CSC364/CSC364 - Computer Security.md",
     "APM236/APM 236 - Applications of Linear Programming.md",
     "APM236/HW1/HW1 - 3.md",
     "APM236/HW1/3c.png",
