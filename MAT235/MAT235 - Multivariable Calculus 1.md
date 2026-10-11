@@ -65,7 +65,7 @@ The **geometric interpretation** of the dot product is that for the angle $0\leq
 	- For vectors that are **coincident** to each other and point in **opposite** directions, $\theta=\pi$ and $\cos{\pi}=-1$, so the dot product is just $-\|\mathbf{a}\|\|\mathbf{b}\|$
 
 
-To determine the **standard form of a plane**, we only need a point $P_{0}=(x_{0},y_{0},z_{0})$ on the plane and a normal vector $\mathbf{n}=a\mathbf{i}+b\mathbf{j}+c\mathbf{k}$ to the plane
+To determine the **standard form of a plane**, we only need an arbitrary point $P_{0}=(x_{0},y_{0},z_{0})$ on the plane and a normal vector $\mathbf{n}=a\mathbf{i}+b\mathbf{j}+c\mathbf{k}$ to the plane
 - Then all displacement vectors from $P_{0}$ that are perpendicular to the normal vector define the plane
 - Take an arbitrary point $P_{1}=(x,y,z)$ in the plane, then the displacement vector $P_{0}P_{1}=(x-x_{0},y-y_{0},z-z_{0})$ must be **perpendicular to the normal** vector, so $\mathbf{n}\cdot P_{0}P_{1}=0$ by properties of the dot product, from which we get the equation $a(x-x_{0})+b(y-y_{0})+c(z-z_{0})=0$
 	- We can simplify further; let $d=ax_{0}+by_{0}+cz_{0}$, then $ax+by+cz=d$; note the components of the normal vector are clear in both forms!
@@ -218,7 +218,7 @@ For single variable functions, determining that a limit **does not exist** invol
 
 We can show that a **limit does not exist** by finding **at least two paths** along which the function takes on different values as we approach $(a,b)$; the simplest paths to check are the $x$-axis and $y$-axis since one value will remain constant throughout in each path
 - Other simple paths to check are $y=x$ where we can just substitute $y$s for $x$s in the function, or more generally $y=mx$ for any given $m$ which allows us to substitute $mx$s and get a parameterized expression for any given straight line through the origin in the $xy$-plane
-- Note, we can pick **any curve as a path**, for ex. $y=x^2$ etc., as long as it **approaches the point** in the limit, ex. take $y=kx^2$ for any $k\neq 0$:
+- Note, we can pick **any curve as a path**, for ex. $y=x^2$ etc., as long as it actually **approaches the point** in the limit, ex. take $y=kx^2$ for any $k\neq 0$, but note this **would not work** for $(x,y)\to(0,1)$ for example
 $$
 \lim_{ (x,y) \to (0,0) } \frac{x^2}{x^2+y}=\lim_{ x \to 0 } \frac{x^2}{x^2+kx^2}=\lim_{ x \to 0 } \frac{x^2}{(k+1)x^2}=\lim_{ x \to 0 } \frac{1}{k+1} \quad (\text{infinite values for infinite }k\text{s})
 $$

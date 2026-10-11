@@ -140,3 +140,36 @@ search(x)
 			- If max(y.left) >= lo(x) then let I be the interval with hi = that max
 				- If I intersects with x then we're fine, if I is entirely greater than x then once we get to it 
 
+A3Q5 Example (words from a dictionary of size $l$)
+- What data structures to use?
+	- Hash table $T$ of size $m$ using chaining, where $m\geq l$
+	- Direct access array $A$ initially all null, accessed with each letter from a-z
+- What to store in each?
+	- Store each word and its count 
+	- `A[c]` is most frequent word starting with c
+- What assumptions are we making?
+	- SUHA, needed to achieve constant expected time for insert and query
+	- Hashing a word takes $\Theta(1)$ time
+- Explain in English how the algorithm works
+	- Whenever a word comes in, we has it to map it to a chain in table $T$
+	- If the word is in the chain, increment its count; otherwise store it with a count of 1
+	- Then check corresponding entry in A (hash table lookup) to see if the new word has higher count; if yes replace, if no do nothing
+	- For queries, output `A[a],...,A[z]`
+- Pseudocode:
+```
+Insert(w)
+	h = hash(w)
+	if W is in the chain T[h]
+		increment counter
+	else
+		store with count of 1 in chain T[h]
+	if T[w] > T[A[w[0]]] or (T[w] > T[A[w[0]]] and w < A[w[0]]) # second part checks
+		A[w[0]] = w                                             # 'dictionary order'
+
+Query()
+	for i in [a,z]
+		output A[i]
+```
+- Runtime:
+	- Query: at most 26 iterations of constant operations, so $O(1)$
+	- Insert: SUHA and $m\in\Theta(l)$ means length of chain is $\Theta(1)$ n expectation and searching chain is $\Theta(1)$ in expectation, essentially accessing a hash table is $\Theta(1)$ expected
