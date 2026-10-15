@@ -7,10 +7,10 @@ Let $\mathbf{a}$ be some **nonzero** vector in $\mathbb{R}^n$ representing the c
 		- In $\mathbb{R}$ a hyperplane is a **point** 
 		- In $\mathbb{R}^2$ a hyperplane is a **line** where with $a_{1},a_{2},s\in \mathbb{R}$ and $\mathbf{x}\in \mathbb{R}^2$, the line is $a_{1}x_{1}+a_{2}x_{2}=s$ or $\mathbf{a}^{\top}\mathbf{x}=s$
 			- For a **horizontal line**, $a_{1}=0$ since $x_{1}$ is the $x$-axis, and all points with $x_{2}=\frac{s}{a_{2}}$ are solutions
-			- For a **vertical line**, $a_{2}=0$ since $x_{2}$ is the $y$-axis, and all points with $x_{2}=\frac{s}{a_{1}}$ are solutions
+			- For a **vertical line**, $a_{2}=0$ since $x_{2}$ is the $y$-axis, and all points with $x_{1}=\frac{s}{a_{1}}$ are solutions
 		- In $\mathbb{R}^3$ a hyperplane is a **plane** where with $a_{1},a_{2},a_{3},s\in \mathbb{R}$ and $\mathbf{x}\in \mathbb{R}^3$, the line is $a_{1}x_{1}+a_{2}x_{2}+a_{3}x_{3}=s$ or $\mathbf{a}^{\top}\mathbf{x}=s$ 
 			- For a **horizontal plane**, $a_{1},a_{2}=0$ since $x_{1},x_{2}$ are the $x$ and $y$ axes, and all points with $x_{3}=\frac{s}{a_{3}}$ are solutions
-- **Halfspace:** the set $\{ \mathbf{x}\in \mathbb{R}^n :\mathbf{a}^{\top}\mathbf{x}\geq s\}$ defines a halfspace; the set of points $\mathbf{x}$ that satisfies the equation being $\geq s$
+- **Halfspace:** the set $\{ \mathbf{x}\in \mathbb{R}^n :\mathbf{a}^{\top}\mathbf{x}\geq s\}$ defines a halfspace; the set of points $\mathbf{x}$ that satisfies the inequality being $\geq s$
 	- Note, this is a **closed halfspace**, the other half of which is the set $\{ \mathbf{x}\in \mathbb{R}^n :\mathbf{a}^{\top}\mathbf{x}\leq s\}$
 	- We also define an **open halfspace** as the set $\{ \mathbf{x}\in \mathbb{R}^n :\mathbf{a}^{\top}\mathbf{x}> s\}$, and the other half of which is $\{ \mathbf{x}\in \mathbb{R}^n :\mathbf{a}^{\top}\mathbf{x}< s\}$
 	- The hyperplane is the boundary of its corresponding halfspaces; for closed halfspaces this boundary is also contained in the halfspace
@@ -114,8 +114,7 @@ The set of all points that satisfies the constraints on an LPP is the **intersec
 
 **Extreme Point:** a point $\mathbf{u}$ in a convex set $S\subseteq \mathbb{R}^n$ is an extreme point iff it is **not an interior point of any line segment** contained fully in $S$
 - The geometric intuition; you cannot draw a line segment that is entirely contained in $S$, in which an extreme point is contained in the interior
-- Formally a point $\mathbf{u}$ is an extreme point if $\neg \exists \mathbf{x}_{1}\neq\mathbf{x}_{2}\in S,\mathbf{u}=\lambda \mathbf{x}_{1}+(1-\lambda)\mathbf{x}_{2}$ for any $\lambda \in(0,1)$
-- Furthermore, a point $\mathbf{u}$ in a convex set $S\subseteq \mathbb{R}^n$ is an extreme point iff $\mathbf{u}$ is **not a convex combination of other points** in $S$ 
+- Formally a point $\mathbf{u}$ is an extreme point if $\neg \exists \mathbf{x}_{1}\neq\mathbf{x}_{2}\in S,\mathbf{u}=\lambda \mathbf{x}_{1}+(1-\lambda)\mathbf{x}_{2}$ for any $\lambda \in(0,1)$, ie. $\mathbf{u}$ is **not** a convex combination of **other points** in $S$ 
 - Ex. the unit sphere encasing the unit ball $\{ \mathbf{x}\in \mathbb{R}^3:||\mathbf{x}||\leq 1\}$ is made entirely of extreme points of the ball
 
 **Extreme Point Theorem:** let $S\subseteq \mathbb{R}^n$ be the feasible set of a general LPP
