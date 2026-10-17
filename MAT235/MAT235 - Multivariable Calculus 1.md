@@ -150,25 +150,31 @@ A **function** $f$ **of two variables** is a rule that assigns to each ordered p
 
 Functions of two variables **can exclude one or both of the variables**; ex. $f(x,y)=x^{2}$ is a parabola opening upward on the $z$-axis and extending infinitely in both directions along the $y$-axis
 - In $\mathbb{R}^2$ there was only one dependent variable, thus if it was not explicitly included in the formula the result was simply a straight line with constant $c=y$; in $\mathbb{R}^3$ this happens only when both dependent variables are excluded ex. $z=c$ as described in [[#<u>12.1 Three-Dimensional Coordinate System</u>|Section 12.1]]
-- Alternatively we can have equations (not functions) ex. $y=x^{2}$ which is a parabola extending infinitely in both directions along the $z$-axis
+- Alternatively we can have functions of a single variable, ex. $y=x^{2}$ which is a parabola, but in $\mathbb{R}^3$ extending infinitely in both directions along the $z$-axis (and thus is **not a function** of two variables, by vertical rule)
 
 The **contours** or **level curves** of a function of two variables are curves in the $xy$-plane with equations $f(x,y)=c$ for a constant $z=c$ chosen from the range of $f$; these are sets of all points at which $f(x,y)$ is $c$ height away from the $xy$-plane
 - Level curves are essentially **horizontal slices** of the graph of $f(x,y)$, superimposed on the $xy$-plane
-	- To **determine a level curve algebraically** we substitute $z=c$ which gives us the equation of the level curve in the $xy$-plane (which itself is not always a function) and thus the set of $(x,y)$ such that $f(x,y)=c$
+	- To **determine a level curve algebraically** we substitute $z=c$ which gives us the equation of the level curve in the $xy$-plane (which itself is often not a function) and thus the set of $(x,y)$ such that $f(x,y)=c$
 - A collection of level curves for various values of $z$ is a **contour map**
-- Contour maps are most useful when we take **equally spaced values of** $z$; it follows that for such contour maps, level curves that are **closer together indicate a more rapid change** in the underlying function
+- Contour maps are most useful when we take **equally spaced values of** $z$; it follows that for such contour maps, level curves that are **closer together indicate a more rapid change** in the underlying function in that direction
 - Level curves **cannot intersect** as it would mean that the underlying function is invalid (multiple values mapped per domain element)
 
-**Cross-sections** are similar to level curves, but they are defined by **vertical** (or otherwise non-horizontal) planes, compared to level curves which are defined by strictly horizontal planes
-- Commonly useful cross-sections are those defined by planes where $x$ or $y$ are held constant; then we are left with $z=f(x,c)$ or $z=f(c,y)$ which are vertical slices where the curve of $z$ as function of only one of $x$ or $y$
+**Cross-sections** are similar to level curves, but they are **vertical slices**: 
+- Of the graphs of $z=f(x,c)$ superimposed on the $xz$ axis, where $y=c$ are chosen constants
+- Of the graphs of $z=f(c,y)$ superimposed on the $yz$ axis, where $x=c$ are chosen constants
 
-Functions of **three or more variables** are defined similarly, but of course difficult to visualize; nevertheless, we can gain some insight by examining the **level surfaces** of three-variable functions, which are surfaces in $\mathbb{R}^{3}$ with equations $f(x,y,z)=c$ where $c$ is a constant
-- Level surfaces consist of the ordered triples for which $f(x,y,z)$ will have the same value of $f$ 
-- These contour diagrams are **collections of level surfaces**, and we can **algebraically determine an equation** in $\mathbb{R}^{3}$ for a surface by isolating $z$ for each given $c$ and treating it as function of two variables
-	- Note, this is **not always possible**
-		- The resulting equation may be an invalid function; when $z$ does not appear in the original function at all, or when $z$ is composed with even powers or even radicals (then the resulting equation will have a $\pm$, but we can make this valid by choosing one side)
-		- If $z$ appears both inside linear or polynomials terms and transcendental terms (ex. $e^z$ or trigonometric functions) in the original function then there is no algebraic way to isolate $z$, even though a unique $z$ may still exist for every $(x, y)$
-	- **Conversely**, we can also determine a three-variable function $g$ for which a two-variable function $f$ is the level surface for $g(x,y,z)=0$ by setting $g(x,y,z)=f(x,y)-z=0$; note this is a function that has this level curve, but this $g$ is **not unique** by any means!
+Functions of **three variables** $g(x,y,z)$ are defined similarly, but of course difficult to visualize; nevertheless, we can gain some insight by examining the **level surfaces** of three-variable functions, which are surfaces in $\mathbb{R}^{3}$ with equations $g(x,y,z)=c$ where $c$ is a constant
+- Level surfaces consist of the **ordered triples** for which $g(x,y,z)$ will have the same value of $g=c$, and contour diagrams are **collections of level surfaces** for different values of $c$
+- Sometimes we can **algebraically determine a two-variable function** $f(x,y)$ for a level surface $g(x,y,z)=c$ by isolating $z$
+	- Note, this is **not always possible** as we often cannot solve for $z$
+		- The resulting function may be an invalid function; when $z$ does not appear in $g(x,y,z)$, or when $z$ is composed with even powers or even radicals, then the resulting equation will have a $\pm$ (but we can make this valid by choosing one side)
+		- If $z$ appears both inside linear or polynomial terms and transcendental terms (ex. $e^z$ or trigonometric functions) in $g(x,y,z)$ then there is no algebraic way to isolate $z$, even though a unique $z$ may still exist for every $(x, y)$
+	- **Conversely**, we can also determine a $g(x,y,z)=0$ level surface from a given two-variable function $f(x,y)=z$ by setting $g(x,y,z)=f(x,y)-z=0$
+		- Then, the three-variable function $g(x,y,z)$ has this $g=0$ level surface, but note this $g$ is **not unique** for this surface
+- So, every surface that is the graph of a function $f(x, y)=z$ can be interpreted as a level surface, but not every level surface $g(x, y, z) = c$ can be interpreted as the graph of a valid function $g(x, y)=z$
+	- That is, level surfaces of three-variable functions can describe more surfaces than can be described as graphs of two-variable functions
+- Similar to level curves, level surfaces cannot intersect as that would make $g(x,y,z)$ invalid, and level surfaces that are closer to each other in some direction indicate that $g$ grows faster in that direction
+- Consider that level curves encode the actual graph of a two variable function in $\mathbb{R}^3$ that we can visualize directly, whereas even with level surfaces we cannot visualize a function in $\mathbb{R}^4$
 ### <u>[12.4]: Linear Functions</u>
 **Linear functions** of two variables take the form $z=ax+by+c$ (often given as as $ax+by-z=-c$) and represent **planes** in $\mathbb{R}^{3}$
 - **Any** other composition will make the functions nonlinear (ex. $z=xy$, or $z=x^2+y$, etc.)
@@ -192,11 +198,11 @@ $$
 Overall, we are equipped for several scenarios with **determining equations of planes**; a plane can be determined by just:
 1. A single point and both slopes:
 	- A given $(x_{0},y_{0},z_{0})$ or $f(x_{0},y_{0})$ and given slopes allow us to simply express the plane as a function $z=m(x-x_0)+n(y-y_0)+z_0$
-	- Note, we can easily rearrange this function format into the standard form like $-mx-ny+z=-mx_{0}-ny_{0}+z_{0}$
+	- Note, we can easily rearrange this function format into the standard form like $mx+ny-z=mx_{0}+ny_{0}-z_{0}$
 2. A single point and a normal vector:
 	- A given $(x_{0},y_{0},z_{0})$ or $f(x_{0},y_{0})$ and a normal vector $\mathbf{n}=a\mathbf{i}+b\mathbf{j}+c\mathbf{k}$ allow us to express the plane in standard form relative to an arbitrary displacement vector $(x,y,z)$ where $a(x-x_{0})+b(y-y_{0})+c(z-z_{0})=0$, or $ax+by+cz=d=ax_{0}+by_{0}+cz_{0}$
 3. A set of $3$ points, provided all $3$ points **do not lie on the same line**:
-	- If we are given points that pairwise lie parallel to the $x$ and $y$ axes, then we can simply use the difference in $z$ between those points to calculate $m,n$, and use those with any of the given points as $(x_{0},y_{0},z_{0})$ to determine our function as in method *1*
+	- If we are given points that pairwise lie **parallel** to the $x$ and $y$ axes, then we can simply use the difference in $z$ between those points to calculate $m,n$, and use those with any of the given points as $(x_{0},y_{0},z_{0})$ to determine our function as in method *1*
 	- If we are not given points that pairwise lie along axes, we use the displacement vectors to cross product to normal vector method instead, and then refer to method *2*
 
 Lines in $\mathbb{R}^3$ are fully determined by a point and a parameterized direction vector; planes are not fully determined by a point and a contained vector because we also need their orientation
@@ -210,14 +216,14 @@ $$
 $$
 Recall, for single variable functions the **definition of the limit** was that the difference between $f(x)$ and $L$ can be made arbitrarily small by bounding the distance $0<|x-a|<\delta$
 - Now our domain is the $xy$-plane rather than the $x$-axis, thus the definition changes to where the $\delta$ is a **radius** around the point $(a,b)$ on the $xy$-plane, ie. $0<\sqrt{(x-a)^{2}+(y-b)^{2}}<\delta$
+All **limit laws** apply the same as they did for single variable functions
 
 For single variable functions, determining that a limit **does not exist** involved approaching the value $a$ from both directions on the $x$-axis, from where if we had $\lim_{x\to a^{-}} f(x) \neq \lim_{x\to a^{+}} f(x)$ then the limit did not exist
-- For functions of two variables, we can approach $(a,b)$ from an infinite number of directions in the $xy$-plane, and in any manner (ie. not just straight lines but functions in the $xy$-plane)
+- For functions of two variables, we can approach $(a,b)$ from an infinite number of directions in the $xy$-plane, and in any manner (ie. not just straight lines but any functions in the $xy$-plane that pass through $(a,b)$)
 - However, our definition of the limit above only specified that we must be within a certain radius $\delta$, so if a limit exists then it must approach the same value regardless of where specifically within the circle of radius $\delta$ the direction of approach lies
-- All **limit laws** apply the same as they did for single variable functions
 
-We can show that a **limit does not exist** by finding **at least two paths** along which the function takes on different values as we approach $(a,b)$; the simplest paths to check are the $x$-axis and $y$-axis since one value will remain constant throughout in each path
-- Other simple paths to check are $y=x$ where we can just substitute $y$s for $x$s in the function, or more generally $y=mx$ for any given $m$ which allows us to substitute $mx$s and get a parameterized expression for any given straight line through the origin in the $xy$-plane
+We can show that a **limit does not exist** by finding **at least two paths** along which the function takes on different values as we approach $(a,b)$; the simplest paths to check are **straight lines** through $(a,b)$ that are parallel to the axes, ie. set $x=a$ (vertical line) and $y=b$ (horizontal line) and evaluate
+- Next we can check **all straight lines** through $(a,b)$, which take the general form $y=m(x-a)+b$ where we $m\neq 0$ is the parameter representing any slope
 - Note, we can pick **any curve as a path**, for ex. $y=x^2$ etc., as long as it actually **approaches the point** in the limit, ex. take $y=kx^2$ for any $k\neq 0$, but note this **would not work** for $(x,y)\to(0,1)$ for example
 $$
 \lim_{ (x,y) \to (0,0) } \frac{x^2}{x^2+y}=\lim_{ x \to 0 } \frac{x^2}{x^2+kx^2}=\lim_{ x \to 0 } \frac{x^2}{(k+1)x^2}=\lim_{ x \to 0 } \frac{1}{k+1} \quad (\text{infinite values for infinite }k\text{s})
