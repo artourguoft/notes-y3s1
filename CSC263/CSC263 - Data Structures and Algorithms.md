@@ -15,11 +15,11 @@ Given the formal definitions above:
 - Note the slight difference in the consequents of $O$ and $\Omega$; since $T$ is a maximum, proving an upper bound requires a universal proof over the set of runtimes, whereas proving a lower bound requires only an existential proof (since any runtime is less than or equal to the maximum runtime)
 - Also note that $O$ and $\Omega$ alone are **not necessarily tight** bounds; for $O$ we can just pick any function that grows faster than $T$, and for $\Omega$ we could even take the minimum runtime for each $n$ as a very loose and uninformative lower bound
 	- This is the value of finding an $\Theta$ class; this by definition is a tight upper and lower bound and thus reflects the exact growth rate of the worst-case runtime function, differing only by a constant factor!
-# <u>Binary Heaps</u>
+
 Recall:
 - **Abstract Data Type (ADT):** theoretical model of an entity and a set of operations that can be performed on that entity
 - **Data Structure:** a value in a program which can be used to store and operate on data; an implementation of an ADT
-
+# <u>Binary Heaps</u>
 **Priority Queue:** similar to a regular queue ADT, except dequeues are based on the concept of priority rather than simple FIFO, with operations:
 - `insert(pq, x, priority)`: adds an element to the priority queue with the given priority value
 - `find_max(pq)`: returns the item from the priority queue with the highest priority
@@ -29,7 +29,7 @@ A naive unordered linked list implementation of a priority queue can add items i
 - **Complete Binary Tree:** a binary tree is complete if:
 	1. All of its levels are **full** (ie. have $2^d$ nodes, where $d$ is depth starting at $0$), **except** possibly the bottom one (every leaf must be in one of the two bottommost levels, so at any level there are $\leq 2^d$ nodes)
 	2. All of the nodes in the bottom level are as far to the **left** as possible
-	- These properties mean that there is only **one complete tree shape** for each **number of nodes**, and the tree is the **smallest possible height** for an $n$ node binary tree (that height being $\lfloor \log_{2}n \rfloor$; note height is defined as **number of edges** from top to bottom - not number of levels)
+	- These properties mean that there is only **a unique complete tree shape** for each **number of nodes**, and the tree is the **smallest possible height** for an $n$ node binary tree (that height being $\lfloor \log_{2}n \rfloor$; note height is defined as **number of edges** from top to bottom - not number of levels)
 	- These properties allow CBTs to be represented as arrays with the elements in **level order**; from top to bottom and left to right respectively
 - **Max-Heap Property:** the value of each node is greater than or equal to the values of its **children** (and thereby all of its **descendants**)
 	- This property is actually less stringent than the binary search tree property; given a tree which satisfies the max-heap property, we **cannot conclude anything** about the relationship between its **left and right subtrees** (ex. nodes in left can be greater than nodes in right)
@@ -80,7 +80,65 @@ $$
 - Once we have a max-heap, we call `extract_max(H)` $n$ times each of which is $\Theta(\log_{2}n)$ for a **total result** of $\Theta(n\log_{2}n)$ for building a max-heap and then heapsorting from it
 # <u>Binomial Heaps</u>
 The preceding **binary heap** implementation of the priority queue does not allow for an efficient **union** operation, wherein we would merge two heaps into one new valid heap (would have to simply merge the two arrays and then run the `build_heap()` algorithm, which recall was $\Theta(n)$)
-- Binomial heaps allow us to perform unions in $O(\log_{2}n)$ at the expense of taking simple retrievals from $O(1)$ to $O(\log_{2}n)$ compared to binary
+- **Binomial heaps** allow us to perform unions in $O(\log_{2}n)$ at the expense of taking simple retrievals from $O(1)$ to $O(\log_{2}n)$ compared to binary heaps, and the ADT becomes known as a **mergeable priority queue** 
+
+**Binomial Tree:** defined recursively where $B_{0}$ is a single node, and for $k\geq 1$ then $B_{k}$ is the tree where the root has $k$ children, each of which are the subtrees $B_{0},B_{1},\dots,B_{k-1}$
+- The **height** is $k$
+- The **number of nodes** at depth $d$ is $\binom{k}{d}$, and the **total number of nodes** is $2^k$
+- To create $B_{k}$ we take two $B_{k-1}$ trees, and attach as a child of the other's root
+	- Two min-heap ordered $B_{k}$ trees can be merged into a single $B_{k+1}$ tree (maintaining min-heap order) with **one key comparison**; simply check which one's root is lesser and attach it as a child to the other's root
+		- We cannot merge two binary heaps so easily!
+**Binomial Forest:** a binomial forest $F_{n}$ is a sequence of $B_{k}$ trees with strictly decreasing $k$ and a total of $n$ nodes
+- If we represent $n$ as a binary number, the high bits indicate which $B_{k}$ trees should be included in the forest, ex. $n=7=(111)_{2}$ implying that $F_{7}$ contains $B_{2},B_{1},B_{0}$
+	- Recall in general that for $n=(b_{t},b_{t-1},\dots,b_{0})_{2}$ we have $t=\lfloor \log_{2}n \rfloor$ and at most $\lfloor \log_{2}n \rfloor + 1$ high bits
+	- Let $\alpha(n)$ be the **number of high bits** in the binary, then $F_{n}$:
+		- Is made of $a(n)$ binomial trees
+		- Has $n-\alpha(n)$ edges; intuitively since there is no ultimate root node connected to each $B_{k}$
+
+A **min binomial heap** stores its elements in a binomial forest such that each contained $B_{k}$ satisfies the **min-heap property**
+ - A binomial heap for $n$ elements can be built with $O(n)$ key comparisons (from an unsorted array), leading to $n$ edges
+ - The **three pointers** necessary in each node are a **parent** pointer, **left child** pointer and **right sibling** pointer
+	 - The roots of each $B_{k}$ treen are connected with the sibling pointer to the other trees, but going leftward instead with the head pointer pointing to the lowest order tree's root
+- **Deleting the root** of a min-heap ordered $B_{k}$ tree **yields a min binomial heap**
+- `union(H, G)`: $O(\log_{2}n)$
+	- For min binomial heaps $H,G$, perform addition of their binary representations; the resulting binary yields the union min binomial heap
+		- The number of **added edges** is the **number of key comparisons**, which is represented by **carried ones** during binary addition (since those represent $k$ values where both heaps already had trees and thus needed to be merged, which recall requires just comparing their roots)
+	- Assuming $|H|,|G|<n$, then recall both have $\leq\lfloor \log_{2}n \rfloor + 1$ high bits representing $B_{k}$ trees, and thus the union will do at most that many comparisons (in the case of both binomial heaps containing all the same binomial trees)
+- `insert(H, {x})`: $\Theta(\log_{2}n)$
+	- Performed as a `union()` with a singleton set of the element to insert
+	- Note, for $k>\log_{2}n$ successive inserts the total cost is $\leq2k$ key comparisons, meaning the **average cost per insert** is $\leq 2$ comparisons 
+- `find_min(H)`: $\Theta(\log_{2}n)$, worse than $\Theta(1)$ in binary heaps because there is no relationship between neighbouring binomial trees in the binomial heap, so at worst will have to check the roots of all the contained trees of which there are $\leq\lfloor \log_{2}n \rfloor + 1$
+- `extract_min(H)`: $\Theta(\log_{2}n)$
+	- Performed by first doing `find_min()` and deleting that node, which recall leaves us with a min binomial heap, that is now disconnected from the whole original binomial heap; then `union()` this resulting binomial heap with the remainder of the original one
+# <u>Binary Search Trees</u>
+**Dictionary:** set $S$ of elements with keys, with operations:
+- `search(S, x)`: returns the element in $S$ with key $x$, or error
+- `insert(S, x)`: inserts $x$ into $S$
+- `delete(S, x)`: deletes the element in $S$ with key $x$, or error
+
+The simplest dictionary implementation is the **linked list**:
+- `search(S, x)`: $\Theta(n)$
+- `insert(S, x)`: $\Theta(1)$
+- `delete(S, x)`: $\Theta(n)$
+
+The **binary search tree** allows us to perform **all** of these operations in $\Theta(h)$ where $h$ is **height**:
+- The **BST property**; each node's left subtree has only keys $\leq$ its key, and right subtree only keys $\geq$
+- When stored in an array, BSTs are walked through via **in-order traversal** which leads to the elements being stored in **ascending order**; traverse the left subtree recursively, then the node, then the right subtree
+	- BSTs are **not unique** for the array of ascending order keys they represent; they can be rotated around the root, for example 
+- `search(S, x)`: $\Theta(h)$
+	- Simply traverse the tree from the root, comparing the key at each node until the key or a leaf is found
+- `insert(S, x)`: $\Theta(h)$
+	- Simply traverse the tree from the root, comparing the key at each node then append where appropriate
+	- Note, BST inserts will **always append a leaf**
+- `delete(S, x)`: $\Theta(h)$
+	- If the node to be deleted **is a leaf** (has no children), simply remove it in $\Theta(1)$
+	- If the node to be deleted **has one child**, replace it with that subtree in $\Theta(1)$
+	- If the node to be deleted **has both children**
+		- Find the successor or predecessor and replace the node with it; then replace the successor or predecessor with its child if it has one (will have at most one by its definition)
+			- The **successor** is the next node in the array; farthest left node of the right subtree, which then by definition will have at most one child
+			- The **predecessor** is the previous node in the array; farthest right node of the left subtree, which then by definition will have at most one child
+			- Note, both of the traversals above will be worst case $\Theta(h)$
+All of these operations are $\Theta(h)$, but consider that an ascending order array can be put into a **single-line** BST where $h=n$, making all these operations **linear**; we can do better 
 
 
 
@@ -88,12 +146,6 @@ The preceding **binary heap** implementation of the priority queue does not allo
 
 
 
-
-BST deletes, node to be deleted $z$:
-- When $z$ has $0$ children; simply delete the node and set the relevant pointer in its parent to null; this is $\Theta(1)$
-- When $z$ has $1$ child (regardless of left or right); delete the node and set the parent of $z$ to now point directly to the child of $z$; this is $\Theta(1)$
-- When $z$ has $2$ children; find the successor of $z$ (smallest key $>z$); this is done by going to the right child first, then repeatedly going to the left child until leaf 
-	- Swap the successor into what was $z$ (this is still a valid BST at this point, but most use cases will not want duplicate data); then do delete algorithm (with $0\vee1$ child case, since the successor by definition has no left child) on successor; this is $\Theta(h)$ where $h=n$ for worst tree
 
 AVL deletes, node to be deleted $z$:
 - Similar to BST delete but with extra logic for rebalancing; deletes in AVL always result in removing a leaf
