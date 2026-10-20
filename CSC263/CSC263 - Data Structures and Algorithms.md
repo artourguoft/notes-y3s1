@@ -134,35 +134,66 @@ The **binary search tree** allows us to perform **all** of these operations in $
 	- If the node to be deleted **is a leaf** (has no children), simply remove it in $\Theta(1)$
 	- If the node to be deleted **has one child**, replace it with that subtree in $\Theta(1)$
 	- If the node to be deleted **has both children**
-		- Find the successor or predecessor and replace the node with it; then replace the successor or predecessor with its child if it has one (will have at most one by its definition)
+		- Find the successor or predecessor and replace the node with it; then replace the successor or predecessor with its child if it has one (will have **at most one** by its definition)
 			- The **successor** is the next node in the array; farthest left node of the right subtree, which then by definition will have at most one child
 			- The **predecessor** is the previous node in the array; farthest right node of the left subtree, which then by definition will have at most one child
 			- Note, both of the traversals above will be worst case $\Theta(h)$
-All of these operations are $\Theta(h)$, but consider that an ascending order array can be put into a **single-line** BST where $h=n$, making all these operations **linear**; we can do better 
+All of these operations are $\Theta(h)$, but consider that an ascending order array can be put into a **single-line** BST where $h=n-1$, making all these operations **linear**
+- There are multiple enhanced forms of BSTs, we will focus on AVL trees
+# <u>AVL Trees</u>
+AVL trees seek to have balanced subtree heights at every node in the tree:
+- **Balance Factor:** at any node $v$, we have $BF(v)=h_{r}-h_{l}$
+	- For an AVL tree $T$, for every node $v\in T$ we require $-1\leq BF(v)\leq 1$
+	- If $BF(v)\leq -2$ it is left heavy, if $BF(v)\geq 2$ it is right heavy
 
-
-
-
-
-
-
-
-AVL deletes, node to be deleted $z$:
-- Similar to BST delete but with extra logic for rebalancing; deletes in AVL always result in removing a leaf
-- When $z$ has $0$ children; simply delete the node and set the relevant pointer in its parent to null; this is $\Theta(1)$
-- When $z$ has $1$ child (regardless of left or right); that child is necessarily a leaf (if it wasn't the AVL property would be violated since this subtree would then be higher than $1$ while the other is $0$)
-	- Thus, simply delete the node and set the relevant pointer in its parent to null; this is $\Theta(1)$
+AVL trees of $n$ nodes have height $\leq 1.44\log_{2}(n+2)$, so $h\in \Theta(\log_{2}n)$ and thus can do `insert()` and `delete()` in $\Theta(\log_{2}n)$ all while maintaining necessary balance factor
+- `search(T, x)`: $\Theta(\log_{2}n)$
+	- Same as regular BST search
+- `insert(T, x)`: $\Theta(\log_{2}n)$
+	- Insert same as in regular BST, then traverse up to the root and update BFs; on the first imbalanced node encountered perform **left and / or right rotations** until balanced; all in $\Theta(1)$ (just changing pointers)
+		- Once balance is restored, the **height** of the subtree at the node that became imbalanced becomes the **same as it was before insertion**
+		- If $BF(v)=2$ and $BF(v.right)=1$, perform a **left** rotation about $v$
+		- If $BF(v)=2$ and $BF(v.right)=-1$, perform a **right** rotation about $v.right$, then a **left** rotation about $v$
+		- If $BF(v)=-2$ and $BF(v.left)=-1$, perform a **right** rotation about $v$
+		- If $BF(v)=-2$ and $BF(v.left)=1$, perform a **left** rotation about $v.left$, then a **right** rotation about $v$
+	- After rebalancing the **first** encountered imbalanced subtree, its **height** is restored to what it was **before the insertion**, therefore no further ancestors can become imbalanced and we stop traversing upward to update balance factors
+- `delete(T, x)`: $\Theta(\log_{2}n)$
+	- When $x$ has $0$ children; simply delete the node and set the relevant pointer in its parent to null in $\Theta(1)$
+	- When $x$ has $1$ child (regardless of left or right); that child is necessarily a leaf (if it wasn't the AVL property would be violated since this subtree would then be higher than $1$ while the other is $0$)
+		- Thus, simply delete the node and set the relevant pointer in its parent to null; this is $\Theta(1)$
 		- This will move the parent's balance from $\pm 1$ (depending on left or right child) to $0$, maintaining the AVL property
-- When $z$ has $2$ children; find the successor of $z$ (smallest key $>z$); this is done by going to the right child first, then repeatedly going to the left child until leaf 
-	- Swap the successor into what was $z$; then do delete algorithm (with $0\vee1$ child case, since the successor by definition has no left child) on successor; this is $\Theta(\log_{2}n)$ since AVLs are balanced (compared to $\Theta(n)$ for BST)
-The difference from BSTs hereon is that balance factors have to be updated and rebalancing rotations may be needed after deletion:
-- These algorithms are the same as in inserts; ie. update balance factors up from deleted node and rotate at first imbalance
+		- When $x$ has $2$ children; do the BST predecessor / successor algorithm; this is worst-case $\Theta(\log_{2}n)$ since AVLs are balanced (compared to worst-case $\Theta(n)$ for BST)
+	- The difference from BSTs is that balance factors have to be updated and rebalancing rotations may be needed after deletion
+		- Note the same fact about preserving heights after insertion is **not true for deletion**; we may need to update balance factors all the way up to the root regardless of where the imbalance initially was after deletion  
+# <u>Augmentation</u>
+Designing augmented data structures for **additional operations**:
+1. Choose the **base data structure** given the runtime class requirements and types of operations
+2. Choose what to use as the **key** values and what **additional data** should be stored to facilitate the additional operations
+3. Ensure the augmentations above can be **updated cheaply** (constant time or within required runtime classes) during and after **all operations** (not necessarily when building the initial structure)
+4. Prove how the supported operations work and their runtime
+# <u>Hash Tables</u>
+A 
 
-Designing augmented data structures:
-1. Choose the base data structure given the requirements
-2. Choose what to use as the key values and what data should be stored
-3. Ensure the augmentations above can be updated in constant time given child nodes, during the supported operations (not necessarily when building the initial structure)
-4. Show how the supported operations work and their runtime
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Interval trees:
 - Overlap of two intervals $i,i'$ happens when $lo(i)\leq hi(i')\wedge lo(i')\leq hi(i)$

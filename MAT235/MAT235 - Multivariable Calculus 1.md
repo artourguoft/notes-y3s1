@@ -6,7 +6,7 @@ Points in the two-dimensional plane $\mathbb{R}\times \mathbb{R}=\mathbb{R}^{2}$
 Equations in $\mathbb{R}^{3}$ represent **surfaces** rather than **curves**; the simplest of these surfaces are planes defined by a single coordinate; ex. $z=5$ is the set of all ordered triples whose $z$ coordinate is $5$
 - For a constant $c$, $x=c$ is a plane parallel to the $yz$-plane, $y=c$ a plane parallel to the $xz$-plane, and $z=c$ a plane parallel to the $xy$-plane
 	- Furthermore, if any of the three variables are **not explicit** in an equation, then the surface described by the equation extends infinitely along that axis; that variable essentially has an implicit $0$ coefficient, allowing it to take any value
-		- Ex. $y=3x-2$ is a simple linear function in the $xy$-plane, which in $\mathbb{R}^3$ becomes a plane extending infinitely up and down the $z$-axis, or $z=x^2$ which is a parabola in the $xz$-plane but extends infinitely along the $y$-axis in $\mathbb{R}^3$
+		- Ex. $y=3x-2$ is a simple linear function in the $xy$-plane, which in $\mathbb{R}^3$ becomes a plane extending infinitely up and down the $z$-axis (and thus cannot be represented as a function of two variables!), or $z=x^2$ which is a parabola in the $xz$-plane but extends infinitely along the $y$-axis in $\mathbb{R}^3$
 - Equations of the form $\sqrt{x^2+y^2}=c$ represent **circles** with radius $c$, it follows that forms like $\sqrt{x^2+y^2}\leq c$ represent filled-in circles; similarly equations of the form $x^2+y^2=c$ represent circles with the radius $\sqrt{c}$
 	- In $\mathbb{R}^3$ these equations define surfaces that extend up and down the $z$-axis to form **hollow cylinders** with the radii of the relevant circle
 	- If we remove the constant and instead treat these like functions in $\mathbb{R}^{3}$, ex. $f(x,y)=\sqrt{ x^2+y^2 }$ and $f(x,y)=x^2+y^2$, the resulting surfaces are a cup shaped by parabolas and a cone, respectively (this will become clear when cross-sections are introduced)
@@ -154,7 +154,7 @@ Functions of two variables **can exclude one or both of the variables**; ex. $f(
 
 The **contours** or **level curves** of a function of two variables are curves in the $xy$-plane with equations $f(x,y)=c$ for a constant $z=c$ chosen from the range of $f$; these are sets of all points at which $f(x,y)$ is $c$ height away from the $xy$-plane
 - Level curves are essentially **horizontal slices** of the graph of $f(x,y)$, superimposed on the $xy$-plane
-	- To **determine a level curve algebraically** we substitute $z=c$ which gives us the equation of the level curve in the $xy$-plane (which itself is often not a function) and thus the set of $(x,y)$ such that $f(x,y)=c$
+	- To **determine a level curve algebraically** we substitute $z=c$ which gives us the equation of the level curve in the $xy$-plane (which itself is often not a valid single variable function) and thus the set of $(x,y)$ such that $f(x,y)=c$
 - A collection of level curves for various values of $z$ is a **contour map**
 - Contour maps are most useful when we take **equally spaced values of** $z$; it follows that for such contour maps, level curves that are **closer together indicate a more rapid change** in the underlying function in that direction
 - Level curves **cannot intersect** as it would mean that the underlying function is invalid (multiple values mapped per domain element)
@@ -169,7 +169,7 @@ Functions of **three variables** $g(x,y,z)$ are defined similarly, but of course
 	- Note, this is **not always possible** as we often cannot solve for $z$
 		- The resulting function may be an invalid function; when $z$ does not appear in $g(x,y,z)$, or when $z$ is composed with even powers or even radicals, then the resulting equation will have a $\pm$ (but we can make this valid by choosing one side)
 		- If $z$ appears both inside linear or polynomial terms and transcendental terms (ex. $e^z$ or trigonometric functions) in $g(x,y,z)$ then there is no algebraic way to isolate $z$, even though a unique $z$ may still exist for every $(x, y)$
-	- **Conversely**, we can also determine a $g(x,y,z)=0$ level surface from a given two-variable function $f(x,y)=z$ by setting $g(x,y,z)=f(x,y)-z=0$
+	- **Conversely**, we can also interpret a $g(x,y,z)=0$ level surface from a given two-variable function $f(x,y)=z$ by setting $g(x,y,z)=f(x,y)-z=0$
 		- Then, the three-variable function $g(x,y,z)$ has this $g=0$ level surface, but note this $g$ is **not unique** for this surface
 - So, every surface that is the graph of a function $f(x, y)=z$ can be interpreted as a level surface, but not every level surface $g(x, y, z) = c$ can be interpreted as the graph of a valid function $g(x, y)=z$
 	- That is, level surfaces of three-variable functions can describe more surfaces than can be described as graphs of two-variable functions
@@ -178,7 +178,7 @@ Functions of **three variables** $g(x,y,z)$ are defined similarly, but of course
 ### <u>[12.4]: Linear Functions</u>
 **Linear functions** of two variables take the form $z=ax+by+c$ (often given as as $ax+by-z=-c$) and represent **planes** in $\mathbb{R}^{3}$
 - **Any** other composition will make the functions nonlinear (ex. $z=xy$, or $z=x^2+y$, etc.)
-- The defining feature of a linear function of two variables is that the **slopes** $\frac{\Delta z}{\Delta x}$ at a fixed $y$ and $\frac{\Delta z}{\Delta y}$ at a fixed $x$ are **constant** (in cross-section terms; the cross-sections of a plane are lines)
+- The defining feature of a linear function of two variables is that the **slopes** $\frac{\Delta z}{\Delta x}$ and $\frac{\Delta z}{\Delta y}$ are **constant** (in cross-section terms; the cross-sections of a plane are lines)
 	- These slopes are also the same **regardless of the fixed value**; in fact, the slope of a plane along any **one direction** is always the same constant regardless of the initial point
 	- These properties of linear functions are also visible in **tabular form**, where the **rows and columns each have constant linear increments** throughout (ie. same slope between all rows, and another between all columns)
 	- These properties of linear functions are also visible in contour maps, where all level curves are **parallel**, **equally-spaced** straight lines each of which represent the linear combinations of $(x,y)$ for that given $z$
