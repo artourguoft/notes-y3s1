@@ -172,7 +172,53 @@ Designing augmented data structures for **additional operations**:
 3. Ensure the augmentations above can be **updated cheaply** (constant time or within required runtime classes) during and after **all operations** (not necessarily when building the initial structure)
 4. Prove how the supported operations work and their runtime
 # <u>Hash Tables</u>
-A 
+If we simply store dictionaries in direct-access tables like arrays **indexed and ordered by keys**, then all operations become $\Theta(1)$ since we can simply perform pointer arithmetic with key values; ex. store counts of each ASCII code (used as the key, with 128 possible keys) in a plaintext file
+- This does not work when the universe of keys $|U|$ becomes large and infeasible to store (in memory or otherwise)
+
+However, if we can store a table $T$ with $m<|U|$ keys we can use **hash tables**
+- Consider a **hash function** $h:U\to \{ 0,1,\dots,m-1 \}$, then for any key $k\in U,h(k)=i$ where $i\in\{ 0,1,\dots,m-1 \}$ we say $k$ **hashes to** $i$
+- Assume that the has function **always hashes in** $\Theta(1)$ for any valid key input
+	- But since $m<|U|$, by the Pigeonhole Principle there must be pairs of keys that have **hash collisions**, ie. different keys hashing to the same value
+		- We resolve this by **chaining**; store a **doubly linked list** at every slot, then:
+- `insert(x)`: $\Theta(1)$
+	- Inserting into slot a given $T[h(key(x))]$ appends to the head of the list at this slot
+- `delete(x)`: $\Theta(1)$
+	- Given that we have a direct pointer to $x$ 
+- `search(k)`: $\Theta(n)$
+	- Searching the chain at $T[h(k)]$ depends on the **length of the chain**, and in the worst case all $n$ keys hash to the same $m$!
+
+The above are worst-case runtimes, but with hashing we need to consider the length of the chains on average; given we are inserting $n$ keys into an initially empty table $T$ of size $m$:
+1. Assume SUHA; **simplified uniform hashing assumption**
+	- Each key $k$ that we insert is **uniformly likely** to hash to any value in $\{ 0,1,\dots,m-1 \}$, ie. $P(h(k)=i)=\frac{1}{m}$ for $0\leq i\leq m-1$
+	- Under SUHA, the **expected length** of any chain $E(|T[i]|)=\frac{n}{m}=\alpha$ where $\frac{n}{m}=\alpha$ is called the **load factor**
+	- Then, a **successful search** (assuming each stored key is equally likely to be searched) will traverse on average half of the elements and thus has an **expected runtime** $\Theta( \frac{\alpha}{2})$, and an **unsuccessful search** will traverse all elements and thus has an **expected runtime** $\Theta(\alpha)$
+2. Assume $\alpha$ is bounded by a constant by ensuring that $m\in\Theta(n)$
+	- If we keep $m$ constant, then as $n$ grows the load factor grows (chains get longer), so search runtime scales linearly with $n$
+	- Thus, we ensure $m$ scales linearly with $n$ which makes $\alpha$ a **constant** $c$, and thus any search becomes $\Theta(1)$
+		- This may 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
