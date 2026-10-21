@@ -80,26 +80,28 @@ $$
 - Once we have a max-heap, we call `extract_max(H)` $n$ times each of which is $\Theta(\log_{2}n)$ for a **total result** of $\Theta(n\log_{2}n)$ for building a max-heap and then heapsorting from it
 # <u>Binomial Heaps</u>
 The preceding **binary heap** implementation of the priority queue does not allow for an efficient **union** operation, wherein we would merge two heaps into one new valid heap (would have to simply merge the two arrays and then run the `build_heap()` algorithm, which recall was $\Theta(n)$)
-- **Binomial heaps** allow us to perform unions in $O(\log_{2}n)$ at the expense of taking simple retrievals from $O(1)$ to $O(\log_{2}n)$ compared to binary heaps, and the ADT becomes known as a **mergeable priority queue** 
+- **Binomial heaps** allow us to perform unions in $O(\log_{2}n)$ at the expense of taking `find_extreme()` operations from $O(1)$ to $O(\log_{2}n)$, and the ADT becomes known as a **mergeable priority queue** 
 
-**Binomial Tree:** defined recursively where $B_{0}$ is a single node, and for $k\geq 1$ then $B_{k}$ is the tree where the root has $k$ children, each of which are the subtrees $B_{0},B_{1},\dots,B_{k-1}$
-- The **height** is $k$
-- The **number of nodes** at depth $d$ is $\binom{k}{d}$, and the **total number of nodes** is $2^k$
+**Binomial Tree:** defined recursively where $B_{0}$ is a single node, and for $k\geq 1$ then $B_{k}$ is the tree where the root has $k$ children (not total descendants!), each of which are the binomial trees $B_{0},B_{1},\dots,B_{k-1}$
+- The **height** of a $B_{k}$ binomial tree is $k$
+- The **number of nodes** at depth $d$ is $\binom{k}{d}$, the **total number of nodes** is $2^k$, and the **number of edges** is $2^k-1$
 - To create $B_{k}$ we take two $B_{k-1}$ trees, and attach as a child of the other's root
 	- Two min-heap ordered $B_{k}$ trees can be merged into a single $B_{k+1}$ tree (maintaining min-heap order) with **one key comparison**; simply check which one's root is lesser and attach it as a child to the other's root
 		- We cannot merge two binary heaps so easily!
 **Binomial Forest:** a binomial forest $F_{n}$ is a sequence of $B_{k}$ trees with strictly decreasing $k$ and a total of $n$ nodes
 - If we represent $n$ as a binary number, the high bits indicate which $B_{k}$ trees should be included in the forest, ex. $n=7=(111)_{2}$ implying that $F_{7}$ contains $B_{2},B_{1},B_{0}$
+	- This follows from the size of each $B_{k}$ being $2^k$
 	- Recall in general that for $n=(b_{t},b_{t-1},\dots,b_{0})_{2}$ we have $t=\lfloor \log_{2}n \rfloor$ and at most $\lfloor \log_{2}n \rfloor + 1$ high bits
 	- Let $\alpha(n)$ be the **number of high bits** in the binary, then $F_{n}$:
 		- Is made of $a(n)$ binomial trees
 		- Has $n-\alpha(n)$ edges; intuitively since there is no ultimate root node connected to each $B_{k}$
+- **Deleting the root** of a binomial tree $B_{k}$ **yields the binomial forest** $F_{n}$ such that $n=(1,1,\dots,1)_{2}$ where there are $k$ ones
 
 A **min binomial heap** stores its elements in a binomial forest such that each contained $B_{k}$ satisfies the **min-heap property**
  - A binomial heap for $n$ elements can be built with $O(n)$ key comparisons (from an unsorted array), leading to $n$ edges
  - The **three pointers** necessary in each node are a **parent** pointer, **left child** pointer and **right sibling** pointer
-	 - The roots of each $B_{k}$ treen are connected with the sibling pointer to the other trees, but going leftward instead with the head pointer pointing to the lowest order tree's root
-- **Deleting the root** of a min-heap ordered binomial tree $B_{k}$ **yields a min binomial heap**
+	 - The roots of each $B_{k}$ tree are connected with the sibling pointer to the other trees, but going leftward instead with the head pointer pointing to the lowest order tree's root
+- **Deleting the root** of a min-heap ordered binomial tree $B_{k}$ **yields a min binomial heap** of all $B_{0},\dots,B_{k-1}$ trees
 - `union(H, G)`: $O(\log_{2}n)$
 	- For min binomial heaps $H,G$, perform addition of their binary representations; the resulting binary yields the union min binomial heap
 		- The number of **added edges** is the **number of key comparisons**, which is represented by **carried ones** during binary addition (since those represent $k$ values where both heaps already had trees and thus needed to be merged, which recall requires just comparing their roots)
@@ -124,7 +126,7 @@ The simplest dictionary implementation is the **linked list**:
 The **binary search tree** allows us to perform **all** of these operations in $\Theta(h)$ where $h$ is **height**:
 - The **BST property**; each node's left subtree has only keys $\leq$ its key, and right subtree only keys $\geq$
 - When stored in an array, BSTs are walked through via **in-order traversal** which leads to the elements being stored in **ascending order**; traverse the left subtree recursively, then the node, then the right subtree
-	- BSTs are **not unique** for the array of ascending order keys they represent; they can be rotated around the root, for example 
+	- BST shapes are **not unique** for the array of ascending order keys they represent; they can be rotated around the root, for example 
 - `search(S, x)`: $\Theta(h)$
 	- Simply traverse the tree from the root, comparing the key at each node until the key or a leaf is found
 - `insert(S, x)`: $\Theta(h)$
@@ -151,7 +153,6 @@ AVL trees of $n$ nodes have height $\leq 1.44\log_{2}(n+2)$, so $h\in \Theta(\lo
 	- Same as regular BST search
 - `insert(T, x)`: $\Theta(\log_{2}n)$
 	- Insert same as in regular BST, then traverse up to the root and update BFs; on the first imbalanced node encountered perform **left and / or right rotations** until balanced; all in $\Theta(1)$ (just changing pointers)
-		- Once balance is restored, the **height** of the subtree at the node that became imbalanced becomes the **same as it was before insertion**
 		- If $BF(v)=2$ and $BF(v.right)=1$, perform a **left** rotation about $v$
 		- If $BF(v)=2$ and $BF(v.right)=-1$, perform a **right** rotation about $v.right$, then a **left** rotation about $v$
 		- If $BF(v)=-2$ and $BF(v.left)=-1$, perform a **right** rotation about $v$
@@ -185,7 +186,7 @@ However, if we can store a table $T$ with $m<|U|$ keys we can use **hash tables*
 - `delete(x)`: $\Theta(1)$
 	- Given that we have a direct pointer to $x$ 
 - `search(k)`: $\Theta(n)$
-	- Searching the chain at $T[h(k)]$ depends on the **length of the chain**, and in the worst case all $n$ keys hash to the same $m$!
+	- Searching the chain at $T[h(k)]$ depends on the **length of the chain**, and in the worst case **all** $n$ **keys hash to the same** $m$!
 
 The above are **worst-case** runtimes, but with hashing we want to consider the length of the chains on average; given we are inserting $n$ keys into an initially empty table $T$ of size $m$:
 1. Assume SUHA; **simplified uniform hashing assumption**
