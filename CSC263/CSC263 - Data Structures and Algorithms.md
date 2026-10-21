@@ -99,7 +99,7 @@ A **min binomial heap** stores its elements in a binomial forest such that each 
  - A binomial heap for $n$ elements can be built with $O(n)$ key comparisons (from an unsorted array), leading to $n$ edges
  - The **three pointers** necessary in each node are a **parent** pointer, **left child** pointer and **right sibling** pointer
 	 - The roots of each $B_{k}$ treen are connected with the sibling pointer to the other trees, but going leftward instead with the head pointer pointing to the lowest order tree's root
-- **Deleting the root** of a min-heap ordered $B_{k}$ tree **yields a min binomial heap**
+- **Deleting the root** of a min-heap ordered binomial tree $B_{k}$ **yields a min binomial heap**
 - `union(H, G)`: $O(\log_{2}n)$
 	- For min binomial heaps $H,G$, perform addition of their binary representations; the resulting binary yields the union min binomial heap
 		- The number of **added edges** is the **number of key comparisons**, which is represented by **carried ones** during binary addition (since those represent $k$ values where both heaps already had trees and thus needed to be merged, which recall requires just comparing their roots)
@@ -187,15 +187,15 @@ However, if we can store a table $T$ with $m<|U|$ keys we can use **hash tables*
 - `search(k)`: $\Theta(n)$
 	- Searching the chain at $T[h(k)]$ depends on the **length of the chain**, and in the worst case all $n$ keys hash to the same $m$!
 
-The above are worst-case runtimes, but with hashing we need to consider the length of the chains on average; given we are inserting $n$ keys into an initially empty table $T$ of size $m$:
+The above are **worst-case** runtimes, but with hashing we want to consider the length of the chains on average; given we are inserting $n$ keys into an initially empty table $T$ of size $m$:
 1. Assume SUHA; **simplified uniform hashing assumption**
 	- Each key $k$ that we insert is **uniformly likely** to hash to any value in $\{ 0,1,\dots,m-1 \}$, ie. $P(h(k)=i)=\frac{1}{m}$ for $0\leq i\leq m-1$
 	- Under SUHA, the **expected length** of any chain $E(|T[i]|)=\frac{n}{m}=\alpha$ where $\frac{n}{m}=\alpha$ is called the **load factor**
 	- Then, a **successful search** (assuming each stored key is equally likely to be searched) will traverse on average half of the elements and thus has an **expected runtime** $\Theta( \frac{\alpha}{2})$, and an **unsuccessful search** will traverse all elements and thus has an **expected runtime** $\Theta(\alpha)$
 2. Assume $\alpha$ is bounded by a constant by ensuring that $m\in\Theta(n)$
 	- If we keep $m$ constant, then as $n$ grows the load factor grows (chains get longer), so search runtime scales linearly with $n$
-	- Thus, we ensure $m$ scales linearly with $n$ which makes $\alpha$ a **constant** $c$, and thus any search becomes $\Theta(1)$
-		- This may 
+	- Thus, we ensure $m$ scales linearly with $n$ (meaning $\frac{n}{m}\leq c \iff n\leq cm$) which makes $\alpha$ a bound by the **constant** $\alpha\leq c$, and thus **any search becomes** expected $\Theta(1)$
+		- Practically, if $n$ grows and we get $n>cm$ then we reallocate a larger array with a larger size $m$ and rehash to it, to maintain the necessary bounds
 
 
 
