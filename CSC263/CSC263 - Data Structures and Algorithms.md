@@ -179,7 +179,7 @@ If we simply store dictionaries in direct-access tables like arrays **indexed an
 However, if we can store a table $T$ with $m<|U|$ keys we can use **hash tables**
 - Consider a **hash function** $h:U\to \{ 0,1,\dots,m-1 \}$, then for any key $k\in U,h(k)=i$ where $i\in\{ 0,1,\dots,m-1 \}$ we say $k$ **hashes to** $i$
 - Assume that the has function **always hashes in** $\Theta(1)$ for any valid key input
-	- But since $m<|U|$, by the Pigeonhole Principle there must be pairs of keys that have **hash collisions**, ie. different keys hashing to the same value
+	- But since $m<|U|$, by the Pigeonhole Principle th]ere must be pairs of keys that have **hash collisions**, ie. different keys hashing to the same value
 		- We resolve this by **chaining**; store a **doubly linked list** at every slot, then:
 - `insert(x)`: $\Theta(1)$
 	- Inserting into slot a given $T[h(key(x))]$ appends to the head of the list at this slot
@@ -192,11 +192,38 @@ The above are **worst-case** runtimes, but with hashing we want to consider the 
 1. Assume SUHA; **simplified uniform hashing assumption**
 	- Each key $k$ that we insert is **uniformly likely** to hash to any value in $\{ 0,1,\dots,m-1 \}$, ie. $P(h(k)=i)=\frac{1}{m}$ for $0\leq i\leq m-1$
 	- Under SUHA, the **expected length** of any chain $E(|T[i]|)=\frac{n}{m}=\alpha$ where $\frac{n}{m}=\alpha$ is called the **load factor**
-	- Then, a **successful search** (assuming each stored key is equally likely to be searched) will traverse on average half of the elements and thus has an **expected runtime** $\Theta( \frac{\alpha}{2})$, and an **unsuccessful search** will traverse all elements and thus has an **expected runtime** $\Theta(\alpha)$
+	- Then, a **successful search** (assuming each stored key is equally likely to be searched) will traverse on average half of the elements and thus has an **expected runtime** $\Theta( \frac{\alpha}{2})$, and an **unsuccessful search** will traverse all elements and thus has an **expected runtime** $\Theta\left( \frac{n}{m} \right)=\Theta(\alpha)$
 2. Assume $\alpha$ is bounded by a constant by ensuring that $m\in\Theta(n)$
 	- If we keep $m$ constant, then as $n$ grows the load factor grows (chains get longer), so search runtime scales linearly with $n$
 	- Thus, we ensure $m$ scales linearly with $n$ (meaning $\frac{n}{m}\leq c \iff n\leq cm$) which makes $\alpha$ a bound by the **constant** $\alpha\leq c$, and thus **any search becomes** expected $\Theta(1)$
 		- Practically, if $n$ grows and we get $n>cm$ then we reallocate a larger array with a larger size $m$ and rehash to it, to maintain the necessary bounds
+
+
+
+
+- **Bloom filters**:
+	- Array of size $m$ bits, with $t$ **independent** hash functions $h_{0},h_{1},\dots,h_{t}$, each of which is $h_{i}:U\to \{ 0,1,\dots,m-1 \}$, satisfies SUHA, and hashes in $\Theta(1)$
+	- Then insertions hash the input with **each** function and set (or keep) each resultant bit at high
+	- And searches hash the input with **each** function and check that **all** resultant bits are set to high
+	- Probability of false positive, by independence and SUHA etc, based on probability of any given bit being positive after $n$ inserts being $1-\left( 1-\frac{1}{m} \right)^{nt}=1-e^{-nt/m}$ is $(1-e^{-nt/m})^t$
+		- Then set the derivative of this to $0$ and solve for $t$ which yields $t=0.69\frac{m}{n}$ for lowest false positive rate (where $m$ is bits per element)
+
+- **Randomized quicksort**:
+	- Two keys are compared only if one of them is selected as a pivot
+	- Two keys are compared at most once
+	- If two keys are split apart into different sets, they are never compared
+	- Ultimately the expected number of comparisons is $O(n\log_{2}n)$
+		- Namely, $E(C)=\sum_{1\leq i\leq j\leq n}\frac{2}{j-i+1}$
+
+- Starting with size $n$ **disjoint singleton set forest**, sequence $\sigma$ of $n-1$ unions with $m\geq n$ finds (finding representative, worst case traversing entire height):
+	- All runtimes have the find complexity absorb the $n-1$ unions because $m\geq n$
+	- Simplest case is doing all unions first but creating a linear tree, so $\Omega(mn)$ for $m$ finds after that and each find traversing all nodes to root
+	- With **WU** is $O(m\log_{2}n)$
+		- By induction, every tree $T$ of height $h$ created by WU has $n\geq|T|\geq 2^h$, from which $\log_{2}n\geq h$ 
+	- With **WU** and **PC** is $O(m\log_{2}^*n)$
+		- Where $\log_{2}^*n=\min\{k:2^{*k}\geq n \}$ 
+		- In fact, there is a lower bound $\Omega(m \alpha^{-1}(m,n))$ where $\alpha^{-1}$ is essentially a constant function, so $\Omega(m)$
+
 
 
 
