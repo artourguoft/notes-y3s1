@@ -166,7 +166,7 @@ AVL trees of $n$ nodes have height $\leq 1.44\log_{2}(n+2)$, so $h\in \Theta(\lo
 		- This will move the parent's balance from $\pm 1$ (depending on left or right child) to $0$, maintaining the AVL property
 		- When $x$ has $2$ children; do the BST predecessor / successor algorithm; this is worst-case $\Theta(\log_{2}n)$ since AVLs are balanced (compared to worst-case $\Theta(n)$ for BST)
 	- The difference from BSTs is that balance factors have to be updated and rebalancing rotations may be needed after deletion
-		- Note the same fact about preserving heights after insertion is **not true for deletion**; we may need to update balance factors all the way up to the root regardless of where the imbalance initially was after deletion  
+		- Note the same fact about **preserving heights** after insertion is **not true for deletion**; we may need to update balance factors all the way up to the root regardless of where the imbalance initially was after deletion  
 # <u>Augmentation</u>
 Designing augmented data structures for **additional operations**:
 1. Choose the **base data structure** given the runtime class requirements and types of operations
@@ -180,7 +180,7 @@ If we simply store dictionaries in direct-access tables like arrays **indexed an
 However, if we can store a table $T$ with $m<|U|$ keys we can use **hash tables**
 - Consider a **hash function** $h:U\to \{ 0,1,\dots,m-1 \}$, then for any key $k\in U,h(k)=i$ where $i\in\{ 0,1,\dots,m-1 \}$ we say $k$ **hashes to** $i$
 - Assume that the has function **always hashes in** $\Theta(1)$ for any valid key input
-	- But since $m<|U|$, by the Pigeonhole Principle th]ere must be pairs of keys that have **hash collisions**, ie. different keys hashing to the same value
+	- But since $m<|U|$, by the Pigeonhole Principle there must be pairs of keys that have **hash collisions**, ie. different keys hashing to the same value
 		- We resolve this by **chaining**; store a **doubly linked list** at every slot, then:
 - `insert(x)`: $\Theta(1)$
 	- Inserting into slot a given $T[h(key(x))]$ appends to the head of the list at this slot
