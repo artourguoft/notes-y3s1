@@ -84,7 +84,7 @@ The preceding **binary heap** implementation of the priority queue does not allo
 
 **Binomial Tree:** defined recursively where $B_{0}$ is a single node, and for $k\geq 1$ then $B_{k}$ is the tree where the root has $k$ children (not total descendants!), each of which are the binomial trees $B_{0},B_{1},\dots,B_{k-1}$
 - The **height** of a $B_{k}$ binomial tree is $k$
-- The **number of nodes** at depth $d$ is $\binom{k}{d}$, the **total number of nodes** is $2^k$, and the **number of edges** is $2^k-1$
+- The **number of nodes** at depth $d$ is $\binom{k}{d}$, the **total number of nodes** is $2^k$, and the **number of edges** is $2^k-1$ (by definition of a connected and acyclic tree)
 - To create $B_{k}$ we take two $B_{k-1}$ trees, and attach as a child of the other's root
 	- Two min-heap ordered $B_{k}$ trees can be merged into a single $B_{k+1}$ tree (maintaining min-heap order) with **one key comparison**; simply check which one's root is lesser and attach it as a child to the other's root
 		- We cannot merge two binary heaps so easily!
@@ -102,6 +102,7 @@ A **min binomial heap** stores its elements in a binomial forest such that each 
  - The **three pointers** necessary in each node are a **parent** pointer, **left child** pointer and **right sibling** pointer
 	 - The roots of each $B_{k}$ tree are connected with the sibling pointer to the other trees, but going leftward instead with the head pointer pointing to the lowest order tree's root
 - **Deleting the root** of a min-heap ordered binomial tree $B_{k}$ **yields a min binomial heap** of all $B_{0},\dots,B_{k-1}$ trees
+	- To **delete any other (not root)** element of a binomial heap, set the nodes **value to the extreme**, bubble it upward to parent until it is the root, then `extract()` it
 - `union(H, G)`: $O(\log_{2}n)$
 	- For min binomial heaps $H,G$, perform addition of their binary representations; the resulting binary yields the union min binomial heap
 		- The number of **added edges** is the **number of key comparisons**, which is represented by **carried ones** during binary addition (since those represent $k$ values where both heaps already had trees and thus needed to be merged, which recall requires just comparing their roots)
@@ -111,7 +112,7 @@ A **min binomial heap** stores its elements in a binomial forest such that each 
 	- Note, for $k>\log_{2}n$ successive inserts the total cost is $\leq2k$ key comparisons, meaning the **average cost per insert** is $\leq 2$ comparisons 
 - `find_min(H)`: $\Theta(\log_{2}n)$, worse than $\Theta(1)$ in binary heaps because there is no relationship between neighbouring binomial trees in the binomial heap, so at worst will have to check the roots of all the contained trees of which there are $\leq\lfloor \log_{2}n \rfloor + 1$
 - `extract_min(H)`: $\Theta(\log_{2}n)$
-	- Performed by first doing `find_min()` and deleting that node, which recall leaves us with a min binomial heap, that is now disconnected from the whole original binomial heap; then `union()` this resulting binomial heap with the remainder of the original one
+	- Performed by first doing `find_min()` and deleting that node, which recall leaves us with a min binomial heap, that is now disconnected from the whole original binomial heap; then `union()` this **resulting binomial heap with the remainder** of the original one
 # <u>Binary Search Trees</u>
 **Dictionary:** set $S$ of elements with keys, with operations:
 - `search(S, x)`: returns the element in $S$ with key $x$, or error
@@ -215,14 +216,18 @@ The above are **worst-case** runtimes, but with hashing we want to consider the 
 	- Ultimately the expected number of comparisons is $O(n\log_{2}n)$
 		- Namely, $E(C)=\sum_{1\leq i\leq j\leq n}\frac{2}{j-i+1}$
 
-- Starting with size $n$ **disjoint singleton set forest**, sequence $\sigma$ of $n-1$ unions with $m\geq n$ finds (finding representative, worst case traversing entire height):
+- Starting with size $n$ **disjoint singleton set forest** stored as an ordered array of keys
+	- Each **union** is $O(1)$ (just append smaller tree as child to larger tree root, ie. just change / add one pointer in each root)
+	- Each **find** is $O(h)$ where $h$ is the height of that particular set (given pointer to element, go up to parent until root / representative is found)
+- For a sequence $\sigma$ of $n-1$ unions with $m\geq n$ finds (finding representative, worst case traversing entire height):
 	- All runtimes have the find complexity absorb the $n-1$ unions because $m\geq n$
-	- Simplest case is doing all unions first but creating a linear tree, so $\Omega(mn)$ for $m$ finds after that and each find traversing all nodes to root
+	- Simplest case is doing all unions first but creating a **linear tree**, so $\Omega(mn)$ for $m$ finds after that and each find traversing all nodes to root
 	- With **WU** is $O(m\log_{2}n)$
 		- By induction, every tree $T$ of height $h$ created by WU has $n\geq|T|\geq 2^h$, from which $\log_{2}n\geq h$ 
 	- With **WU** and **PC** is $O(m\log_{2}^*n)$
 		- Where $\log_{2}^*n=\min\{k:2^{*k}\geq n \}$ 
 		- In fact, there is a lower bound $\Omega(m \alpha^{-1}(m,n))$ where $\alpha^{-1}$ is essentially a constant function, so $\Omega(m)$
+		- Recall, PC moves the **entire subtree** up as the child of the root at each iteration of find traversal
 
 
 
