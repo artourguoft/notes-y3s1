@@ -140,6 +140,12 @@ Key algebraic properties of cross products:
 - $\mathbf{a}\times \mathbf{b}=-(\mathbf{b}\times \mathbf{a})$ (the cross products point in opposite directions)
 - $c(\mathbf{a}\times \mathbf{b})=(c \mathbf{a})\times \mathbf{b}=\mathbf{a}\times (c\mathbf{b})$
 - $\mathbf{a}\times(\mathbf{b}+\mathbf{c})=(\mathbf{a}\times \mathbf{b})+(\mathbf{a}\times \mathbf{c})$
+### <u>[17.3]: Vector Fields</u>
+**Vector fields** in general:
+- $\mathbf{F}:\mathbb{R}^2\to \mathbb{R}^2$ where $\mathbf{F}(x,y)=f(x,y)\mathbf{i}+g(x,y)\mathbf{j}$
+- $\mathbf{F}:\mathbb{R}^3\to \mathbb{R}^3$ where $\mathbf{F}(x,y,z)=f(x,y,z)\mathbf{i}+g(x,y,z)\mathbf{j}+h(x,y,z)\mathbf{k}$
+
+From these forms, it is clear that **gradient fields** are vector fields, where the scalar functions in the definition are the partial derivatives in the components' directions
 ## <u>14: Partial Derivatives</u>
 ### <u>14.1: Functions of Several Variables</u>
 A **function** $f$ **of two variables** is a rule that assigns to each ordered pair of real numbers $(x,y)$ in a set $D$, a unique real number denoted $f(x,y)$
