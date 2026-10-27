@@ -31,7 +31,7 @@ A set $S\subset \mathbb{R}^n$ is a **convex set** if for all $\mathbf{x}_{1}\neq
 			- Same proofs follow for the other side of the halfspace, and for open halfspaces
 	- The **intersection of convex sets** is convex:
 		- Define convex sets $S_{1},\dots,S_{k}\in \mathbb{R}^n$ and let $\mathbf{x}_{1},\mathbf{x}_{2}\in \bigcap_{i=1}^kS_{i}$; then since each $S_{i}$ is convex, for all $i$ we have $\lambda \mathbf{x}_{1}+(1-\lambda)\mathbf{x}_{2}\in S_{i}$ which is directly the definition of $\lambda \mathbf{x}_{1}+(1-\lambda)\mathbf{x}_{2}\in \bigcap_{i=1}^kS_{i}$
-	- The **set of solutions** $\mathbf{x}$ to a system of linear equations is convex:
+	- The **set of solutions** $\mathbf{x}$ to a system of linear equalities is convex:
 		- Define $S:=\{ \mathbf{x}\in \mathbb{R}^n: \mathbf{A}\mathbf{x}=\mathbf{b}\}$ where $\mathbf{A}\in \mathbb{R}^{m\times n}$ and $\mathbf{b}\in \mathbb{R}^m$; let $\mathbf{x}_{1},\mathbf{x}_{2}\in S$, then $\lambda(\mathbf{x}_{1})+(1-\lambda)(\mathbf{x}_{2})\in \mathbb{R}^n$ from which $\mathbf{A}\cdot(\lambda(\mathbf{x}_{1})+(1-\lambda)(\mathbf{x}_{2}))=\lambda\mathbf{A}\mathbf{x}_{1}+(1-\lambda)\mathbf{A}\mathbf{x}_{2}=\lambda \mathbf{b}+(1-\lambda)\mathbf{b}=\mathbf{b}$ as needed
 		- This also applies to sets of solutions to systems of linear inequalities, with a similar proof
 
@@ -108,7 +108,14 @@ However, we can show that **any arbitrary LPP has an equivalent standard form**:
 
 Any LPP also has an **equivalent canonical form**:
 - In each inequality in the constraints we can introduce a **slack variable** $x_{n+j}$ where $j\in[1,m]$ per inequality, turning them into equalities and making the system of equations in up to $n+m$ unknowns, and introducing additional nonnegativity constraints (on each slack variable)
-# <u>The Extreme Point Theorem</u>
+	- Note, all slack variables must also be constrained to $x_{n+j}\geq 0$
+	- The resulting coefficient matrix $\mathbf{A}$ is in $\mathbb{R}^{m\times(n+m)}$
+	- The resulting objective function becomes $f:\mathbb{R}^{m\times(n+m)}\to \mathbb{R}$ where the coefficients of the slack variables are $0$ (but still count for the dimension of the domain!)
+
+==Objectives are functions in dimension of all LPP variables and slack variables (regardless of 0 coefficients)
+Absolute values in objectives vs absolute values in constraints
+LPPs with variables for coefficients==
+# <u>Extreme Point Theorem</u>
 The set of all points that satisfies the constraints on an LPP is the **intersection of closed halfspaces and hyperplanes**; recall, both are convex sets and the intersection of convex sets is convex, thus the **feasible set is convex** if it is nonempty
 - Specifically, nonempty **feasible sets are convex polyhedrons** defined by all convex combinations of their **finitely many extreme points**, and if the polyhedron is **bounded** then the feasible set is a **convex polytope**
 
@@ -125,13 +132,87 @@ The set of all points that satisfies the constraints on an LPP is the **intersec
 Consider why **optimal solutions do not occur at interior points**:
 - Let $\mathbf{x}^*\in\{ \mathbf{x}\in \mathbb{R}^n: \mathbf{A}\mathbf{x}\leq\mathbf{b}\}$ be an interior point of this feasible set, that is $\mathbf{A}\mathbf{x}^*<\mathbf{b}$; then by definition of interior points we can perturb $\mathbf{x}^*$ by a chosen direction vector $\mathbf{d}\in \mathbb{R}^n$ scaled by $\epsilon>0$ while remaining in the feasible set, such that $\mathbf{x}^{**}=\mathbf{x}^*+\epsilon \mathbf{d}$ further reduces or increases the objective function
 # <u>Basic Solutions</u>
-Consider a canonical LPP where $\mathbf{A}\in \mathbb{R}^{m\times n}$, $\mathbf{x}\in \mathbb{R}^n$ and $\mathbf{b}\in \mathbb{R}^m$
+Consider a **canonical** LPP where $\mathbf{A}\in \mathbb{R}^{m\times n}$, $\mathbf{x}\in \mathbb{R}^n$ and $\mathbf{b}\in \mathbb{R}^m$
 - Assume $m\leq n$, and assume that $\text{rank}(\mathbf{A})=m$; that is $\mathbf{A}$ contains at least one set of $m$ **linearly independent columns**
 	- If we cannot assume $\text{rank}(\mathbf{A})=m$, then do row-reduction of $\mathbf{A}$ to determine $\text{rank}(\mathbf{A})$ first
 - **Any** set of $m$ linearly independent columns of $\mathbf{A}$ forms a **basis** for $\mathbb{R}^m$ which is a basis matrix $\mathbf{B}\in\mathbb{R}^{m\times m}$, then for each $\mathbb{R}^{m}$ column in $\mathbf{B}$ the corresponding column index in $\mathbf{A}$ marks a **basic variable**, with the remaining $n-m$ columns of the original $\mathbf{A}$ marking **nonbasic variables**
-	- The nonbasic $x$ values in $\mathbf{x}$ are then set to $0$, from which it follows that at most $m$ components of any extreme point of $S$ can be positive and the rest must be $0$
+	- The nonbasic $x$ values in $\mathbf{x}$ are then set to $0$, from which it follows that $\leq m$ components of any basic solution can be positive and **the rest must be** $0$
 	- Then $\mathbf{A}\mathbf{x}=\mathbf{b}$ becomes equivalent to $\mathbf{B}\mathbf{x}=\mathbf{b}$, which is a system of $m$ equations in $m$ unknowns and thus has a **unique solution** $\mathbf{x}$ which we solve for by **row-reducing** $[\mathbf{B}|\mathbf{b}]$, and is called a **basic solution**
-		- The number of **distinct** basic solutions is **upper bounded** by $\binom{n}{m}$; the number of choices of $m$ columns from $n$ (note $\mathbf{A}$ may have less linearly independent sets of $m$ columns than that)
+		- The number of **distinct** basic solutions is **upper bounded** by $\binom{n}{m}$; the number of choices of $m$ columns from $n$ (so $\mathbf{A}$ may have less linearly independent sets of $m$ columns than this)
 		- Note, basic solutions are **not necessarily feasible solutions** because they do not account for the $\mathbf{x}\geq 0$ constraint; any basic solution where all components are nonnegative is called a **basic feasible solution** or BFS
 			- One **all BFSs** have been identified **truncate** these vectors to remove any possible slack variables, and test the resulting solutions to determine the optimal solution
+Note that this method can **only** be used for LPPs in **canonical** form, but **any optimal solution to the canonical form** found as described above **is an optimal solution to the equivalent standard form**
 
+**Every BFS is an extreme point** of the feasible set (and every extreme point is a BFS), whereas basic solutions that are infeasible are not extreme points since they are not in the feasible set at all
+# <u>Simplex Method</u>
+**Adjacent:** two extreme points in a set of feasible solutions $S$ are adjacent they have **all but one** in common in their **selection of basic variables**; ie. the selection of nonzero components differs in two places
+
+**Simplex Method:** a method that iterates from a given extreme point to an **adjacent** extreme point such that the value of the objective function increases or remains the same, and proceeds until either an optimal solution is identified or it is determined that the given problem has no finite optimal solution
+- Assume $\mathbf{b}\geq 0$ (if not, will have to use the two-phase method, covered later)
+- Set all non-slack variables as nonbasic variables, ie. set all non-slack components of $\mathbf{x}$ to $0$; then we are left with **all slack variables as basic variables**, ie. $x_{n+1}=b_{1},x_{n+2}=b_{2},\dots,x_{n+m}=b_{n}$
+	- Since $(n+m)-n=m\geq m$ this is a basic solution, and since $\mathbf{b}\geq 0$ this is a feasible solution, and thus this is a BFS
+		- Use this BFS to determine an initial value $z_{0}$ for the objective function, then set up the tableau below
+$$
+\begin{array}{c|ccccccccc|c}
+\hline
+& x_1 & x_2 & \cdots & x_{n} & x_{n+1} & x_{n+2} & \cdots & x_{n+m} & z & \\
+\hline
+x_{n+1} & a_{11} & a_{12} & \cdots & a_{1n} & 1 & 0 & \cdots & 0 & 0 & b_{1} \\
+x_{n+2} & a_{21} & a_{22} & \cdots & a_{2n} & 0 & 1 & \cdots & 0 & 0 & b_{2}  \\ 
+\vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+x_{n+m} & a_{m1} & a_{m2} & \cdots & a_{mn} & 0 & 0 & \cdots & 1 & 0 & b_{m} \\
+\hline
+\text{obj}& -c_{1} & -c_{2} & \cdots & -c_{n} & 0 & 0 & \cdots & 0 & 1 & 0 \\
+\hline
+\end{array}
+$$
+At this stage we have an initial BFS as determined above in the rightmost column, for which the objective function is:
+$$
+\begin{align}
+z&=c_{1}x_{1}+c_{2}x_{2}+\dots+c_{n}x_{n}+0\cdot x_{n+1}+0\cdot x_{n+2}+\dots+0\cdot x_{n+m} \\
+&=c_{1}\cdot 0+c_{2}\cdot 0+\dots+c_{n}\cdot 0+0\cdot b_{1}+0\cdot b_{2}+\dots+0\cdot b_{m} \\
+&=0
+\end{align}
+$$
+In a tableau, **basic variables** have the following property:
+- Have a **nonzero coefficient** in only **one row**, and that coefficient is $1$, ie. the column containing the $1$ coefficient otherwise has only $0$s, thus the row placement of the $1$ identifies the $x_{n+j}=b_{j}$ relation
+
+**Optimality Criterion:** if the **objective row** of a tableau has zero entries in the columns labeled by basic variables and **no negative entries** in the columns labeled by **nonbasic variables**, then the solution represented by the tableau is optimal
+- Intuitively this is because we start with all nonbasic (non-slack) variables at values of $0$, but the basic variables (slack variables in this case) have coefficients of $0$; we can increase some nonbasic variables, decrease basic variables, and still remain feasible while increasing the objective
+- From the definition of adjacent extreme point, it is clear that when we increase a single variable from zero to a positive value we must decrease another variable with a positive value to zero
+
+**Entering Variable:** the nonbasic variable to be increased is called the entering variable, since in the next iteration it will become a basic variable; it will enter the set of basic variables
+- The largest increase in $z$ per unit increase in a variable occurs for the **most negative coefficient in the objective row**; choose the nonbasic variable in that respective column
+- If there are several possible entering variables (when the most negative entry in the objective row occurs in more than one column), choose any of them
+- If the feasible set is bounded, there is a limit on the amount by which we can increase a variable
+	- Because of this limit, it may turn out that a larger increase in $z$ may be achieved by **not increasing the variable with the most negative entry** in the objective row; however, we often ignore this and follow the rule above because of its **computational simplicity**
+- **Pivotal Column:** the column of the entering variable
+
+**Departing Variable:** the basic variable to be decrease to $0$ is called the departing variable, since in the next iteration it will become a nonbasic variable
+- **Pivotal Row:** the row that is labeled with the departing variable
+- To ensure we remain feasible, we can express the basic (slack) variables in terms of the nonbasic ones (with all nonbasic variables other than the chosen one set to $0$)
+	- Together with the $\geq 0$ constraint on the chosen nonbasic variable, we can put upper bounds on the nonbasic variables relative to the slack variables, and choose the lesser upper bound (the first juncture at which either of the slack variables would become negative and thus not feasible)
+	- This is facilitated easily by the tableau; $\theta$-**ratios** are the values in the rightmost column divided by the coefficients in the pivotal column in the respective rows
+		- Choose the **smallest positive ratio** as the pivotal row (the pivotal column and pivotal row then together determine the **pivot**)
+		- If all ratios are nonpositive, then there is **no finite optimal solution** so the Simplex ceases
+
+**Pivoting:** each iteration of updating the tableau is similar to matrix row reduction
+1. Locate the pivot coefficient at the intersection of the pivotal row and pivotal column
+2. If the pivot is $k$, multiply the pivotal row by $\frac{1}{k}$ , making the **coefficient in the pivot position** equal to $1$
+3. Add suitable multiples of the new pivotal row to all other rows (including the objective row!), so that **all other coefficients in the pivotal column** become $0$
+4. In the updated tableau, replace the label on the pivotal row by the entering variable
+Once there are **no negative coefficients remaining** in the objective function, the resulting basic variables indicate the optimal BFS
+- Any variables that were never pivotal columns remain nonbasic variables (values remain $0$)
+- Recall if at any iteration we first encounter all $\theta$-ratios being nonpositive, the method stops early
+
+
+
+
+
+
+
+
+==For n variables and m independent equality constraints,
+Dimension=n−m
+provided the constraints are consistent and the nonnegativity constraints do not reduce the dimension further.
+So, one equality in three variables gives a plane; two give a line; and three independent equalities give a point (before accounting for nonnegativity restrictions).==
