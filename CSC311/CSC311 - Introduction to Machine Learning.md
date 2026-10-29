@@ -231,11 +231,11 @@ The entire algorithm can be summarized as follows:
 3. **Continue** until all branches end in leaf nodes; prediction of each leaf node is its **modal** class
 # <u>3: Linear Regression</u>
 ## <u>Linear Regression</u>
-For regressions, we assume that there is an underlying function $f:\mathbb{R}^D\to \mathbb{R}$ that maps each $D$-dimensional feature vector to its corresponding continuous scalar output, and attempt to learn said model
+For regression, we assume that there is an underlying function $f:\mathbb{R}^D\to \mathbb{R}$ that maps each $D$-dimensional feature vector to its corresponding continuous scalar output, and attempt to learn said function
 
-For **linear models**, the hypothesis space is restricted to functions of the form:
+For **linear regression**, the hypothesis space is restricted to functions of the form:
 $$
-y=f(\mathbf{x})=w_{1}x_{1}+w_{2}x_{2}+\dots+w_{D}x_{D}+b=\sum_{j=1}^Dw_{j}x_{j}+b
+y=f(\mathbf{x})=w_{1}x_{1}+w_{2}x_{2}+\dots+w_{D}x_{D}+b=\left(\sum_{j=1}^Dw_{j}x_{j}\right)+b
 $$
 Wherein:
 - The vector $\mathbf{w}=[\begin{matrix} w_{1} & w_{2} & \dots & w_{D}  \end{matrix}]$ is the **weights vector** and controls the **magnitude** and **direction** of how each input feature affects the resulting prediction
@@ -405,4 +405,34 @@ the weights continuously toward zero rather than removing features outright
 - The original cost term $\mathcal{E}(\mathbf{w})$ is minimized by **fitting the training data** as closely as possible, while the regularization term $\lambda\frac{1}{2}\mathbf{w}^{\top}\mathbf{w}$ is minimized by **making the weights small**; the hyperparameter $\lambda$ sets the relative importance of the two goals
 # <u>4: Linear Classification</u>
 ## <u>Logistic Regression</u>
-For regressions
+For classification, the targets are categorical; assuming binary classification we call each $t^{(i)}=0$ a **negative example** and $t^{(i)}=1$ a **positive example**
+
+For a **binary classification** (two classes), one way we can go from a linear regression (producing a real number) to a binary predictor is to start with the linear regression:
+$$
+z=\left(\sum_{j=1}^Dw_{j}x_{j}\right)+b=\mathbf{w}^{\top}\mathbf{x}+b
+$$
+And from there create a piecewise function with a boundary $r$:
+$$
+y=
+\begin{cases}
+0 & \text{if } z < r \\
+1 & \text{if } z \geq r  
+\end{cases}
+$$
+We can further simplify this by noticing that the difference between the bias $b$ and the boundary $r$ is static, and thus for any inequality for ex. $\mathbf{w}^{\top}\mathbf{x}+b\geq r\implies \mathbf{w}^{\top}\mathbf{x}+(b-r)\geq 0$; then absorb this term into a dummy feature $x_{0}=1$ and dummy weight $w_{0}=b-r$:
+$$
+y=
+\begin{cases}
+0 & \text{if } \mathbf{w}^{\top}\mathbf{x}< 0 \\
+1 & \text{if } \mathbf{w}^{\top}\mathbf{x}\geq 0  
+\end{cases}
+$$
+Then the **decision boundary** is the **hyperplane** defined by the set $\{ \mathbf{x}:\mathbf{w}^{\top}\mathbf{x}=0 \}$; in $\mathbb{R}^1$ (one feature) this is a point on the real line, in $\mathbb{R}^2$ (ie. two features) a line on the plane, in $\mathbb{R}^3$ a plane in space, etc.
+- The choices of weights $\mathbf{w}$ (including the bias and boundary terms) changes the decision boundary; to work towards optimizing this decision boundary we need to consider the **weight space**
+
+For each given training point $(\mathbf{x}^{(i)},t^{(i)})$, we can substitute the feature values and determine an inequality with regards to the weights, which determines the **halfspace** $\{ \mathbf{w}:\mathbf{w}^{\top}\mathbf{x}\geq -w_{0} \}$ assuming a positive example here; ie. the weight vectors in weight space which would correctly classify this training point 
+- We take each of these inequalities as a constraint in a linear system; then the **intersection** of all these halfspaces is the **feasible region** in weight space where the weights **correctly classify all training** points
+	- If this feasible region is nonempty, then it follows that a hyperplane exists that perfectly separates the classes and the training set is **linearly separable**
+	- Finding points in a feasible set is efficiently solvable with linear programming methods; but in practice linearly separable data is rare, so instead we focus on finding the good weights through optimizing a loss function
+
+The
