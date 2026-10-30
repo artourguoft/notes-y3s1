@@ -6,7 +6,7 @@ Distinguish between:
 
 Machine learning can be broken down into three modular components:
 1. A model architecture which specifies the form of the relationship between inputs and outputs; an example is representing the prediction as a linear combination of features.
-2. A loss (or cost) function which measures how well the model fits the data by assigning a numerical penalty to prediction errors; an example is the squared error for regression.
+2. A loss (or cost) function which measures how well the model fits the data by assigning a numerical penalty to prediction errors; an example is the squared-error for regression.
 3. An optimization algorithm which determines how the model’s parameters are learned in order to reduce the loss; gradient descent is an example
 This modular approach is useful because it clearly distinguishes three parts: what we assume about the data, how we measure errors, and how we learn from the data; by keeping some components fixed and changing others, we can construct many different machine learning algorithms within a single framework
 # <u>1: Supervised Learning</u>
@@ -269,15 +269,15 @@ We define the matrix of inputs as the **data matrix** $\mathbf{X}$, and thus ove
 And finally; $\mathbf{y}=\mathbf{X}\mathbf{w}$
 
 
-To optimize $\mathbf{w}$, we first need a **loss function** which measures the discrepancy between a model’s prediction and the ground-truth target value for any **one example**; for regression, we generally use **squared error** loss: 
+To optimize $\mathbf{w}$, we first need a **loss function** which measures the discrepancy between a model’s prediction and the ground-truth target value for any **one example**; for regression, we generally use **squared-error** loss: 
 $$
-\mathcal{L}^{(i)}(\mathbf{w})=\mathcal{L}(y^{(i)},t^{(i)})=\frac{1}{2}(y^{(i)}-t^{(i)})^2=\frac{1}{2}(\mathbf{w}^{\top}\mathbf{x}^{(i)}-t^{(i)})^2
+\mathcal{L}^{(i)}(\mathbf{w})=\mathcal{L}^{(i)}(y^{(i)})=\frac{1}{2}(y^{(i)}-t^{(i)})^2=\frac{1}{2}(\mathbf{w}^{\top}\mathbf{x}^{(i)}-t^{(i)})^2
 $$
 Wherein:
 - We want to minimize the **residual** $y^{(i)}-t^{(i)}$ (the division is done to simplify derivative calculations)
-- We prefer squared error over **absolute error** because the latter allows many shifted functions to achieve the same loss as long as the partition of points remains the same, while the former penalizes larger errors more heavily and pulls the the hyperplane to the 'middle' of the data  
+- We prefer squared-error over **absolute error** because the latter allows many shifted functions to achieve the same loss as long as the partition of points remains the same, while the former penalizes larger errors more heavily and pulls the the hyperplane to the 'middle' of the data  
 
-The loss function measures the error for a single prediction and its corresponding target; we define a **cost function** which measures the average loss across all training examples, called **mean squared error (MSE)**:
+The loss function measures the error for a single prediction and its corresponding target; we define a **cost function** which measures the average loss across all training examples, called **mean squared-error (MSE)**:
 $$
 \mathcal{E}(\mathbf{w}) = \frac{1}{N} \sum_{i = 1}^N \mathcal{L}^{(i)}(\mathbf{w}) = \frac{1}{2N} \sum_{i = 1}^N (y^{(i)}-t^{(i)})^2 = \frac{1}{2N} \sum_{i = 1}^N (\mathbf{w}^{\top}\mathbf{x}^{(i)}-t^{(i)})^2
 $$
@@ -339,7 +339,7 @@ $$
 Note that all components of $\mathbf{w}$ update simultaneously (not one coordinate at a time, otherwise earlier updates would affect where all other partials would be computed)
 - The negation of the gradient is used, since the gradient points in the direction of steepest ascent
 - The hyperparameter $\alpha>0$ is the **learning rate**
-Recalling the expression for $\nabla \mathcal{E}(\mathbf{w})$, we get:
+Recalling the expression for the gradient of the cost function $\nabla \mathcal{E}(\mathbf{w})$, we get:
 $$
 \mathbf{w}\leftarrow \mathbf{w}-\frac{\alpha}{N} \mathbf{X}^\top (\mathbf{X}\mathbf{w} - \mathbf{t})
 $$
@@ -348,7 +348,7 @@ Gradient descent is a simple optimization method, but its use requires several c
 	- In practice $\alpha$ is determined empirically using a **training curve** that simply compares values of $\mathcal{E}$ after each iteration using different $\alpha$
 - Gradient descent uses only local information about the function, thus gradient descent is only able to find **local minima** (which may or may not be a global minimum)
 	- This also depends on the initial vector; different initial points can lead to different local minima
-	- However, this is not a concern for linear regression with squared error; recall, the cost over squared error function is **convex** with a **single global minimum**
+	- However, this is not a concern for linear regression with squared-error; recall, the cost over squared-error function is **convex** with a **single global minimum**
 The stopping criterion is used by gradient descent, but is not specified by the algorithm itself; we want to see $\mathcal{E}$ **converge** to the minimum but this is usually not computationally feasible
 - In practice we simply define an **improvement threshold** for $\mathcal{E}$ and stop when iterations of gradient descent reduce $\mathcal{E}$ by less than that
 - We may also set a **fixed cap on number of iterations**
@@ -405,7 +405,7 @@ the weights continuously toward zero rather than removing features outright
 - The original cost term $\mathcal{E}(\mathbf{w})$ is minimized by **fitting the training data** as closely as possible, while the regularization term $\lambda\frac{1}{2}\mathbf{w}^{\top}\mathbf{w}$ is minimized by **making the weights small**; the hyperparameter $\lambda$ sets the relative importance of the two goals
 # <u>4: Linear Classification</u>
 ## <u>Logistic Regression</u>
-For classification, the targets are categorical; assuming binary classification we call each $t^{(i)}=0$ a **negative example** and $t^{(i)}=1$ a **positive example**
+For classification, the targets are categorical; assuming binary classification we label each $t^{(i)}=0$ a **negative example** and $t^{(i)}=1$ a **positive example**
 
 For a **binary classification** (two classes), one way we can go from a linear regression (producing a real number) to a binary predictor is to start with the linear regression:
 $$
@@ -427,12 +427,143 @@ y=
 1 & \text{if } \mathbf{w}^{\top}\mathbf{x}\geq 0  
 \end{cases}
 $$
-Then the **decision boundary** is the **hyperplane** defined by the set $\{ \mathbf{x}:\mathbf{w}^{\top}\mathbf{x}=0 \}$; in $\mathbb{R}^1$ (one feature) this is a point on the real line, in $\mathbb{R}^2$ (ie. two features) a line on the plane, in $\mathbb{R}^3$ a plane in space, etc.
+Then the **decision boundary** is the **hyperplane** defined by the set $\{ \mathbf{x}:\mathbf{w}^{\top}\mathbf{x}=0 \}$
+- In $\mathbb{R}^1$ (one feature) this is a point on the real line, in $\mathbb{R}^2$ (ie. two features) a line on the plane, in $\mathbb{R}^3$ a plane in space, etc.
 - The choices of weights $\mathbf{w}$ (including the bias and boundary terms) changes the decision boundary; to work towards optimizing this decision boundary we need to consider the **weight space**
 
 For each given training point $(\mathbf{x}^{(i)},t^{(i)})$, we can substitute the feature values and determine an inequality with regards to the weights, which determines the **halfspace** $\{ \mathbf{w}:\mathbf{w}^{\top}\mathbf{x}\geq -w_{0} \}$ assuming a positive example here; ie. the weight vectors in weight space which would correctly classify this training point 
 - We take each of these inequalities as a constraint in a linear system; then the **intersection** of all these halfspaces is the **feasible region** in weight space where the weights **correctly classify all training** points
 	- If this feasible region is nonempty, then it follows that a hyperplane exists that perfectly separates the classes and the training set is **linearly separable**
-	- Finding points in a feasible set is efficiently solvable with linear programming methods; but in practice linearly separable data is rare, so instead we focus on finding the good weights through optimizing a loss function
+	- Finding points in a feasible set is efficiently solvable with linear programming methods, but in practice linearly separable data is rare; instead we focus on finding the good weights through optimizing a loss function
 
-The
+
+First we consider the **zero-one** loss function:
+$$
+\mathcal{L}_{0-1}^{(i)}(y^{(i)})=
+\begin{cases}
+0 & \text{if } y^{(i)}=t^{(i)} \\
+1 & \text{otherwise }  
+\end{cases}
+=\mathbb{I}(y^{(i)}=t^{(i)})
+$$
+The corresponding cost function to this zero-one loss function then captures how many training set points are misclassified, and we simply seek to minimize that via gradient descent as with linear regression
+- But this loss function is **constant** everywhere with respect to $z=\mathbf{w}^{\top}\mathbf{x}$ with a **step** at the decision boundary
+	- Ex. for a negative example (ie. $t^{(i)}=0$) we have $\mathcal{L}_{0-1}^{(i)}=0$ when $z<0$ and $\mathcal{L}_{0-1}^{(i)}=1$ when $z\geq 0$, and vice versa for a positive example
+	- Note this is with respect to $z$ which is the actual model prediction; $y$ is only a label that conveniently describes where $z$ is in relation to the decision boundary
+- Then for a given training point $(\mathbf{x}^{(i)},t^{(i)})$ its partial with respect to a weight $w_{j}$ is:
+$$
+\frac{\partial\mathcal{L}_{0-1}^{(i)}}{\partial w_{j}}=\frac{d\mathcal{L}_{0-1}^{(i)}}{d z^{(i)}}\frac{\partial z^{(i)}}{\partial w_{j}}
+$$
+- But $\frac{d\mathcal{L}_{0-1}^{(i)}}{d z^{(i)}}=0$ everywhere except $z=0$ since the loss function is constant there, and $\frac{d\mathcal{L}_{0-1}^{(i)}}{d z^{(i)}}=\text{undefined}$ at $z=0$ due to the step so it is **not differentiable** there
+	- This follows through to the final partials with respect to each weight by the Chain Rule, and thus we **do not have meaningful gradients** with which to run gradient descent with at any vector of weights!
+	- Furthermore, this loss function **does not treat different magnitudes of error differently**; an incorrect prediction with $z$ close to the boundary is treated the same as one with $z$ being far from the boundary 
+
+Next we consider the **squared-error** loss function, which was used for linear regression:
+$$
+\mathcal{L}_{SE}^{(i)}(z^{(i)})=\frac{1}{2}(z^{(i)}-t^{(i)})^2
+$$
+This function is **differentiable** and has **nonzero derivatives** with respect to $z$ **everywhere** as we saw with linear regression, unlike the zero-one loss
+- Furthermore this is a function of $z$ rather than $y$, which immediately resolves the zero-one function's problem of not being affected by **different magnitudes of error** (in fact if we used $y$ this loss function would be identical to zero-one loss)
+	- This immediately introduces a new problem; **confidently correct predictions are reflected as large errors** just as if they were confidently incorrect
+	- Thus, gradient descent would push the weights such that negative examples yield close to $z=0$ and positive examples close to $z=1$
+		- But this is not meaningful for categorization; $z$ can be interpreted as the confidence of a prediction but it is not a classification in of itself ($y$ is), so we do not want it to match $t$
+
+
+**Sigmoid Function:** also called the **logistic** or **activation function**, where $z=\mathbf{w}^{\top}\mathbf{x}$ is called the **pre-activation** or **logit**
+$$
+\sigma(z)=\frac{1}{1+e^{-z}}
+$$
+The sigmoid function has several key properties:
+- For all $z\in \mathbb{R}$, the function is bounded $0<\sigma(z)<1$
+	- $\sigma(z)\to 1$ as $z\to \infty$
+	- $\sigma(z)\to 0$ as $z\to -\infty$
+	- $\sigma(0)=\frac{1}{2}$
+- $\sigma(z)$ is strictly increasing
+- $\sigma(z)$ is the CDF of the logistic distribution, with the PDF: $\frac{d}{dz}\sigma(z)=\sigma(z)(1-\sigma(z))$
+	- This allows us to interpret $\sigma(z)$ as the **probability that an example belongs to the positive class**, given its score $z$
+	- By convention for binary classification $\sigma(z)\geq \frac{1}{2}$ indicates a prediction of the **positive class**
+		- As aforementioned this happens when $z=0$, thus the decision boundary is again the hyperplane $\{ \mathbf{x}:\mathbf{w}^{\top}\mathbf{x}=0 \}$
+
+We construct a new linear classification model with the sigmoid function and squared-error loss:
+$$
+\begin{align}
+\text{Linear Model:\quad}&z=\mathbf{w}^{\top}\mathbf{x} \\
+\text{Probability:\quad}&y=\sigma(z)=\frac{1}{1-e^{-z}} \\
+\text{Loss:\quad}&\mathcal{L}_{SE}(y)=\frac{1}{2}(y-t)^2
+\end{align}
+$$
+Then we can compute the gradient from the partials for each weight which are:
+$$
+\frac{\partial\mathcal{L}_{SE}^{(i)}}{\partial w_{j}}
+=\frac{d\mathcal{L}_{SE}^{(i)}}{d y^{(i)}}\frac{dy^{(i)}}{dz^{(i)}}\frac{\partial z^{(i)}}{\partial w_{j}}
+=(y^{(i)}-t^{(i)})\cdot y^{(i)}(1-y^{(i)})\cdot x_{j}^{(i)}
+$$
+Still, these partials show a clear problem with **gradient signal**; when the prediction is **very wrong** this function has critical points and the gradient approaches $0$, which stalls the gradient descent when it needs to move most!
+- If $t=1$ and $z=-1000$, then $y=\sigma(z)\approx 0$ and the prediction is very wrong, but then $y(1-y)=0$ and thus the partial derivative of the loss for **all weights** approaches $0$, so gradient is $\mathbf{0}$
+- If $t=0$ and $z=1000$, then $y=\sigma(z)\approx 1$ and the prediction is very wrong, but then $(y-t)=0$ and thus the partial derivative of the loss for **all weights** approaches $0$, so gradient is $\mathbf{0}$
+
+Finally we look at the **cross-entropy** loss function, which works
+$$
+\mathcal{L}_{CE}^{(i)}(y^{(i)})=
+\begin{cases}
+-\log(1-y^{(i)}) & \text{if } t^{(i)}=0 \\
+-\log(y^{(i)}) & \text{if } t^{(i)}=1 \quad
+\end{cases}
+=-t^{(i)}\log(y^{(i)})-(1-t^{(i)})\log(1-y^{(i)})
+$$
+Then the behaviour of this loss function is:
+- When $t=0$ as $y\to 0$ (increasingly confidently correct) the error $\mathcal{L}_{CE}^{(i)}\to-\log(1-0)=0$
+- When $t=0$ as $y\to 1$ (increasingly confidently wrong) the error $\mathcal{L}_{CE}^{(i)}\to-\log(1-1)=\infty$
+- When $t=1$ as $y\to 0$ (increasingly confidently wrong) the error $\mathcal{L}_{CE}^{(i)}\to-\log(0)=\infty$
+- When $t=1$ as $y\to 1$ (increasingly confidently correct) the error $\mathcal{L}_{CE}^{(i)}\to-\log(1)=0$
+Moreover, the partial derivatives are as follows:
+$$
+\frac{\partial\mathcal{L}_{CE}^{(i)}}{\partial w_{j}}
+=\frac{d\mathcal{L}_{CE}^{(i)}}{d y^{(i)}}\frac{dy^{(i)}}{dz^{(i)}}\frac{\partial z^{(i)}}{\partial w_{j}}
+=\left(-\frac{t^{(i)}}{y^{(i)}}-\left(-\frac{1-t^{(i)}}{1-y^{(i)}}\right)\right)\cdot y^{(i)}(1-y^{(i)})\cdot x_{j}^{(i)}
+=(y^{(i)}-t^{(i)})x_{j}^{(i)}
+$$
+Then mapping each partial to a component of the gradient for each weight gives:
+$$
+\nabla_{\mathbf{w}}\mathcal{L}_{CE}^{(i)}=(y^{(i)}-t^{(i)})\mathbf{x}^{(i)}
+$$
+The behaviours of this cross-entropy loss function perfectly capture the information that we want the loss measure to convey, and its gradient only approaches $0$ when predictions are confidently correct (rather than confidently wrong as with squared-error)!
+- Furthermore, the gradient has a simple final form and that is easy to compute; what remains is the error, so the **size of the gradient now reflects how wrong the prediction is**
+	- When the prediction is far from the target the gradient stays large in magnitude, encouraging the model to make larger weight updates; and to make smaller updates when the prediction gets close to target
+- Minimizing this loss corresponds to **maximum likelihood estimation** which will be covered in Chapter 7
+
+Then the cross-entropy cost function for an $N$ sample training set is: 
+$$
+\mathcal{E}(\mathbf{w})
+=\frac{1}{N} \sum_{i = 1}^N \mathcal{L}^{(i)}(y^{(i)})
+=\frac{1}{N} \sum_{i = 1}^N-t^{(i)}\log(y^{(i)})-(1-t^{(i)})\log(1-y^{(i)})
+$$
+From which the gradient is:
+$$
+\nabla\mathcal{E}(\mathbf{w})
+=\frac{1}{N} \sum_{i = 1}^N \nabla\mathcal{L}^{(i)}(y^{(i)})
+=\frac{1}{N} \sum_{i = 1}^N (y^{(i)}-t^{(i)})\mathbf{x}^{(i)}
+$$
+And finally the gradient descent:
+$$
+\mathbf{w}\leftarrow \mathbf{w}-\frac{\alpha}{N} \sum_{i = 1}^N (y^{(i)}-t^{(i)})\mathbf{x}^{(i)}
+$$
+Notice that this logistic regression cross-entropy cost function gradient and descent is the **same as a linear regression squared-error cost function** gradient and descent
+- Despite the fact that the linear prediction $y^{(i)}=\mathbf{w}^{\top}\mathbf{x}^{(i)}$ is now used as an intermediate value $y^{(i)}=\sigma(\mathbf{w}^{\top}\mathbf{x}^{(i)})$
+
+Like with linear regression, **feature scaling** is recommended before running linear regression, using the means and standard deviations of features in the training set:
+$$
+\begin{align}
+\tilde{x}_j = \frac{x_j - \mu_j}{\sigma_j}
+\end{align}
+$$
+
+Logistic regression are **parametric**; their hypothesis space can be characterized by a fixed-size finite set of parameters (in this case $\mathbf{w}$) and the training data thereafter is not required at all for inference
+- kNNs in contrast are **non-parametric**; the complexity of the hypothesis can grow infinitely with the amount of training data, in the case of kNNs linearly with the size of the training set
+**Inductive Bias:** of a machine learning algorithm is the set of assumptions or preferences that guide how it generalizes from training data to new, unseen examples; these assumptions determine what patterns the algorithm can learn and how it interpolates between training points
+- The inductive bias of logistic regression is that the classes can be separated by a linear decision boundary, a hyperplane; this underfits when the boundary between classes is nonlinear
+	- Logistic regression is also easily **interpretable**; the weights tell us which features matter most and in which direction 
+- The inductive bias of kNN is that similar inputs should have similar outputs, so it can represent arbitrarily complex boundaries given enough data
+	- A strong assumption which helps kNNs when it matches the data and hurts when it does not
+## <u>Stochastic Gradient Descent</u>
+A
