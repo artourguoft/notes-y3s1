@@ -502,7 +502,7 @@ Still, these partials show a clear problem with **gradient signal**; when the pr
 - If $t=1$ and $z=-1000$, then $y=\sigma(z)\approx 0$ and the prediction is very wrong, but then $y(1-y)=0$ and thus the partial derivative of the loss for **all weights** approaches $0$, so gradient is $\mathbf{0}$
 - If $t=0$ and $z=1000$, then $y=\sigma(z)\approx 1$ and the prediction is very wrong, but then $(y-t)=0$ and thus the partial derivative of the loss for **all weights** approaches $0$, so gradient is $\mathbf{0}$
 
-Finally we look at the **cross-entropy** loss function, which works
+Finally we look at the **cross-entropy** loss function, which works:
 $$
 \mathcal{L}_{CE}^{(i)}(y^{(i)})=
 \begin{cases}
@@ -566,4 +566,121 @@ Logistic regression are **parametric**; their hypothesis space can be character
 - The inductive bias of kNN is that similar inputs should have similar outputs, so it can represent arbitrarily complex boundaries given enough data
 	- A strong assumption which helps kNNs when it matches the data and hurts when it does not
 ## <u>Stochastic Gradient Descent</u>
+**Full-batch gradient descent** is what we have been using so far:
+$$
+\mathbf{w} \leftarrow \mathbf{w} - \alpha \frac{1}{N} \sum_{i=1}^{N} \nabla_{\mathbf{w}} \mathcal{L}^{(i)}(y^{(i)})
+$$
+
+**Stochastic gradient descent** chooses **one** uniformly random training example $i$ per iteration, and uses its **loss function gradient** for updating:
+$$
+\mathbf{w} \leftarrow \mathbf{w} - \alpha \nabla_{\mathbf{w}} \mathcal{L}^{(i)}(y^{(i)})
+$$
+Benefits of stochastic gradient descent:
+- Computational cost of each iteration is very low, and is **constant** with regards to the size of the training set $N$, whereas full-batch scales linearly with $N$
+- Mathematically, it provides an **unbiased estimate of the full-batch gradient at each iteration**, as long as we perform uniform random sampling
+- For data which is inherently large in memory (ex. video and images), stochastic gradient descent may be necessary to make gradient descent computationally feasible
+Drawbacks of stochastic gradient descent:
+- While it is an unbiased estimate of the full-batch gradient at each iteration, it is obviously **noisy**
+- Cannot take advantage of vectorization and parallelization in hardware
+
+**Mini-batch gradient descent** is technically also stochastic, in that it chooses a subset **batch** of training examples per iteration, and uses its **cost function gradient** for updating:
+$$
+\mathbf{w} \leftarrow \mathbf{w} - \alpha \frac{1}{k} \sum_{i \in \mathcal{B}} \nabla_{\mathbf{w}} \mathcal{L}^{(i)}(y^{(i)})
+$$
+Where:
+- The **batch size** is $k$ and each batch is $\mathcal{B}=\{ i_{1},i_{2},\dots,i_{k} \}$
+- The batches **partition** the training set and are chosen by randomly permuting the training set
+- At each iteration we use one batch **without replacement**; an **epoch** of mini-batch gradient descent is complete once all batches have been used in one iteration for total of $\frac{N}{k}$ iterations
+	- Then, for full-batch gradient descent each iteration is essentially an entire epoch
+The benefits of mini-batch gradient descent:
+- Computational cost of each iteration is lower than full-batch
+- Since the mini-batches are sampled at random, the gradient estimate at each iteration is correct on average; it is an **unbiased estimate of the true full-batch gradient**
+- Can take advantage of vectorization and parallelization in hardware given a large enough batch size $k$
+Drawbacks of stochastic gradient descent:
+- Mini-batch gradient descent follows the gradient of the mini-batch cost, not the gradient of the full training cost; thus, the gradient estimate at any single iteration can point in a different direction from the full-batch gradient 
+- While it is an unbiased estimate of the full-batch gradient at each iteration, it is obviously **noisy**; however, this noise causes the gradient descent to be more erratic and less smooth which sometimes helps it **escape suboptimal local minima**
+Further considerations for mini-batch gradient descent:
+- When using smaller batches (which produce noisier gradient estimates), it is often beneficial to use a **smaller learning rate** $\alpha$ to compensate for the increased noise and prevent divergence
+	- Conversely, larger batches with more accurate gradient estimates can often tolerate larger learning rates
+- The randomness introduced by sampling mini-batches can sometimes help escape **plateaus** (where $\mathcal{E}$ is not at a minimum but is flat and thus has $\mathbf{0}$ gradient), as the noisy gradient estimates may occasionally point in directions that lead out of the flat region
+	- However, it is best to **construct cost functions to avoid plateaus** if possible
+- When features are **not normalized**, or are **correlated**, the cost function can present **ravines** which either makes the function wildly oscillate about the ravine (with a higher $\alpha$) or make very slow progress (with a relatively smaller $\alpha$)
+## <u>Multi-Class Classification</u>
+For binary classification with $K=2$ the target was labelled $t^{(i)}\in \{ 0,1 \}$; now we extend logistic regression to **multi-class classification** where each input example belongs to exactly one of possible $K\geq 3$ classes
+- Initially we consider using $t^{(i)}\in \{ 0,1,\dots,K-1 \}$ but this would imply that the classes have meaningful **ordering** and **distances** among each other as measured by the labels, which is not the case for classification
+	- Instead we use **one-hot vectors**; each target is $\mathbf{t}^{(i)}\in \mathbb{R}^K$ where the $k^{th}$ component of the vector is $1$ for class $K=k$ and all other components are $0$
+	- Then the training set becomes $\{ (\mathbf{x}^{(1)},\mathbf{t}^{(1)}),(\mathbf{x}^{(2)},\mathbf{t}^{(2)}),\dots,(\mathbf{x}^{(K)},\mathbf{t}^{(K)}) \}$
+
+The next major difference from binary classification is that we now have a **separate linear model for each class**, where for each class $k$ the logit is:
+$$
+z_{k}=\mathbf{w}_{k}^{\top}\mathbf{x}
+$$
+Then, for each example there is vector of logits $\mathbf{z}\in \mathbb{R}^K$ such that:
+$$
+\mathbf{z}=\begin{bmatrix} z_1 \\ z_2 \\ \vdots \\ z_K \end{bmatrix}
+=\begin{bmatrix} \mathbf{w}_{1}^{\top}\mathbf{x} \\ \mathbf{w}_{2}^{\top}\mathbf{x} \\ \vdots \\ \mathbf{w}_{K}^{\top}\mathbf{x} \end{bmatrix}
+$$
+From this we can split out a **weights matrix** where $\mathbf{W}\in \mathbb{R}^{K\times (D+1)}$:
+$$
+\mathbf{z}=\mathbf{W}\mathbf{x}
+=
+\begin{bmatrix}
+b_{1} & w_{1,1} & w_{1,2} & \cdots & w_{1,D} \\
+b_{2} & w_{2,1} & w_{2,2} & \cdots & w_{2,D} \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+b_{K} & w_{K,1} & w_{K,2} & \cdots & w_{K,D}
+\end{bmatrix}
+\begin{bmatrix}
+1 \\
+x_{1} \\
+\vdots \\
+x_{D} 
+\end{bmatrix}
+$$
+At this stage:
+- The $k$-th row of $\mathbf{W}$ is the weights of the linear model for predicting whether the example is of class $k$, and has $D+1$ parameters to match the $D$ features and dummy feature for the bias
+- The scores in $\mathbf{z}$ are **logits** or **pre-activations**; they are unnormalized and cannot yet be interpreted as probabilities, which we will resolve with the softmax function as we did with the sigmoid for binary classification
+
+
+**Softmax Function:** just as the sigmoid maps a single logit to a probability, the softmax function maps a vector of logits to a probability distribution over $K$ classes; given a vector of logits $\mathbf{z}\in \mathbb{R}^K$ where $z_{k}$ is the logit for class $k$, the softmax function produces a vector of $\mathbf{y}\in \mathbb{R}^K$ predictions , where the predicted probability for each class $k$ is:
+$$
+y_{k}=\frac{e^{z_{k}}}{\sum_{k'=1}^Ke^{z_{k'}}}
+$$
+And the resulting softmax function is:
+$$
+\mathbf{y}=\text{softmax}(\mathbf{z})=\begin{bmatrix} y_1 \\ y_2 \\ \vdots \\ y_K \end{bmatrix}
+=\begin{bmatrix} \frac{e^{z_{1}}}{\sum_{k'=1}^Ke^{z_{k'}}} \\ \frac{e^{z_{2}}}{\sum_{k'=1}^Ke^{z_{k'}}} \\ \vdots \\ \frac{e^{z_{K}}}{\sum_{k'=1}^Ke^{z_{k'}}} \end{bmatrix}
+$$
+The softmax function has several key properties:
+- Since $\exp(x)>0$, for all $k\in \{ 1,2,\dots,K \}$ we have $0 \leq y_k \leq 1$ and $\sum_{k=1}^K y_k = 1$, so each $y_{k}$ can now be interpreted as a probability and $\mathbf{y}$ as a probability distribution over $K$ classes
+- Since $\exp(x)$ is strictly increasing, softmax **preserves the ordering of the logits** in $\mathbf{z}$; in fact **during inference we can skip the softmax calculation** and simply choose the greatest logit, but softmax gives us what we can interpret as the **confidence** of the prediction
+- It can be viewed as a **smooth, differentiable** approximation to the **argmax** operation on the logits; this is **why need the softmax calculation during training**, to facilitate gradient descent
+- Lastly consider that softmax is a generalization of the sigmoid; the **sigmoid is a special case of softmax** for $K=2$
+
+There are now **multiple decision boundaries**; recall that the decision boundary is the set of points where the model’s prediction would change if the input changes a little bit
+- Since the model predicts the class with the highest score, the prediction changes where the highest score switches from one class to another; this happens where **two classes tie for the highest score**
+	- That is, a point $\mathbf{x}$ lies on the decision boundary between classes $a$ and $b$ if their logits are the same $\mathbf{w}_{a}^{\top}\mathbf{x}=\mathbf{w}_{b}^{\top}\mathbf{x}$, and **no other class has a larger score** 
+		- Both conditions are necessary; if another class $c$ has a larger score, the model predicts the class $c$, and changing a little bit does not change the prediction
+		- Consider that $\mathbf{w}_{a}^{\top}\mathbf{x}=\mathbf{w}_{b}^{\top}\mathbf{x}$ is equivalent to $(\mathbf{w}_{a}^{\top}-\mathbf{w}_{b}^{\top})\mathbf{x}=0$ which defines a **hyperplane** which is the decision boundary between the two classes
+		- To determine the decision boundaries, set up the above hyperplane equations for all combinations of classes to determine the hyperplanes
+			- Then discern the specific parts of the boundaries by applying the second condition where the remaining classes' logits must be less (or draw the full hyperplanes and simply check points by substitution, verifying which halfspaces lead to which class having the highest logit)
+
+
+Finally, for training to choose the parameters $\mathbf{W}$ such that the predictions produced during inference match the labelled data as closely as possible, we optimize the cross-entropy cost function, where the loss generalizes from the sigmoid loss:
+$$
+\mathcal{L}_{CE}^{(i)}(\mathbf{y}^{(i)})= -t_1^{(i)} \log(y_1^{(i)}) -t_2^{(i)} \log(y_2^{(i)}) - \dots - t_K^{(i)} \log(y_K^{(i)}) 
+=\sum_{k=1}^K t_k^{(i)} \log(y_k^{(i)})
+=-\mathbf{t}^{(i)\top}\log (\mathbf{y}^{(i)})
+$$
+Notice that only **one term in this loss function is nonzero** since $\mathbf{t}^{(i)}$ is a one-hot vector at component $k$; the expression simplifies to the negative log-probability assigned to the class of $i$, so the loss penalizes the model whenever it assigns low probability to the correct class
+
+Lastly the loss function gradient simplifies to:
+$$
+\nabla \mathcal{L}_{\text{CE}}^{(i)}= (y_k^{(i)} - t_k^{(i)}) \mathbf{x}^{(i)}
+$$
+And the gradient descent update to:
+$$
+\mathbf{w} \leftarrow \mathbf{w}  - \frac{\alpha}{N} \sum_{i=1}^{N} (y^{(i)}_k - t^{(i)}_k)\mathbf{x}^{(i)}
+$$
+## <u>Limitations of Linear Models</u>
 A
