@@ -205,11 +205,31 @@ Once there are **no negative coefficients remaining** in the objective function,
 - Any variables that were never pivotal columns remain nonbasic variables (values remain $0$)
 - Recall if at any iteration we first encounter all $\theta$-ratios being nonpositive, the method stops early
 
+==Simplex requires canonical form, each iteration moves to a new BFS==
+==Inverse of matrix $B$ is matrix such that $BB^{-1}=I$ and $B^{-1}B=I$==
 
+**Feasible Direction:** for a feasible set represented by polyhedron $P\subseteq \mathbb{R}^n$ and $\mathbf{x}\in P$, a vector $\mathbf{v}\in \mathbb{R}^n$ is a feasible direction at $\mathbf{x}$ if $\exists\theta_{0}>0,\forall\leq\theta<\theta_{0},\mathbf{x}+\theta \mathbf{v}\in P$
+- Ie. we can move in the direction $\mathbf{v}$ from $\mathbf{x}$ while remaining in the feasible set
+Generally, we want to answer which basic directions at a given BFS $\mathbf{x}$ are feasible
+- If $\mathbf{x}$ is not degenerate; then all basic directions at this point are feasible directions
+- If $\mathbf{x}$ is degenerate; it is possible that some basic directions are not feasible directions, depending on number of active constraints
 
+**Extreme Point Theorem:** a polyhedron $P\subseteq \mathbb{R}^n$ contains a line if there is a point $\mathbf{x}_{0}\in P$ and a direction vector $\mathbf{0}\neq \mathbf{d}\in \mathbb{R}^n$ such that $\mathbf{x}_{0}+t\mathbf{d}\in P$ for all $t\in R$
 
+Theorem KB2.6: if $P$ has at least one extreme point $\iff$ $P$ does not contain a line
+- Intuitively, lines extend infinitely in two directions so this follows; ex. a halfspace is a polyhedron that contains an infinite number of lines parallel to its boundary, and it does not have any extreme points
+	- Consider why a halfspace cannot be put into standard or canonical form
+	- The first quadrant is a polyhedron that does not contain any lines, and it does have an extreme point at the origin
 
-
+Theorem: consider an LPP to min $\mathbf{c}^{\top}\mathbf{x}$ constrained by $\mathbf{x}\in P$ where $P$ is a polyhedron and suppose $P$ has at least one extreme point and that an optimal solution exists, then there is an optimal solution which is an extreme point
+- Let $Q$ be the set of all optimal solutions
+- Express $P$ in the form $P=\{ \mathbf{x}\in \mathbb{R}^n:\mathbf{A}\mathbf{x}\leq \mathbf{b} \}$
+- Let $m$ be the minimum, then $Q=\{ \mathbf{x}\in \mathbb{R}^n:\mathbf{A}\mathbf{x}\leq \mathbf{b}\wedge \mathbf{c}^{\top}\mathbf{x}=m \}$ and $Q$ is a polyhedron
+- Then if $P$ does not contain a line, then $Q\subseteq P$ cannot contain a line, and if $Q$ does not contain a line then it has extreme points
+- Let $\mathbf{x}^*$ be an extreme point of $Q$, then we show that $\mathbf{x}^*$ is also an extreme point of $P$; proof by contradiction:
+	- If it were not an extreme point of $P$, then we could write $\mathbf{x}^*=\lambda \mathbf{x}_{1}+(1-\lambda)\mathbf{x}_{2}\in P$ for some $\mathbf{x}^*\neq \mathbf{x}_{1}\neq \mathbf{x}_{2}\in P$ and $\lambda \in(0,1)$
+	- We know $m=\mathbf{c}^{\top}\mathbf{x}^*=\lambda(\mathbf{c}^{\top}\mathbf{x}_{1})+(1-\lambda)(\mathbf{c}^{\top}\mathbf{x}_{2})$, but that implies $\mathbf{c}^{\top}\mathbf{x}_{1}=\mathbf{c}^{\top}\mathbf{x}_{2}=m$ which implies $\mathbf{x}_{1},\mathbf{x}_{2}\in Q$, which implies $\mathbf{x}^*$ is not an extreme point of $Q$ which contradicts our initial assumption!
+This is different than the textbook statement which is incorrect!
 
 
 ==For n variables and m independent equality constraints,

@@ -277,7 +277,7 @@ Wherein:
 - We want to minimize the **residual** $y^{(i)}-t^{(i)}$ (the division is done to simplify derivative calculations)
 - We prefer squared-error over **absolute error** because the latter allows many shifted functions to achieve the same loss as long as the partition of points remains the same, while the former penalizes larger errors more heavily and pulls the the hyperplane to the 'middle' of the data  
 
-The loss function measures the error for a single prediction and its corresponding target; we define a **cost function** which measures the average loss across all training examples, called **mean squared-error (MSE)**:
+The loss function measures the error for a single prediction and its corresponding target; we define a **cost function** which measures the **average loss across all training examples**, called **mean squared-error (MSE)**:
 $$
 \mathcal{E}(\mathbf{w}) = \frac{1}{N} \sum_{i = 1}^N \mathcal{L}^{(i)}(\mathbf{w}) = \frac{1}{2N} \sum_{i = 1}^N (y^{(i)}-t^{(i)})^2 = \frac{1}{2N} \sum_{i = 1}^N (\mathbf{w}^{\top}\mathbf{x}^{(i)}-t^{(i)})^2
 $$
@@ -291,7 +291,7 @@ $$
 $$
 
 
-The goal is to find parameters $\mathbf{w}^*=\text{argmin }\mathcal{E}(\mathbf{w})$; we will first attempt a **direct solution** to find the minimum of the MSE
+The goal is to find parameters $\mathbf{w}^*=\text{argmin }\mathcal{E}(\mathbf{w})$, ie. weights that minimize the cost (average loss over the training set); we will first attempt a **direct solution** to find the minimum of the MSE
 - Compute the gradient $\nabla\mathcal{E}(\mathbf{w})$
 - Set $\nabla\mathcal{E}(\mathbf{w})=\mathbf{0}$
 - Solve the system of equations (partial derivatives set to $0$) to determine weights where $\mathcal{E}$ has critical points, one of which may be a global minimum 
@@ -411,7 +411,7 @@ For a **binary classification** (two classes), one way we can go from a linear r
 $$
 z=\left(\sum_{j=1}^Dw_{j}x_{j}\right)+b=\mathbf{w}^{\top}\mathbf{x}+b
 $$
-And from there create a piecewise function with a boundary $r$:
+And from there create a piecewise function with a threshold $r$:
 $$
 y=
 \begin{cases}
@@ -419,7 +419,7 @@ y=
 1 & \text{if } z \geq r  
 \end{cases}
 $$
-We can further simplify this by noticing that the difference between the bias $b$ and the boundary $r$ is static, and thus for any inequality for ex. $\mathbf{w}^{\top}\mathbf{x}+b\geq r\implies \mathbf{w}^{\top}\mathbf{x}+(b-r)\geq 0$; then absorb this term into a dummy feature $x_{0}=1$ and dummy weight $w_{0}=b-r$:
+We can further simplify this by noticing that the difference between the bias $b$ and the threshold $r$ is static, and thus for any inequality for ex. $\mathbf{w}^{\top}\mathbf{x}+b\geq r\implies \mathbf{w}^{\top}\mathbf{x}+(b-r)\geq 0$; then absorb this term into a dummy feature $x_{0}=1$ and dummy weight $w_{0}=b-r$:
 $$
 y=
 \begin{cases}
@@ -429,11 +429,11 @@ y=
 $$
 Then the **decision boundary** is the **hyperplane** defined by the set $\{ \mathbf{x}:\mathbf{w}^{\top}\mathbf{x}=0 \}$
 - In $\mathbb{R}^1$ (one feature) this is a point on the real line, in $\mathbb{R}^2$ (ie. two features) a line on the plane, in $\mathbb{R}^3$ a plane in space, etc.
-- The choices of weights $\mathbf{w}$ (including the bias and boundary terms) changes the decision boundary; to work towards optimizing this decision boundary we need to consider the **weight space**
+- The choices of weights $\mathbf{w}$ (including the bias and threshold terms) changes the decision boundary; to work towards optimizing this decision boundary we need to consider the **weight space**
 
 For each given training point $(\mathbf{x}^{(i)},t^{(i)})$, we can substitute the feature values and determine an inequality with regards to the weights, which determines the **halfspace** $\{ \mathbf{w}:\mathbf{w}^{\top}\mathbf{x}\geq -w_{0} \}$ assuming a positive example here; ie. the weight vectors in weight space which would correctly classify this training point 
 - We take each of these inequalities as a constraint in a linear system; then the **intersection** of all these halfspaces is the **feasible region** in weight space where the weights **correctly classify all training** points
-	- If this feasible region is nonempty, then it follows that a hyperplane exists that perfectly separates the classes and the training set is **linearly separable**
+	- If this feasible region is nonempty, then it follows that a **hyperplane exists that perfectly separates the classes** and the training set is **linearly separable**
 	- Finding points in a feasible set is efficiently solvable with linear programming methods, but in practice linearly separable data is rare; instead we focus on finding the good weights through optimizing a loss function
 
 
@@ -456,7 +456,7 @@ $$
 $$
 - But $\frac{d\mathcal{L}_{0-1}^{(i)}}{d z^{(i)}}=0$ everywhere except $z=0$ since the loss function is constant there, and $\frac{d\mathcal{L}_{0-1}^{(i)}}{d z^{(i)}}=\text{undefined}$ at $z=0$ due to the step so it is **not differentiable** there
 	- This follows through to the final partials with respect to each weight by the Chain Rule, and thus we **do not have meaningful gradients** with which to run gradient descent with at any vector of weights!
-	- Furthermore, this loss function **does not treat different magnitudes of error differently**; an incorrect prediction with $z$ close to the boundary is treated the same as one with $z$ being far from the boundary 
+	- Furthermore, this loss function **does not treat different magnitudes of error differently**; an incorrect prediction with $z$ close to the threshold is treated the same as one with $z$ being far from the threshold 
 
 Next we consider the **squared-error** loss function, which was used for linear regression:
 $$
@@ -464,14 +464,15 @@ $$
 $$
 This function is **differentiable** and has **nonzero derivatives** with respect to $z$ **everywhere** as we saw with linear regression, unlike the zero-one loss
 - Furthermore this is a function of $z$ rather than $y$, which immediately resolves the zero-one function's problem of not being affected by **different magnitudes of error** (in fact if we used $y$ this loss function would be identical to zero-one loss)
-	- This immediately introduces a new problem; **confidently correct predictions are reflected as large errors** just as if they were confidently incorrect
-	- Thus, gradient descent would push the weights such that negative examples yield close to $z=0$ and positive examples close to $z=1$
-		- But this is not meaningful for categorization; $z$ can be interpreted as the confidence of a prediction but it is not a classification in of itself ($y$ is), so we do not want it to match $t$
+	- But this immediately introduces a new problem; **confidently correct predictions are reflected as large errors** just as if they were confidently incorrect
+		- Thus, gradient descent would push the weights such that negative examples yield close to $z=0$ and positive examples close to $z=1$
+			- But this is not meaningful for categorization; $z$ can be interpreted as the confidence of a prediction but it is not a classification in of itself ($y$ is), so we do not want it to match $t$
+			- This suggests a potential solution; apply a **differentiable** function that restricts our prediction to the interval $[0,1]$, so that the error cannot exceed $1$
 
 
-**Sigmoid Function:** also called the **logistic** or **activation function**, where $z=\mathbf{w}^{\top}\mathbf{x}$ is called the **pre-activation** or **logit**
+**Sigmoid Function:** also called the **logistic function**, where $z=\mathbf{w}^{\top}\mathbf{x}$ is called the **logit**
 $$
-\sigma(z)=\frac{1}{1+e^{-z}}
+y=\sigma(z)=\frac{1}{1+e^{-z}}
 $$
 The sigmoid function has several key properties:
 - For all $z\in \mathbb{R}$, the function is bounded $0<\sigma(z)<1$
@@ -483,6 +484,8 @@ The sigmoid function has several key properties:
 	- This allows us to interpret $\sigma(z)$ as the **probability that an example belongs to the positive class**, given its score $z$
 	- By convention for binary classification $\sigma(z)\geq \frac{1}{2}$ indicates a prediction of the **positive class**
 		- As aforementioned this happens when $z=0$, thus the decision boundary is again the hyperplane $\{ \mathbf{x}:\mathbf{w}^{\top}\mathbf{x}=0 \}$
+- The log-probability of the sigmoid is the inverse which takes us back to $z=\ln\left( \frac{\sigma(z)}{1-\sigma(z)} \right)$
+	- Note then that the logistic regression model **linearly predicts log-odds** which is $z$, but the activated probability $y$ is **not a linear function** of $z$
 
 We construct a new linear classification model with the sigmoid function and squared-error loss:
 $$
@@ -500,7 +503,7 @@ $$
 $$
 Still, these partials show a clear problem with **gradient signal**; when the prediction is **very wrong** this function has critical points and the gradient approaches $0$, which stalls the gradient descent when it needs to move most!
 - If $t=1$ and $z=-1000$, then $y=\sigma(z)\approx 0$ and the prediction is very wrong, but then $y(1-y)=0$ and thus the partial derivative of the loss for **all weights** approaches $0$, so gradient is $\mathbf{0}$
-- If $t=0$ and $z=1000$, then $y=\sigma(z)\approx 1$ and the prediction is very wrong, but then $(y-t)=0$ and thus the partial derivative of the loss for **all weights** approaches $0$, so gradient is $\mathbf{0}$
+- If $t=0$ and $z=1000$, then $y=\sigma(z)\approx 1$ and the prediction is very wrong, but then $(y-t)=0$ and thus the partial derivative of the loss for **all weights** approaches $0$, so gradient is $\mathbf{0}$ 
 
 Finally we look at the **cross-entropy** loss function, which works:
 $$
@@ -605,7 +608,7 @@ Further considerations for mini-batch gradient descent:
 - The randomness introduced by sampling mini-batches can sometimes help escape **plateaus** (where $\mathcal{E}$ is not at a minimum but is flat and thus has $\mathbf{0}$ gradient), as the noisy gradient estimates may occasionally point in directions that lead out of the flat region
 	- However, it is best to **construct cost functions to avoid plateaus** if possible
 - When features are **not normalized**, or are **correlated**, the cost function can present **ravines** which either makes the function wildly oscillate about the ravine (with a higher $\alpha$) or make very slow progress (with a relatively smaller $\alpha$)
-## <u>Multi-Class Classification</u>
+## <u>Softmax Regression for Multi-Class Classification</u>
 For binary classification with $K=2$ the target was labelled $t^{(i)}\in \{ 0,1 \}$; now we extend logistic regression to **multi-class classification** where each input example belongs to exactly one of possible $K\geq 3$ classes
 - Initially we consider using $t^{(i)}\in \{ 0,1,\dots,K-1 \}$ but this would imply that the classes have meaningful **ordering** and **distances** among each other as measured by the labels, which is not the case for classification
 	- Instead we use **one-hot vectors**; each target is $\mathbf{t}^{(i)}\in \mathbb{R}^K$ where the $k^{th}$ component of the vector is $1$ for class $K=k$ and all other components are $0$
@@ -642,7 +645,7 @@ At this stage:
 - The scores in $\mathbf{z}$ are **logits** or **pre-activations**; they are unnormalized and cannot yet be interpreted as probabilities, which we will resolve with the softmax function as we did with the sigmoid for binary classification
 
 
-**Softmax Function:** just as the sigmoid maps a single logit to a probability, the softmax function maps a vector of logits to a probability distribution over $K$ classes; given a vector of logits $\mathbf{z}\in \mathbb{R}^K$ where $z_{k}$ is the logit for class $k$, the softmax function produces a vector of $\mathbf{y}\in \mathbb{R}^K$ predictions , where the predicted probability for each class $k$ is:
+**Softmax Function:** just as the sigmoid maps a single logit to a probability, the softmax function maps a vector of logits to a **probability distribution over** $K$ **classes**; given a vector of logits $\mathbf{z}\in \mathbb{R}^K$ where $z_{k}$ is the logit for class $k$, the softmax function produces a vector of $\mathbf{y}\in \mathbb{R}^K$ predictions , where the predicted probability for each class $k$ is:
 $$
 y_{k}=\frac{e^{z_{k}}}{\sum_{k'=1}^Ke^{z_{k'}}}
 $$
@@ -672,7 +675,7 @@ $$
 =\sum_{k=1}^K t_k^{(i)} \log(y_k^{(i)})
 =-\mathbf{t}^{(i)\top}\log (\mathbf{y}^{(i)})
 $$
-Notice that only **one term in this loss function is nonzero** since $\mathbf{t}^{(i)}$ is a one-hot vector at component $k$; the expression simplifies to the negative log-probability assigned to the class of $i$, so the loss penalizes the model whenever it assigns low probability to the correct class
+Notice that only **one term in this loss function is nonzero** since $\mathbf{t}^{(i)}$ is a one-hot vector at component $k$; the expression simplifies to the negative log-probability (not log-odds like in sigmoid binary classification!) assigned to the class of $i$, so the loss **penalizes the model whenever it assigns low probability to the correct class** 
 
 Lastly the loss function gradient simplifies to:
 $$
@@ -683,4 +686,67 @@ $$
 \mathbf{w} \leftarrow \mathbf{w}  - \frac{\alpha}{N} \sum_{i=1}^{N} (y^{(i)}_k - t^{(i)}_k)\mathbf{x}^{(i)}
 $$
 ## <u>Limitations of Linear Models</u>
-A
+Consider that decision boundaries between classes may be nonlinear, disconnected, etc. all of which linear models cannot capture
+
+For example, the **XOR** dataset $\oplus(x_{1},x_{2})$ is **not linearly separable**, ie. there is no hyperplane that perfectly classifies the outputs of the function
+- We can prove this **algebraically**:
+	- Assume a logistic regression classifier with threshold $z=0$ and a positive prediction for $z\geq 0$, then the constraints for a perfect classifier are:
+		- For $x_{1}=0,x_{2}=0$, we have $t=0$ and thus $b+w_{1}x_{1}+w_{2}x_{2}=b< 0$
+		- For $x_{1}=1,x_{2}=0$, we have $t=1$ and thus $b+w_{1}x_{1}+w_{2}x_{2}=b+w_{1}\geq 0$
+		- For $x_{1}=0,x_{2}=1$, we have $t=1$ and thus $b+w_{1}x_{1}+w_{2}x_{2}=b+w_{2}\geq 0$
+		- For $x_{1}=1,x_{2}=1$, we have $t=0$ and thus $b+w_{1}x_{1}+w_{2}x_{2}=b+w_{1}+w_{2}< 0$
+	- Summing the constraints for the negative examples yields $2b+w_{1}+w_{2}<0$ while summing the positive examples yields $2b+w_{1}+w_{2}\geq 0$, so there are no solutions
+- We can also prove this **geometrically**:
+	- The two line segments that connect $(0,0),(1,1)$, and $(1,0),(0,1)$ both intersect at $(0.5,0.5)$ and we can prove via convexity that this intersection lies in both halfspaces defined by the decision boundary, which is a contradiction
+
+ Feature mapping can create more expressive models and determine valid nonlinear decision boundaries (recall, linear models are **linear in the weights**) where there previously were not any
+ - However, the choice of features requires domain knowledge and manual experimentation; the right interactions between features are not obvious
+ - Moreover, the number of possible features grows combinatorially; for $D$ features, all degree $2$ products (ex. $x_{1}^2x_{2}$) give $O(D^2)$ new features, which becomes infeasible for high-dimensional data
+ - The motivation for neural networks; rather than hand-crafting feature maps, we will build models that learn nonlinear representations directly from data
+# <u>5: Neural Networks</u>
+## <u>The Neuron</u>
+An artificial neuron takes an input vector $\mathbf{x}$ and computes a weighted sum of the inputs plus a bias $\mathbf{w}^\top \mathbf{x} + b$; this quantity is called the **pre-activation** which the neuron then passes through an **activation function** $f$, which is typically **nonlinear**, to produce the output $y=f(\mathbf{w}^\top \mathbf{x} + b)$
+- Logistic and softmax regression can each be interpreted as a single artificial neuron, or equivalently a small one-layer neural network that applies a linear transformation to its input and then passes the result through the sigmoid or softmax activation functions
+	- If interpreted as such, the logistic neuron produces one output whereas the softmax neuron produces $K$ outputs 
+- The natural next step is to **stack layers** of neurons; by composing several linear transformations with nonlinear activation functions, a network can represent the complex decision boundaries that a single layer cannot
+## <u>The Multi-Layer Perceptron</u>
+**Unit:** any node in a neural network
+- **Input Layer:** represents the input features to the model; each input unit acts like a sensor that reports one measurement but does not perform any computation and simply holds the data, so it is a unit but not a neuron
+**Neuron:** a unit that computes its output from its inputs
+- **Computational Layer:** a layer of neurons; ie. a layer in which units transform some inputs to some outputs
+- **Output Layer:** a computational layer that produces values that have a clear interpretation; for a classification task the outputs typically represent a probability distribution over classes, for a regression task a continuous value
+- **Hidden Layer:** any computational layer between the input layer and output layer; the outputs of the hidden units are internal model representations rather than observed data or final predictions; essential for modelling nonlinear relationships
+- **Fully Connected Layer:** a layer in which **every** unit receives input from **every** unit in the preceding layer, and only from those units
+**Feedforward Neural Network:** a neural network whose computation flows only from earlier layers (but not necessarily the preceding layer) to later layers with no feedback loops, ie. a **directed acyclic graph** (DAG)
+
+**Multi-Layer Perceptron:** an MLP is a **feedforward** neural network with **one or more hidden layers** between the input and output layers, in which **every layer is fully connected**
+- The notation $m$-layer MLP implies $m-1$ hidden layers and an output layer; then input layer is indexed $0$ and the output layer is indexed $m$
+- $D^{(i)}$ is the number of units in the $i$th layer, then:
+	- Input layer is $\mathbf{a}^{(0)}\in \mathbb{R}^{D^{(0)}}$
+	- Weights matrix is $\mathbf{W}^{(i)}\in \mathbb{R}^{D^{(i)}\times D^{(i-1)}}$ where $W_{j,k}^{(i)}$ is the weight applied to the output of unit $k$ in layer $i-1$ to produce the output of unit $j$ in layer $i$
+	- Bias vector $\mathbf{b}^{(i)}\in \mathbb{R}^{D^{(i)}}$ where $b_{j}^{(i)}$ is the bias of the $j$th unit 
+	- Pre-activations $\mathbf{z}^{(i)}\in \mathbb{R}^{D^{(i)}}$ where $z_{j}^{(i)}$ is the pre-activation of the $j$th unit and $\mathbf{z}^{(i)}=\mathbf{W}^{(i)}\mathbf{a}^{(i-1)}+\mathbf{b}^{(i)}$
+	- Activations are $\mathbf{a}^{(i)}\in \mathbb{R}^{D^{(i)}}$ where $a_{j}^{(i)}$ is the activation of the $j$th unit; these activations are computed as $f^{(i)}(\mathbf{W}^{(i)}\mathbf{a}^{(i-1)}+\mathbf{b^{(i)}})=f^{(i)}(\mathbf{z}^{(i)})=\mathbf{a}^{(i)}$ 
+	- Activation function is $f^{(i)}$; note this is specific to the layer
+	- Final prediction is $\mathbf{a}^{(m)}\in \mathbb{R}^{D^{(m)}}$ where for $\mathbf{t}\in \mathbb{R}^n$ we have $D^{(m)}=n$
+
+
+Any given activation function in an MLP generally takes the form $f:\mathbb{R}\to \mathbb{R}$ and is **nonlinear**
+- Nonlinear activation functions are the source of nonlinearity in MLPs; with linear activation functions an MLP would be linear and could be reduced to just one layer with function composition, thus choice of activation functions is key
+- Generally, the activation function at a layer $i$ is applied element-wise to the pre-activations to determine the activations, ie. $\mathbf{a}^{(i)}=f^{(i)}(\mathbf{z}^{(i)})$; the **softmax activation function is an exception** which generates a discrete probability distribution over the units
+- There are four types of activation functions generally used in simpler MLPs
+
+The **sigmoid** function, as we already encountered in logistic regression, which has two appealing properties as an activation function
+- The sigmoid is a smooth and everywhere-differentiable approximation of the threshold / step function, which makes gradient descent based training possible
+- It mirrors the biological intuition of a neuron firing; instead of treating a neuron as either firing or not firing, we can interpret the sigmoid’s output as the neuron’s rate of firing, or the probability that it fires
+==However the sigmoid also had its drawbacks: come back to this after backprop==
+- **Saturation:** when $|z|$ is large (ie. very confident), the sigmoid is nearly flat as it asymptotically approaches $0$ or $1$; thus the derivative approaches $0$ and gradient descent barely updates a saturated unit's incoming weights, even if the prediction is wrong
+- **Vanishing Gradient:** even for deep MLPs with no saturated units, 
+## <u>Expressiveness of Neural Networks</u>
+**Unit:** any node
+## <u>Backpropogation</u>
+**Unit:** any node
+
+
+
+
