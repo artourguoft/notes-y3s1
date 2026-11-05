@@ -110,10 +110,9 @@ Any LPP also has an **equivalent canonical form**:
 - In each inequality in the constraints we can introduce a **slack variable** $x_{n+j}$ where $j\in[1,m]$ per inequality, turning them into equalities and making the system of equations in up to $n+m$ unknowns, and introducing additional nonnegativity constraints (on each slack variable)
 	- Note, all slack variables must also be constrained to $x_{n+j}\geq 0$
 	- The resulting coefficient matrix $\mathbf{A}$ is in $\mathbb{R}^{m\times(n+m)}$
-	- The resulting objective function becomes $f:\mathbb{R}^{m\times(n+m)}\to \mathbb{R}$ where the coefficients of the slack variables are $0$ (but still count for the dimension of the domain!)
+	- The resulting objective function becomes $f:\mathbb{R}^{m\times(n+m)}\to \mathbb{R}$ where the coefficients of the slack variables are $0$ (but **still count for the dimension** of the domain!)
 
-==Objectives are functions in dimension of all LPP variables and slack variables (regardless of 0 coefficients)
-Absolute values in objectives vs absolute values in constraints
+==Absolute values in objectives vs absolute values in constraints
 LPPs with variables for coefficients==
 # <u>Extreme Point Theorem</u>
 The set of all points that satisfies the constraints on an LPP is the **intersection of closed halfspaces and hyperplanes**; recall, both are convex sets and the intersection of convex sets is convex, thus the **feasible set is convex** if it is nonempty
@@ -143,13 +142,15 @@ Consider a **canonical** LPP where $\mathbf{A}\in \mathbb{R}^{m\times n}$, $\mat
 			- One **all BFSs** have been identified **truncate** these vectors to remove any possible slack variables, and test the resulting solutions to determine the optimal solution
 Note that this method can **only** be used for LPPs in **canonical** form, but **any optimal solution to the canonical form** found as described above **is an optimal solution to the equivalent standard form**
 
-**Every BFS is an extreme point** of the feasible set (and every extreme point is a BFS), whereas basic solutions that are infeasible are not extreme points since they are not in the feasible set at all
+**Every BFS is an extreme point** of the feasible set (and **every extreme point is a BFS**), whereas basic solutions that are infeasible are not extreme points since they are not in the feasible set at all
 # <u>Simplex Method</u>
 **Adjacent:** two extreme points in a set of feasible solutions $S$ are adjacent they have **all but one** in common in their **selection of basic variables**; ie. the selection of nonzero components differs in two places
 
-**Simplex Method:** a method that iterates from a given extreme point to an **adjacent** extreme point such that the value of the objective function increases or remains the same, and proceeds until either an optimal solution is identified or it is determined that the given problem has no finite optimal solution
+**Simplex Method:** a method that iterates from a given extreme point / BFS to an **adjacent** extreme point / BFS such that the value of the objective function increases or remains the same, and proceeds until either an optimal solution is identified or it is determined that the given problem has no finite optimal solution
+- Start with an LPP in **canonical form**
 - Assume $\mathbf{b}\geq 0$ (if not, will have to use the two-phase method, covered later)
 - Set all non-slack variables as nonbasic variables, ie. set all non-slack components of $\mathbf{x}$ to $0$; then we are left with **all slack variables as basic variables**, ie. $x_{n+1}=b_{1},x_{n+2}=b_{2},\dots,x_{n+m}=b_{n}$
+	- The columns representing the slack variables will always be linearly independent by their definition
 	- Since $(n+m)-n=m\geq m$ this is a basic solution, and since $\mathbf{b}\geq 0$ this is a feasible solution, and thus this is a BFS
 		- Use this BFS to determine an initial value $z_{0}$ for the objective function, then set up the tableau below
 $$
@@ -162,7 +163,7 @@ x_{n+2} & a_{21} & a_{22} & \cdots & a_{2n} & 0 & 1 & \cdots & 0 & 0 & b_{2}  \\
 \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
 x_{n+m} & a_{m1} & a_{m2} & \cdots & a_{mn} & 0 & 0 & \cdots & 1 & 0 & b_{m} \\
 \hline
-\text{obj}& -c_{1} & -c_{2} & \cdots & -c_{n} & 0 & 0 & \cdots & 0 & 1 & 0 \\
+z & -c_{1} & -c_{2} & \cdots & -c_{n} & 0 & 0 & \cdots & 0 & 1 & 0 \\
 \hline
 \end{array}
 $$
@@ -201,12 +202,14 @@ In a tableau, **basic variables** have the following property:
 2. If the pivot is $k$, multiply the pivotal row by $\frac{1}{k}$ , making the **coefficient in the pivot position** equal to $1$
 3. Add suitable multiples of the new pivotal row to all other rows (including the objective row!), so that **all other coefficients in the pivotal column** become $0$
 4. In the updated tableau, replace the label on the pivotal row by the entering variable
-Once there are **no negative coefficients remaining** in the objective function, the resulting basic variables indicate the optimal BFS
+Once there are **no negative coefficients remaining** in the objective function, the resulting basic variables indicate the optimal BFS and the value of the variables is in the rightmost column
 - Any variables that were never pivotal columns remain nonbasic variables (values remain $0$)
 - Recall if at any iteration we first encounter all $\theta$-ratios being nonpositive, the method stops early
 
-==Simplex requires canonical form, each iteration moves to a new BFS==
+==each iteration moves to a new extreme point / BFS==
 ==Inverse of matrix $B$ is matrix such that $BB^{-1}=I$ and $B^{-1}B=I$==
+
+
 
 **Feasible Direction:** for a feasible set represented by polyhedron $P\subseteq \mathbb{R}^n$ and $\mathbf{x}\in P$, a vector $\mathbf{v}\in \mathbb{R}^n$ is a feasible direction at $\mathbf{x}$ if $\exists\theta_{0}>0,\forall\leq\theta<\theta_{0},\mathbf{x}+\theta \mathbf{v}\in P$
 - Ie. we can move in the direction $\mathbf{v}$ from $\mathbf{x}$ while remaining in the feasible set
@@ -231,8 +234,27 @@ Theorem: consider an LPP to min $\mathbf{c}^{\top}\mathbf{x}$ constrained by $\m
 	- We know $m=\mathbf{c}^{\top}\mathbf{x}^*=\lambda(\mathbf{c}^{\top}\mathbf{x}_{1})+(1-\lambda)(\mathbf{c}^{\top}\mathbf{x}_{2})$, but that implies $\mathbf{c}^{\top}\mathbf{x}_{1}=\mathbf{c}^{\top}\mathbf{x}_{2}=m$ which implies $\mathbf{x}_{1},\mathbf{x}_{2}\in Q$, which implies $\mathbf{x}^*$ is not an extreme point of $Q$ which contradicts our initial assumption!
 This is different than the textbook statement which is incorrect!
 
+**jth Reduced Cost:**
+- Let $e_{1},\dots,e_{m}$ be the canonical basis of $\mathbb{R}^m$
+- Define the $i$th basic direction $D_{j}=e_{j}+d_{B(1)}\cdot e_{B(1)}+\dots+d_{B(m)}\cdot e_{B(m)}$
+	- Where $e_{B(1)},\dots,e_{B(m)}$ be the basis corresponding to the basic variable $x_{B(1)},\dots,x_{B(m)}$ and $(d_{B(1)}\dots d_{B(m)})^\top=-\mathbf{A}^{-1}\cdot \mathbf{A}_{j}$
+	- If $x_{j}$ is a nonbasic variable then the definitions coincide
+	- If $x_{j}$ is a basic variable then it is $\mathbf{0}$
+How much does the objective function improve when moving towards a basic direction:
+- Where $z=\mathbf{c}^\top\mathbf{x}$ for an extreme point $\mathbf{x}$, then take $\mathbf{x}\to \mathbf{x}+\theta D_{j}$, so the difference is $\mathbf{c}-D_{j}$
+- The jth reduced cost $\mathbf{c}_{j}=\mathbf{c}\cdot D_{j}=\mathbf{c}_{j}-\mathbf{c}_{B}\cdot \mathbf{A}_{B}^{-1}\mathbf{A}_{j}$
+ - If every reduced cost entry is negative at an extreme point, then that point is a maximizer
+ - 
+
+
+
+
 
 ==For n variables and m independent equality constraints,
 Dimension=n−m
 provided the constraints are consistent and the nonnegativity constraints do not reduce the dimension further.
 So, one equality in three variables gives a plane; two give a line; and three independent equalities give a point (before accounting for nonnegativity restrictions).==
+
+
+a3 q1
+$\binom{5}{2}=10$ combinations of 2 columns, find linearly independent then etc.
