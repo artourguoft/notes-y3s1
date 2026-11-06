@@ -349,7 +349,9 @@ f_{\mathbf{u}}(x,y)=\frac{\Delta f}{h}&=\frac{f_{x}(x,y)((x+hu_{x})-x)+f_{y}(x,y
 &=f_{x}(x,y)u_{x}+f_{y}(x,y)u_{y}
 \end{align}
 $$
-If $f$ is **not differentiable** at a point $(x,y)$ (meaning one or both partials do not exist), **we cannot conclude anything about the existence or values of  directional derivatives** at that $(x,y)$. These derivatives would have to be determined from the full definition, without the shortcut identity above.
+Intuitively, the rate of change in a unit direction $\mathbf{u}$ is the sum of the changes caused by moving horizontally and vertically, weighted by how much we move in each direction.
+
+If $f$ is **not differentiable** at a point $(x,y)$ (meaning one or both partials do not exist), **we cannot conclude anything about the existence or values of directional derivatives** at that $(x,y)$. These derivatives would have to be determined from the full definition, without the shortcut identity above.
 
 Then we can also conclude:
 - $f_{\mathbf{i}}(a,b)=f_{x}(a,b)$
