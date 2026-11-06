@@ -746,7 +746,73 @@ The **sigmoid** function, as we already encountered in logistic regression, whic
 **Unit:** any node
 ## <u>Backpropogation</u>
 **Unit:** any node
+# <u>7: Probabilistic Modeling</u>
+## <u>Maximum Likelihood and Maximum-a-Posteriori</u>
+Let $\mathcal{D}=x^{(1)},x^{(2)},\dots,x^{(n)}$ be **iid** observed data points 
+
+**Likelihood Function:** tells us how likely the observed sample $\mathcal{D}\in \mathbb{R}^n$ is, as a function of the value of the parameter $\theta$
+$$
+L(\theta)=P(\mathcal{D};\theta)=\prod_{i=1}^nP(X=x^{(i)};\theta)
+$$
+Intuitively this is simply the **joint probability** $P(X^{(1)}=x^{(1)},X^{(2)}=x^{(2)},\dots,X^{(n)}=x^{(n)};\theta)$; the probability of observing our data $\mathcal{D}$ for a value of $\theta$
+- By the iid assumption the data is independent and comes from one distribution, which is why the joint probability is simply $\prod_{i=1}^nP(X=x^{(i)};\theta)$
+- Maximizing the likelihood gives the parameter value for which the observed sample is most likely to have been generated
+
+**Maximum Likelihood Estimate:** the MLE is the value of $\theta$ for which the likelihood function is maximized; and thus is the value of $\theta$ where the probability of observing $\mathcal{D}$ is maximized
+$$
+\hat{\theta}_{\text{MLE}}=\arg\max_{\theta \in\mathcal{R}}L(\theta)=\arg\max_{\theta \in\mathcal{R}}P(\mathcal{D};\theta)
+$$
+Where $\mathcal{R}$ is the range of $\theta$, which depends on the underlying distribution of $X$
+- For simple and agreeable distributions, this value is determined by **solving for** $\theta$ in the derivative $\frac{d}{d\theta}L(\theta)=0$ because the likelihood is concave and thus has a maximum at this critical point
+	- To make the derivative calculation simpler still we often swap in the **log-likelihood function** which is $l(\theta)=\ln(L(\theta))=\sum_{i=1}^n\ln P(X=x^{(i)};\theta)$, which works because
+		1. The $\ln$ function is strictly increasing; the log-likelihood has its maximum at exactly the same $\theta$ as $L(\theta)$ does so nothing is lost
+		2. The $\ln$ function turns products into sums, which are efficient to compute and far easier to differentiate
+		3. The $\ln$ function is numerically stable; a product of many numbers each of which is $\leq 1$ (which $L(\theta)$ often is since it is a joint probability) often goes to $0$, but a sum of their logs does not
+
+The MLE has two major flaws:
+- With limited data, it can overfit to the given sample; ex. take a few iid Bernoulli samples which are all negative, then the MLE is necessarily $\hat{\theta}_{\text{MLE}}=0$ where $\theta$ is the probability of success
+- The MLE uses only the observed samples together with an assumption about the underlying iid distribution type; it does not take into account any a priori assumptions about $\theta$
 
 
+**Posterior Probability:** is a **conditional probability distribution** that represents the updated belief about a parameter after observing data $\mathcal{D}$
+$$
+P(\theta\mid\mathcal{D})
+=\frac{P(\mathcal{D} \mid \theta) P(\theta)}{P(\mathcal{D})}
+\propto P(\mathcal{D} \mid \theta)\cdot P(\theta)
+$$
+Notice then that posterior probability is derived by updating the prior probability $P(\theta)$ with information summarized by the likelihood function via Bayes' theorem
 
+Assume the underlying distribution of $\mathcal{D}$ is **Bernoulli** with its one parameter, probability of success, being $\theta$, then:
+- The term $P(\theta)$ is our **a priori estimate of the success probability parameter's distribution**; since this is $\in[0,1]$ it is best modelled using the **Beta distribution** where $P(\theta;\alpha,\beta)\propto \theta^{\alpha-1}(1-\theta)^{\beta-1}$
+	- The Beta distribution is symmetric and centered at $0.5$ when $\alpha=\beta$, and is simply the uniform distribution when $\alpha=\beta=1$
+	- When $\alpha\neq\beta$, the distribution is skewed toward the larger parameter
+		- Increasing $\alpha$ shifts the distribution toward $1$, and increasing $\beta$ shifts it toward $0$
+	- Finally as $\alpha+\beta$ becomes larger the distribution has a higher peak, meaning that it concentrates more of its density around its expectation; more confidence
+	- Ultimately $\alpha$ and $\beta$ can be interpreted as **pseudo-counts**; we pretend to have observed $\alpha-1$ successes and $\beta-1$ failures before calculating the MAP
+- Then $P(\mathcal{D} \mid \theta) \ P(\theta) \propto\theta^{N_{\text{win}}} (1 - \theta)^{N_{\text{loss}}}\theta^{(\alpha - 1)} (1 - \theta)^{(\beta - 1)} = \theta^{(N_{\text{win}} + \alpha - 1)} (1 - \theta)^{(N_{\text{loss}} + \beta - 1)}$, which suggests that the posterior $P(\theta\mid\mathcal{D})$ itself a Beta distribution with params $\alpha+N_{\text{win}}$ and $\beta+N_{\text{loss}}$
+	- Because the **prior and posterior belong to the same family**, the Beta is a **conjugate prior** for the **Bernoulli likelihood**
+		- Conjugate priors simplify the math because the posterior has a closed form in the same family as the prior, so updating our beliefs just means updating the prior’s parameters
 
+**Maximum a-Posteriori Estimate:** the MAP estimate of $\theta$ is the **mode of the posterior distribution**; 
+the **single value** of $\theta$ that has the highest posterior probability density, given the observed sample $\mathcal{D}$
+$$
+\hat{\theta}_{\text{MAP}}=\arg\max_{\theta \in\mathcal{R}}P(\theta\mid\mathcal{D})
+$$
+Recall by using Bayes' Theorem we can rewrite this and drop the $P(\mathcal{D})$ denominator since it does not affect the $\arg\max$ function:
+$$
+\hat{\theta}_{\text{MAP}}=\arg\max_{\theta\in\mathcal{R}}P(\theta\mid\mathcal{D})
+=\arg\max_{\theta \in [0, 1]} \frac{P(\mathcal{D} \mid \theta) P(\theta)}{P(\mathcal{D})}
+\approx \arg\max_{\theta \in [0, 1]}P(\mathcal{D} \mid \theta)\cdot P(\theta)
+$$
+The process to compute the MAP is similar to computing the MLE:
+- First we take the natural logarithm of the posterior probability; $\ln P(\theta \mid \mathcal{D}) = (N_{\text{win}} + \alpha - 1) \log (\theta) +  (N_{\text{loss}} + \beta - 1) \log (1 - \theta) + \text{const}$
+- Then take the derivative, set to $0$, and solve for $\theta$, which in the Bernoulli and Beta case is $\hat{\theta}_{\text{MAP}} =\frac{N_{\text{win}} + \alpha - 1}{N_{\text{win}} + N_{\text{loss}} + \alpha + \beta - 2}$
+	- Intuitively, we can think of this as adding $\alpha-1$ successes and $\beta-1$ failures through our priors to the $\theta$ suggested only by the observed data
+
+Consider the connections between MLE and MAP:
+- **MLE is a special case of MAP where the prior is the uniform distribution**; a uniform prior with $\alpha=\beta=1$ assigns the same probability to every value of $\theta$ in $[0,1]$
+	- In other words, a uniform prior expresses no preference for any value of $\theta$, so the estimate is determined by the data alone
+- The **influence of the prior depends on how much data we have**; the pseudo-counts become negligible compared to the observed counts $N_{\text{win}}$ and $N_{\text{loss}}$ as the number of observed samples grows
+- We can interpret the prior as a **regularizer** to prevent overfitting, the values of $\alpha$ and $\beta$ play a role similar to a regularization strength; the larger they are, the stronger the penalty, and thus the more data we need before the estimate moves away from the prior
+## <u>Probabilistic Conditional Models</u>
+Let $\mathcal{D}=x^{(1)},x^{(2)},\dots,x^{(n)}$ be **iid** observed data points
