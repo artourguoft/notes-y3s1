@@ -113,7 +113,8 @@ Any LPP also has an **equivalent canonical form**:
 	- The resulting objective function becomes $f:\mathbb{R}^{m\times(n+m)}\to \mathbb{R}$ where the coefficients of the slack variables are $0$ (but **still count for the dimension** of the domain!)
 
 ==Absolute values in objectives vs absolute values in constraints
-LPPs with variables for coefficients==
+LPPs with variables for coefficients
+Objective function is completely independent of constraints feasible set (no intersection or any other relationship needed); the former decides the optimal point, but the value can change for same point by just changing objective function==
 # <u>Extreme Point Theorem</u>
 The set of all points that satisfies the constraints on an LPP is the **intersection of closed halfspaces and hyperplanes**; recall, both are convex sets and the intersection of convex sets is convex, thus the **feasible set is convex** if it is nonempty
 - Specifically, nonempty **feasible sets are convex polyhedrons** defined by all convex combinations of their **finitely many extreme points**, and if the polyhedron is **bounded** then the feasible set is a **convex polytope**
@@ -206,12 +207,11 @@ Once there are **no negative coefficients remaining** in the objective function,
 - Any variables that were never pivotal columns remain nonbasic variables (values remain $0$)
 - Recall if at any iteration we first encounter all $\theta$-ratios being nonpositive, the method stops early
 
-==each iteration moves to a new extreme point / BFS==
 ==Inverse of matrix $B$ is matrix such that $BB^{-1}=I$ and $B^{-1}B=I$==
 
 
 
-**Feasible Direction:** for a feasible set represented by polyhedron $P\subseteq \mathbb{R}^n$ and $\mathbf{x}\in P$, a vector $\mathbf{v}\in \mathbb{R}^n$ is a feasible direction at $\mathbf{x}$ if $\exists\theta_{0}>0,\forall\leq\theta<\theta_{0},\mathbf{x}+\theta \mathbf{v}\in P$
+**Feasible Direction:** for a feasible set represented by polyhedron $P\subseteq \mathbb{R}^n$ and $\mathbf{x}\in P$, a vector $\mathbf{v}\in \mathbb{R}^n$ is a feasible direction at $\mathbf{x}$ if $\exists\theta_{0}>0,\forall_{0}\leq\theta<\theta_{0},\mathbf{x}+\theta \mathbf{v}\in P$
 - Ie. we can move in the direction $\mathbf{v}$ from $\mathbf{x}$ while remaining in the feasible set
 Generally, we want to answer which basic directions at a given BFS $\mathbf{x}$ are feasible
 - If $\mathbf{x}$ is not degenerate; then all basic directions at this point are feasible directions
@@ -254,7 +254,3 @@ How much does the objective function improve when moving towards a basic directi
 Dimension=n−m
 provided the constraints are consistent and the nonnegativity constraints do not reduce the dimension further.
 So, one equality in three variables gives a plane; two give a line; and three independent equalities give a point (before accounting for nonnegativity restrictions).==
-
-
-a3 q1
-$\binom{5}{2}=10$ combinations of 2 columns, find linearly independent then etc.
