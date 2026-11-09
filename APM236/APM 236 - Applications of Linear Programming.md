@@ -144,6 +144,32 @@ Consider a **canonical** LPP where $\mathbf{A}\in \mathbb{R}^{m\times n}$, $\mat
 Note that this method can **only** be used for LPPs in **canonical** form, but **any optimal solution to the canonical form** found as described above **is an optimal solution to the equivalent standard form**
 
 **Every BFS is an extreme point** of the feasible set (and **every extreme point is a BFS**), whereas basic solutions that are infeasible are not extreme points since they are not in the feasible set at all
+# <u>Active Constraints and Degeneracy</u>
+**Active Constraint:** for a polyhedron $P\subseteq \mathbb{R}^n$ defined by some set of $m$ equalities and inequalities, if a point $\mathbf{x}^*\in \mathbb{R}^n$ satisfies $\mathbf{a}_{i}^\top\mathbf{x}^*=b_{i}$ for some $1\leq i\leq m$, then the $i$th constraint is **active at** $\mathbf{x}^*$
+- Note the standard $x_{j}\geq 0$ inequalities for $1\leq j\leq n$ are counted as separate individual constraints here
+- It follows that if $n$ constraints are active at $\mathbf{x}^*$ and all these active constraints are linearly independent, then $\mathbf{x}^*$ solves the system of linear equations in $n$ unknowns defined by this set of equations
+	- Recall from linear algebra that such a system has a unique solution iff these $n$ equations are linearly independent (coefficient vectors are not scalar multiples of each other)
+	- For $m<n$ active constraints there cannot be a unique solution
+	- For $m>n$ **at least** $n$ of the active constraints must be linearly independent
+		- If $>n$ constraints are active, refer to definition of degeneracy below
+
+Let $\mathbf{x}^*\in P$ and $I=\{ i:\mathbf{a}_{i}^\top \mathbf{x}^*=b_{i}\}$, ie. the set of row indices of active constraints at $\mathbf{x}^*$, then the following statements are **equivalent**
+- There exist $n$ active constraints in $\{ \mathbf{a}_{i}:i\in I \}$ which are linearly independent
+- There exist $n$ active constraints in $\{ \mathbf{a}_{i}:i\in I \}$ which span $\mathbb{R}^n$
+- $\mathbf{x}^*$ is the unique solution of the system of equations $\mathbf{a}_{i}^\top \mathbf{x}^*=b_{i}$ where $i\in I$
+A point $\mathbf{x}\in P$ is a **BFS** if it meets **any/all of these conditions**
+- This definition of BFS has the benefit of not requiring the feasible set to be defined in canonical form (recall definition of $P$)
+- Intuitively, BFSs are extreme points and thus must be unique solutions rather than parameterized solutions (hyperplanes)
+
+
+**Degeneracy:** a BFS (refer to definition above) $\mathbf{x}^*\in P$ is **degenerate** if $|I=\{ i:\mathbf{a}_{i}^\top \mathbf{x}^*=b_{i}\}|>n$, ie. if there are more than $n$ active constraints
+
+If $P$ is defined in **canonical** form rather than general form, there is an even simpler way to determine if BFS is degenerate
+- Ie. $P=\{ \mathbf{x}\in \mathbb{R}^n:\mathbf{A}\mathbf{x}=\mathbf{b}\wedge x_{1},x_{2},\dots x_{n}\geq 0 \}$, where $\mathbf{A}\in \mathbb{R}^{m\times n}$ and $\text{rank}(\mathbf{A})=m$ meaning there are $m$ linearly independent rows
+- Let $\mathbf{x}^*\in P$ be a BFS, then $\mathbf{x}^*$ is degenerate iff any of the basic variables of $\mathbf{x}^*$ are $0$
+	- Each BFS has $m$ basic variables, and the other $n-m$ nonbasic variables are set to $0$
+		- Then there are $m$ active constraints from $\mathbf{A}\mathbf{x}^*=\mathbf{b}$ and $n$ more active constraints from the nonnegativity constraints on the nonbasic variables, for a total of $m+(n-m)=n$
+			- Thus, if any basic variables are also $0$, their nonnegativity constraints become active and thus $|I|>n$ which is the definition of degeneracy
 # <u>Simplex Method</u>
 **Adjacent:** two extreme points in a set of feasible solutions $S$ are adjacent they have **all but one** in common in their **selection of basic variables**; ie. the selection of nonzero components differs in two places
 
