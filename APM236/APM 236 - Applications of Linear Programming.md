@@ -132,16 +132,19 @@ The set of all points that satisfies the constraints on an LPP is the **intersec
 Consider why **optimal solutions do not occur at interior points**:
 - Let $\mathbf{x}^*\in\{ \mathbf{x}\in \mathbb{R}^n: \mathbf{A}\mathbf{x}\leq\mathbf{b}\}$ be an interior point of this feasible set, that is $\mathbf{A}\mathbf{x}^*<\mathbf{b}$; then by definition of interior points we can perturb $\mathbf{x}^*$ by a chosen direction vector $\mathbf{d}\in \mathbb{R}^n$ scaled by $\epsilon>0$ while remaining in the feasible set, such that $\mathbf{x}^{**}=\mathbf{x}^*+\epsilon \mathbf{d}$ further reduces or increases the objective function
 # <u>Basic Solutions</u>
-Consider a **canonical** LPP where $\mathbf{A}\in \mathbb{R}^{m\times n}$, $\mathbf{x}\in \mathbb{R}^n$ and $\mathbf{b}\in \mathbb{R}^m$
+Consider a **canonical** LPP $\mathbf{A}\mathbf{x}=\mathbf{b}$ where $\mathbf{A}\in \mathbb{R}^{m\times n}$, $\mathbf{x}\in \mathbb{R}^n$ and $\mathbf{b}\in \mathbb{R}^m$
 - Assume $m\leq n$, and assume that $\text{rank}(\mathbf{A})=m$; that is $\mathbf{A}$ contains at least one set of $m$ **linearly independent columns**
 	- If we cannot assume $\text{rank}(\mathbf{A})=m$, then do row-reduction of $\mathbf{A}$ to determine $\text{rank}(\mathbf{A})$ first
 - **Any** set of $m$ linearly independent columns of $\mathbf{A}$ forms a **basis** for $\mathbb{R}^m$ which is a basis matrix $\mathbf{B}\in\mathbb{R}^{m\times m}$, then for each $\mathbb{R}^{m}$ column in $\mathbf{B}$ the corresponding column index in $\mathbf{A}$ marks a **basic variable**, with the remaining $n-m$ columns of the original $\mathbf{A}$ marking **nonbasic variables**
-	- The nonbasic $x$ values in $\mathbf{x}$ are then set to $0$, from which it follows that $\leq m$ components of any basic solution can be positive and **the rest must be** $0$
-	- Then $\mathbf{A}\mathbf{x}=\mathbf{b}$ becomes equivalent to $\mathbf{B}\mathbf{x}=\mathbf{b}$, which is a system of $m$ equations in $m$ unknowns and thus has a **unique solution** $\mathbf{x}$ which we solve for by **row-reducing** $[\mathbf{B}|\mathbf{b}]$, and is called a **basic solution**
+	- The nonbasic $x$ values in $\mathbf{x}$ are then set to $0$, from which it follows that $\leq m$ **components of any basic solution can be positive** and **the rest must be** $0$
+	- Then $\mathbf{A}\mathbf{x}=\mathbf{b}$ becomes equivalent to $\mathbf{B}\mathbf{x}_{\mathbf{B}}=\mathbf{b}$ where $\mathbf{x}_{\mathbf{B}}\in \mathbb{R}^m$ with nonbasic components removed, which is a system of $m$ equations in $m$ unknowns and thus has a **unique solution** $\mathbf{x}^*$ which we solve for by **row-reducing** $[\mathbf{B}|\mathbf{b}]$, and is called a **basic solution**
+		- Alternatively we can express this as $\mathbf{x}_{\mathbf{B}}=\mathbf{B}^{-1}\mathbf{b}$ and row-reduce the right hand side; note that basic solutions $\mathbf{x}^*$ given by these methods are also dimension $\mathbb{R}^m$, we have to **refill all nonbasic components with** $0$ to get the full $\mathbb{R}^n$ equivalent
 		- The number of **distinct** basic solutions is **upper bounded** by $\binom{n}{m}$; the number of choices of $m$ columns from $n$ (so $\mathbf{A}$ may have less linearly independent sets of $m$ columns than this)
-		- Note, basic solutions are **not necessarily feasible solutions** because they do not account for the $\mathbf{x}\geq 0$ constraint; any basic solution where all components are nonnegative is called a **basic feasible solution** or BFS
-			- One **all BFSs** have been identified **truncate** these vectors to remove any possible slack variables, and test the resulting solutions to determine the optimal solution
-Note that this method can **only** be used for LPPs in **canonical** form, but **any optimal solution to the canonical form** found as described above **is an optimal solution to the equivalent standard form**
+		- Note, basic solutions are **not necessarily feasible solutions** because they do not account for the $\mathbf{x}\geq 0$ constraints; only a basic solution where **all basic components are nonnegative**, ie. $\mathbf{0}\leq \mathbf{x}_{\mathbf{B}}=\mathbf{B}^{-1}\mathbf{b}$, is called a **basic feasible solution** or BFS
+			- Once **all BFSs** have been identified, **truncate** these vectors to remove any possible slack variables and test the resulting solutions to determine the optimal solution
+Note that this method can **only** be used for LPPs in **canonical** form, but **any optimal solution to the canonical form** found as described above **is an optimal solution to the equivalent standard form** (to which slack variables were introduced for canonical form)
+
+Note, each basis matrix is $\mathbf{B}= \begin{pmatrix}\big| & & \big| \\\mathbf{A}_{\mathbf{B}(1)} & \cdots & \mathbf{A}_{\mathbf{B}(m)} \\\big| & & \big|\end{pmatrix}$ where $\mathbf{B}(1),\mathbf{B}(2),\dots,\mathbf{B}(m)$ return column indices of $\mathbf{A}$ corresponding to the basic variables chosen by this basis
 
 **Every BFS is an extreme point** of the feasible set (and **every extreme point is a BFS**), whereas basic solutions that are infeasible are not extreme points since they are not in the feasible set at all
 # <u>Active Constraints and Degeneracy</u>
@@ -149,8 +152,8 @@ Note that this method can **only** be used for LPPs in **canonical** form, but *
 - Note the standard $x_{j}\geq 0$ inequalities for $1\leq j\leq n$ are counted as separate individual constraints here
 - It follows that if $n$ constraints are active at $\mathbf{x}^*$ and all these active constraints are linearly independent, then $\mathbf{x}^*$ solves the system of linear equations in $n$ unknowns defined by this set of equations
 	- Recall from linear algebra that such a system has a unique solution iff these $n$ equations are linearly independent (coefficient vectors are not scalar multiples of each other)
-	- For $m<n$ active constraints there cannot be a unique solution
-	- For $m>n$ **at least** $n$ of the active constraints must be linearly independent
+	- For $m<n$ active constraints there **cannot be a unique solution**
+	- For $m>n$ **at least** $n$ of the active constraints must be linearly independent for a unique solution
 		- If $>n$ constraints are active, refer to definition of degeneracy below
 
 Let $\mathbf{x}^*\in P$ and $I=\{ i:\mathbf{a}_{i}^\top \mathbf{x}^*=b_{i}\}$, ie. the set of row indices of active constraints at $\mathbf{x}^*$, then the following statements are **equivalent**
@@ -163,13 +166,55 @@ A point $\mathbf{x}\in P$ is a **BFS** if it meets **any/all of these conditions
 
 
 **Degeneracy:** a BFS (refer to definition above) $\mathbf{x}^*\in P$ is **degenerate** if $|I=\{ i:\mathbf{a}_{i}^\top \mathbf{x}^*=b_{i}\}|>n$, ie. if there are more than $n$ active constraints
+- If $P$ is defined in **canonical** form rather than general form, ie. $P=\{ \mathbf{x}\in \mathbb{R}^n:\mathbf{A}\mathbf{x}=\mathbf{b}\wedge x_{1},x_{2},\dots x_{n}\geq 0 \}$, where $\mathbf{A}\in \mathbb{R}^{m\times n}$ and $\text{rank}(\mathbf{A})=m$ meaning there are $m$ linearly independent rows, there is a simple way to determine if BFS is degenerate:
+	- Let $\mathbf{x}^*\in P$ be a BFS, then $\mathbf{x}^*$ is **degenerate iff any of the basic variables** of the BFS $\mathbf{x}^*$ are $0$
+		- Each BFS has $m$ basic variables, and the other $n-m$ nonbasic variables are set to $0$
+		- Then there are $m$ active constraints from $\mathbf{A}\mathbf{x}^*=\mathbf{b}$ by definition of BFS, and $n$ more active constraints from the nonnegativity constraints on the nonbasic variables, for a total of $m+(n-m)=n$
+			- Thus, if **any basic variables are also** $0$, their nonnegativity constraints become active and immediately $|I|>n$ which is the definition of degeneracy
 
-If $P$ is defined in **canonical** form rather than general form, there is an even simpler way to determine if BFS is degenerate
-- Ie. $P=\{ \mathbf{x}\in \mathbb{R}^n:\mathbf{A}\mathbf{x}=\mathbf{b}\wedge x_{1},x_{2},\dots x_{n}\geq 0 \}$, where $\mathbf{A}\in \mathbb{R}^{m\times n}$ and $\text{rank}(\mathbf{A})=m$ meaning there are $m$ linearly independent rows
-- Let $\mathbf{x}^*\in P$ be a BFS, then $\mathbf{x}^*$ is degenerate iff any of the basic variables of $\mathbf{x}^*$ are $0$
-	- Each BFS has $m$ basic variables, and the other $n-m$ nonbasic variables are set to $0$
-		- Then there are $m$ active constraints from $\mathbf{A}\mathbf{x}^*=\mathbf{b}$ and $n$ more active constraints from the nonnegativity constraints on the nonbasic variables, for a total of $m+(n-m)=n$
-			- Thus, if any basic variables are also $0$, their nonnegativity constraints become active and thus $|I|>n$ which is the definition of degeneracy
+Degeneracy becomes important in the simplex method, because it implies a **change of basis** can occur without moving to a different BFS
+# <u>Basic Directions</u>
+**Feasible Direction:** for a feasible set represented by polyhedron $P\subseteq \mathbb{R}^n$ and $\mathbf{x}\in P$, a vector $\mathbf{v}\in \mathbb{R}^n$ is a feasible direction at $\mathbf{x}$ if $\exists\theta_{0}>0,\forall 0<\theta\leq\theta_{0},\mathbf{x}+\theta \mathbf{v}\in P$
+- Intuitively, this means we can move some scalar amount in the direction $\mathbf{v}$ from $\mathbf{x}$ while **remaining in the feasible set**
+
+**Basic Directions:** assume $P$ was in canonical form, ie. $P=\{ \mathbf{x}\in \mathbb{R}^n:\mathbf{A}\mathbf{x}=\mathbf{b}\wedge x_{1},x_{2},\dots x_{n}\geq 0 \}$, and let $\mathbf{x}^*\in P$ be a BFS, then for each **nonbasic variable** $j$ at this BFS, the $j$th **basic direction at** $\mathbf{x}^*$ is the vector $\mathbf{d}$ given by:
+$$
+\begin{cases}
+d_j = 1 \\
+d_i = 0 & \text{all other nonbasic indices }i \\
+\mathbf{d}_\mathbf{B} = -\mathbf{B}^{-1}\mathbf{A}_j
+\end{cases}
+$$
+Where $\mathbf{d}_{\mathbf{B}}$ are the components corresponding to column indices of **basic variables**
+- It follows that each BFS has $n-m$ basic directions (assuming $\text{rank}(\mathbf{A})=m$)
+
+Basic directions are needed to know where we can move from a BFS while remaining feasible (satisfying all equalities), which explains the construction of basic directions:
+- $j$ is the nonbasic variable that we want to increase
+- All other nonbasic variables remain unchanged
+- The $d_\mathbf{B} = -\mathbf{B}^{-1}\mathbf{A}_j$ captures how all the basic variables must change so that the constraints remain satisfied, ie. we require that the changes in basic variables and the $j$th nonbasic variables cancel out $\mathbf{B}\mathbf{d}_\mathbf{B} + \mathbf{A}_{j}=\mathbf{0}$
+
+Note, moving in a basic direction preserves the equality constraints $\mathbf{A}\mathbf{x}=\mathbf{b}$ but it **does not necessarily preserve the nonnegativity** constraints $\mathbf{x}\geq 0$, so to answer **which basic directions** at a given BFS $\mathbf{x}^*$ are **feasible directions**:
+- If $\mathbf{x}^*$ is **not degenerate**; then **all** basic directions at this point are feasible directions
+	- Recall, not degenerate implies $\mathbf{x}_{\mathbf{B}}>\mathbf{0}$, thus even if there are components of $\mathbf{d}_{\mathbf{B}}$ which are negative, we can still move some small scalar amount in the basic direction within which we have this $\mathbf{d}_{\mathbf{B}}$ while maintaining the nonnegativity constraints (and thus being a feasible direction)
+- If $\mathbf{x}^*$ is **degenerate**; it is possible that some basic directions are not feasible directions
+	- Recall, degenerate implies one or more basic variables are $0$ in $\mathbf{x}_{\mathbf{B}}$, thus if any basic direction $\mathbf{d}_{\mathbf{B}}$ has negative components at **one or more of the basic variable indices** which are equal to $0$ in $\mathbf{x}_{\mathbf{B}}$, then that basic direction is not a feasible direction
+# <u>Restated Extreme Point Theorem</u>
+**Extreme Point Theorem:** a polyhedron $P\subseteq \mathbb{R}^n$ contains a line if there is a point $\mathbf{x}_{0}\in P$ and a direction vector $\mathbf{0}\neq \mathbf{d}\in \mathbb{R}^n$ such that $\mathbf{x}_{0}+t\mathbf{d}\in P$ for all $t\in R$
+
+Theorem KB2.6: if $P$ has at least one extreme point $\iff$ $P$ does not contain a line
+- Intuitively, lines extend infinitely in two directions so this follows; ex. a halfspace is a polyhedron that contains an infinite number of lines parallel to its boundary, and it does not have any extreme points
+	- Consider why a halfspace cannot be put into standard or canonical form
+	- The first quadrant is a polyhedron that does not contain any lines, and it does have an extreme point at the origin
+
+Theorem: consider an LPP to min $\mathbf{c}^{\top}\mathbf{x}$ constrained by $\mathbf{x}\in P$ where $P$ is a polyhedron and suppose $P$ has at least one extreme point and that an optimal solution exists, then there is an optimal solution which is an extreme point
+- Let $Q$ be the set of all optimal solutions
+- Express $P$ in the form $P=\{ \mathbf{x}\in \mathbb{R}^n:\mathbf{A}\mathbf{x}\leq \mathbf{b} \}$
+- Let $m$ be the minimum, then $Q=\{ \mathbf{x}\in \mathbb{R}^n:\mathbf{A}\mathbf{x}\leq \mathbf{b}\wedge \mathbf{c}^{\top}\mathbf{x}=m \}$ and $Q$ is a polyhedron
+- Then if $P$ does not contain a line, then $Q\subseteq P$ cannot contain a line, and if $Q$ does not contain a line then it has extreme points
+- Let $\mathbf{x}^*$ be an extreme point of $Q$, then we show that $\mathbf{x}^*$ is also an extreme point of $P$; proof by contradiction:
+	- If it were not an extreme point of $P$, then we could write $\mathbf{x}^*=\lambda \mathbf{x}_{1}+(1-\lambda)\mathbf{x}_{2}\in P$ for some $\mathbf{x}^*\neq \mathbf{x}_{1}\neq \mathbf{x}_{2}\in P$ and $\lambda \in(0,1)$
+	- We know $m=\mathbf{c}^{\top}\mathbf{x}^*=\lambda(\mathbf{c}^{\top}\mathbf{x}_{1})+(1-\lambda)(\mathbf{c}^{\top}\mathbf{x}_{2})$, but that implies $\mathbf{c}^{\top}\mathbf{x}_{1}=\mathbf{c}^{\top}\mathbf{x}_{2}=m$ which implies $\mathbf{x}_{1},\mathbf{x}_{2}\in Q$, which implies $\mathbf{x}^*$ is not an extreme point of $Q$ which contradicts our initial assumption!
+This is different than the textbook statement which is incorrect!
 # <u>Simplex Method</u>
 **Adjacent:** two extreme points in a set of feasible solutions $S$ are adjacent they have **all but one** in common in their **selection of basic variables**; ie. the selection of nonzero components differs in two places
 
@@ -233,32 +278,20 @@ Once there are **no negative coefficients remaining** in the objective function,
 - Any variables that were never pivotal columns remain nonbasic variables (values remain $0$)
 - Recall if at any iteration we first encounter all $\theta$-ratios being nonpositive, the method stops early
 
+
+1. Choose a non-basic variable to enter the basis.
+2. Calculate its basic direction \(d\).
+3. Determine how far we can move in that direction without violating non-negativity.
+4. Move to the next BFS, if a positive step is possible.
 ==Inverse of matrix $B$ is matrix such that $BB^{-1}=I$ and $B^{-1}B=I$==
-==Degeneracy matters in simplex because a change of basis can then occur without moving to a different point==
+==Degeneracy becomes important in the simplex method, because it implies a **change of basis** can occur without moving to a different BFS
+- Stalling: The simplex method performs a pivot without improving the objective function
+- Cycling: In rare cases, the simplex method can return to a previously visited basis, potentially repeating indefinitely
 
 
-**Feasible Direction:** for a feasible set represented by polyhedron $P\subseteq \mathbb{R}^n$ and $\mathbf{x}\in P$, a vector $\mathbf{v}\in \mathbb{R}^n$ is a feasible direction at $\mathbf{x}$ if $\exists\theta_{0}>0,\forall_{0}\leq\theta<\theta_{0},\mathbf{x}+\theta \mathbf{v}\in P$
-- Ie. we can move in the direction $\mathbf{v}$ from $\mathbf{x}$ while remaining in the feasible set
-Generally, we want to answer which basic directions at a given BFS $\mathbf{x}$ are feasible
-- If $\mathbf{x}$ is not degenerate; then all basic directions at this point are feasible directions
-- If $\mathbf{x}$ is degenerate; it is possible that some basic directions are not feasible directions, depending on number of active constraints
 
-**Extreme Point Theorem:** a polyhedron $P\subseteq \mathbb{R}^n$ contains a line if there is a point $\mathbf{x}_{0}\in P$ and a direction vector $\mathbf{0}\neq \mathbf{d}\in \mathbb{R}^n$ such that $\mathbf{x}_{0}+t\mathbf{d}\in P$ for all $t\in R$
 
-Theorem KB2.6: if $P$ has at least one extreme point $\iff$ $P$ does not contain a line
-- Intuitively, lines extend infinitely in two directions so this follows; ex. a halfspace is a polyhedron that contains an infinite number of lines parallel to its boundary, and it does not have any extreme points
-	- Consider why a halfspace cannot be put into standard or canonical form
-	- The first quadrant is a polyhedron that does not contain any lines, and it does have an extreme point at the origin
 
-Theorem: consider an LPP to min $\mathbf{c}^{\top}\mathbf{x}$ constrained by $\mathbf{x}\in P$ where $P$ is a polyhedron and suppose $P$ has at least one extreme point and that an optimal solution exists, then there is an optimal solution which is an extreme point
-- Let $Q$ be the set of all optimal solutions
-- Express $P$ in the form $P=\{ \mathbf{x}\in \mathbb{R}^n:\mathbf{A}\mathbf{x}\leq \mathbf{b} \}$
-- Let $m$ be the minimum, then $Q=\{ \mathbf{x}\in \mathbb{R}^n:\mathbf{A}\mathbf{x}\leq \mathbf{b}\wedge \mathbf{c}^{\top}\mathbf{x}=m \}$ and $Q$ is a polyhedron
-- Then if $P$ does not contain a line, then $Q\subseteq P$ cannot contain a line, and if $Q$ does not contain a line then it has extreme points
-- Let $\mathbf{x}^*$ be an extreme point of $Q$, then we show that $\mathbf{x}^*$ is also an extreme point of $P$; proof by contradiction:
-	- If it were not an extreme point of $P$, then we could write $\mathbf{x}^*=\lambda \mathbf{x}_{1}+(1-\lambda)\mathbf{x}_{2}\in P$ for some $\mathbf{x}^*\neq \mathbf{x}_{1}\neq \mathbf{x}_{2}\in P$ and $\lambda \in(0,1)$
-	- We know $m=\mathbf{c}^{\top}\mathbf{x}^*=\lambda(\mathbf{c}^{\top}\mathbf{x}_{1})+(1-\lambda)(\mathbf{c}^{\top}\mathbf{x}_{2})$, but that implies $\mathbf{c}^{\top}\mathbf{x}_{1}=\mathbf{c}^{\top}\mathbf{x}_{2}=m$ which implies $\mathbf{x}_{1},\mathbf{x}_{2}\in Q$, which implies $\mathbf{x}^*$ is not an extreme point of $Q$ which contradicts our initial assumption!
-This is different than the textbook statement which is incorrect!
 
 **jth Reduced Cost:**
 - Let $e_{1},\dots,e_{m}$ be the canonical basis of $\mathbb{R}^m$
@@ -288,5 +321,3 @@ Dimension=n−m
 provided the constraints are consistent and the nonnegativity constraints do not reduce the dimension further.
 So, one equality in three variables gives a plane; two give a line; and three independent equalities give a point (before accounting for nonnegativity restrictions).==
 
-# <u>Game Theory</u>
-**Adjacent:** a
