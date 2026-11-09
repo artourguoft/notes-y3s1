@@ -234,7 +234,7 @@ Once there are **no negative coefficients remaining** in the objective function,
 - Recall if at any iteration we first encounter all $\theta$-ratios being nonpositive, the method stops early
 
 ==Inverse of matrix $B$ is matrix such that $BB^{-1}=I$ and $B^{-1}B=I$==
-
+==Degeneracy matters in simplex because a change of basis can then occur without moving to a different point==
 
 
 **Feasible Direction:** for a feasible set represented by polyhedron $P\subseteq \mathbb{R}^n$ and $\mathbf{x}\in P$, a vector $\mathbf{v}\in \mathbb{R}^n$ is a feasible direction at $\mathbf{x}$ if $\exists\theta_{0}>0,\forall_{0}\leq\theta<\theta_{0},\mathbf{x}+\theta \mathbf{v}\in P$
@@ -270,13 +270,23 @@ How much does the objective function improve when moving towards a basic directi
 - Where $z=\mathbf{c}^\top\mathbf{x}$ for an extreme point $\mathbf{x}$, then take $\mathbf{x}\to \mathbf{x}+\theta D_{j}$, so the difference is $\mathbf{c}-D_{j}$
 - The jth reduced cost $\mathbf{c}_{j}=\mathbf{c}\cdot D_{j}=\mathbf{c}_{j}-\mathbf{c}_{B}\cdot \mathbf{A}_{B}^{-1}\mathbf{A}_{j}$
  - If every reduced cost entry is negative at an extreme point, then that point is a maximizer
- - 
 
 
-
+$\theta$**-ratios:** for an LPP in canonical form, assume all BFSs are non-degenerate, and assume a BFS $\mathbf{x}$ with $j$th basic direction $\mathbf{d}$
+- The ratio tells us how far we can go from $\mathbf{x}$ in a basic direction $\mathbf{d}$ while remaining feasible
+- Moving in direction $\mathbf{d}$ away from $\mathbf{x}$, the $x_{j}$ component changes while all other nonbasic variables remain $0$
+- We want to move as far as we can $\mathbf{x}+\theta \mathbf{d}$ while remaining feasible; ie. $\theta=\max\{t:\mathbf{x}+t\mathbf{d}\in P \}$
+	- Formula is $\theta=\min_{\{ i:d_{i}<0 \}}\{ -\frac{x_{i}}{d_{i}} \}$
+	- Consider $\mathbf{A}\mathbf{x}=\mathbf{b}$ and $\mathbf{A}(\mathbf{x}+\theta \mathbf{d})=\mathbf{b}$, then $\mathbf{A}\theta \mathbf{d}=\mathbf{0}$ which also implies $\mathbf{A}\mathbf{d}=\mathbf{0}$
+	- So only way $\mathbf{x}+\theta \mathbf{d}$ can become infeasible if one its components becomes negative
+		- Then in an unbounded polyhedron $\theta$ can be $\infty$, since $d_{i}\geq 0$ for all $i$
+		- If $d_{i}<0$ for some $i$, recall any $x_{i}+\theta d_{i}\geq 0$ to be feasible so $\theta\leq -\frac{x_{i}}{d_{i}}$ which ties back to the formula above
 
 
 ==For n variables and m independent equality constraints,
 Dimension=n−m
 provided the constraints are consistent and the nonnegativity constraints do not reduce the dimension further.
 So, one equality in three variables gives a plane; two give a line; and three independent equalities give a point (before accounting for nonnegativity restrictions).==
+
+# <u>Game Theory</u>
+**Adjacent:** a
