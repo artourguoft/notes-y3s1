@@ -905,5 +905,9 @@ $$
 - For values $\geq 0.5$ we select $c=1$, otherwise $c=0$
 - The **decision boundary** is the value(s) of $x$ where the two terms in the denominator are equal, ie. where the two Gaussians (weighted by the class prior) give equal probabilities (in the binary univariate case the decision boundary is a point, since we have a single feature)
 ## <u>Multivariate GDA</u>
-If we want a generative c
+If we want a generative
+
+- Deriving single variable Gaussian MLEs, yes
+- Dw about derivation of multivariate Gaussian parameter MLEs, put formulas on aid sheet
+- Convert between eigenvector coordinate system 
 

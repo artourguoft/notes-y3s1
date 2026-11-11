@@ -144,7 +144,7 @@ Consider a **canonical** LPP $\mathbf{A}\mathbf{x}=\mathbf{b}$ where $\mathbf{A}
 			- Once **all BFSs** have been identified, **truncate** these vectors to remove any possible slack variables and test the resulting solutions to determine the optimal solution
 Note that this method can **only** be used for LPPs in **canonical** form, but **any optimal solution to the canonical form** found as described above **is an optimal solution to the equivalent standard form** (to which slack variables were introduced for canonical form)
 
-Note, each basis matrix is $\mathbf{B}= \begin{pmatrix}\big| & & \big| \\\mathbf{A}_{\mathbf{B}(1)} & \cdots & \mathbf{A}_{\mathbf{B}(m)} \\\big| & & \big|\end{pmatrix}$ where $\mathbf{B}(1),\mathbf{B}(2),\dots,\mathbf{B}(m)$ return column indices of $\mathbf{A}$ corresponding to the basic variables chosen by this basis
+Note, each basis matrix is $\mathbf{B}= [\mathbf{A}_{B(1)} \cdots \mathbf{A}_{B(m)}]$ where $B(1),B(2),\dots,B(m)$ return column indices of $\mathbf{A}$ corresponding to the basic variables chosen by this basis
 
 **Every BFS is an extreme point** of the feasible set (and **every extreme point is a BFS**), whereas basic solutions that are infeasible are not extreme points since they are not in the feasible set at all
 # <u>Active Constraints and Degeneracy</u>
@@ -198,6 +198,8 @@ Note, moving in a basic direction preserves the equality constraints $\mathbf{A}
 	- Recall, not degenerate implies $\mathbf{x}_{\mathbf{B}}>\mathbf{0}$, thus even if there are components of $\mathbf{d}_{\mathbf{B}}$ which are negative, we can still move some small scalar amount in the basic direction within which we have this $\mathbf{d}_{\mathbf{B}}$ while maintaining the nonnegativity constraints (and thus being a feasible direction)
 - If $\mathbf{x}^*$ is **degenerate**; it is possible that some basic directions are not feasible directions
 	- Recall, degenerate implies one or more basic variables are $0$ in $\mathbf{x}_{\mathbf{B}}$, thus if **any** component of $\mathbf{d}_{\mathbf{B}}$ is negative at **one or more of the basic variable indices** which are equal to $0$ in $\mathbf{x}_{\mathbf{B}}$, then that basic direction is not a feasible direction
+# <u>Reduced Cost</u>
+**Feasible Direction:** for
 # <u>Restated Extreme Point Theorem</u>
 **Extreme Point Theorem:** a polyhedron $P\subseteq \mathbb{R}^n$ contains a line if there is a point $\mathbf{x}_{0}\in P$ and a direction vector $\mathbf{0}\neq \mathbf{d}\in \mathbb{R}^n$ such that $\mathbf{x}_{0}+t\mathbf{d}\in P$ for all $t\in R$
 
