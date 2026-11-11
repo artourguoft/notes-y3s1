@@ -793,8 +793,7 @@ Assume the underlying distribution of $\mathcal{D}$ is **Bernoulli** with its on
 	- Because the **prior and posterior belong to the same family**, the Beta is a **conjugate prior** for the **Bernoulli likelihood**
 		- Conjugate priors simplify the math because the posterior has a closed form in the same family as the prior, so updating our beliefs just means updating the prior’s parameters
 
-**Maximum a-Posteriori Estimate:** the MAP estimate of $\theta$ is the **mode of the posterior distribution**; 
-the **single value** of $\theta$ that has the highest posterior probability density, given the observed sample $\mathcal{D}$
+**Maximum a-Posteriori Estimate:** the MAP estimate of $\theta$ is the **mode of the posterior distribution**; the **single value** of $\theta$ that has the highest posterior probability density, given the observed sample $\mathcal{D}$
 $$
 \hat{\theta}_{\text{MAP}}=\arg\max_{\theta \in\mathcal{R}}P(\theta\mid\mathcal{D})
 $$
@@ -815,4 +814,96 @@ Consider the connections between MLE and MAP:
 - The **influence of the prior depends on how much data we have**; the pseudo-counts become negligible compared to the observed counts $N_{\text{win}}$ and $N_{\text{loss}}$ as the number of observed samples grows
 - We can interpret the prior as a **regularizer** to prevent overfitting, the values of $\alpha$ and $\beta$ play a role similar to a regularization strength; the larger they are, the stronger the penalty, and thus the more data we need before the estimate moves away from the prior
 ## <u>Probabilistic Conditional Models</u>
-Let $\mathcal{D}=x^{(1)},x^{(2)},\dots,x^{(n)}$ be **iid** observed data points
+Let $\mathcal{D}=\{ (x^{(1)},y^{(1)}),(x^{(2)},y^{(2)}),\dots,(x^{(n)},y^{(n)}) \}$ be observed data points where both $X$ and $Y$ are Bernoulli but **not necessarily iid**; then effectively $\mathcal{D}$ gives us a **joint probability distribution** $P(X,Y)$, from which we can **determine conditional probability distributions** using Bayes'
+- Note here $Y$ is the class and $X$ is the feature
+
+Recall Bayes' concepts regarding **conditional distributions**:
+$$
+\begin{align}
+P(X\mid Y) &= \frac{P(X, Y)}{P(Y)}\implies P(X,Y)=P(X\mid Y)\cdot P(Y)=P(Y\mid X)\cdot P(X) \tag{Product Rule} \\
+&=\frac{P(Y\mid X)\cdot P(X)}{P(Y\mid X)\cdot P(X)+P(Y\mid X^c)\cdot P(X^c)} \tag{Bayes' Theorem} 
+\end{align}
+$$
+Recall that the event being conditioned on is **not a variable** but a constant in the conditional distribution
+- The conditional distribution's type is generally determined **by the variable being described**; ie. a Bernoulli dependent on an RV of some other family is still Bernoulli
+- Each conditional distribution **has its own parameters**, ie. $P(X\mid Y=0)$ and $P(X\mid Y=1)$ would have two parameters $\theta_{0}$ and $\theta_{1}$ determined by the joint distribution
+	- This assumed just two binary features in each point in $\mathcal{D}$; with $d$ **binary features** we need $2^{d+1}-1$ parameters, so **number of parameters** scales **exponentially** with **number of features**
+		- This is a result of the multiplicative law of conditional probability, ex. for $2$ features we would have $P(X\mid Y\mid Z)=P(X\mid Y,Z)\cdot P(Y\mid Z)\cdot P(Z)$ for which:
+			- $P(Z)$ contributes $1$ parameter (note we use $Z$ here as the class and both $X$ and $Y$ as features)
+			- $P(Y\mid Z)$ contributes $2$ parameters, one for both values of $Z=z$
+			- $P(X\mid Y,Z)$ contributes $4$ parameters, one for each combination of $Y=y,Z=z$
+		- As number of features grows we may also get **sparse data**; most combinations of the conditioning variables will have few or no examples, which is taken literally as probability of $0$ for the MLE calculation
+
+During **learning**, the model calculates the MLEs of each parameter to fully determine the conditional distributions
+- For two binary features this is as simple as counting occurrences out of the total number of data points in a table
+- More formally, we use facts about the Bernoulli distribution and Bayes' to determine expressions for $P(x^{(i)},y^{(i)})=P(y{(i)})\cdot P(x^{(i)}\mid y^{(i)})$, then assume the joint events are iid and take the steps from the previous chapter about determining the likelihood and log-likelihood functions, solving for derivative $0$, etc.
+- Note features do not have to be binary; for a Normal feature we can still determine MLE for parameters like mean and variance (Normal has $2$ parameters unlike Bernoulli with $1$) by simply averaging the features from the data table
+	- Formally deriving this is for Chapter 8
+	- Inference becomes more complicated as well since the Normal PDF is much messier than the Bernoulli PMF used in all the probability calculations
+
+During **inference**, the model applies Bayes' Theorem to calculate $P(Y \mid X=x)$ and then evaluates $\arg\max_{y \in \text{classes}} P(Y=y \mid X=x)$ to determine its classification
+- This is a **generative classifier** with a learned class prior $P(Y)$ together with learned class-conditional distributions for the features $P(X\mid Y)$
+	- Examples include Bayes classifiers, Naïve Bayes, and Gaussian Discriminant Analysis
+	- In contrast a **discriminative classifier** learns a mapping directly from inputs to labels by modelling only $P(Y=y\mid X=x)$, it never specifies a distribution over $X$
+		- Examples include logistic regression, softmax regression, and decision trees
+## <u>Naive Bayes</u>
+**Bag-of-Words:** treat a piece of text as a collection of its words, **disregarding word order and occurrence frequency**
+- Build a **vocabulary** of all **unique** words across the dataset, then represent each piece of text as a vector $\mathbf{x}$ of $0$s and $1$s, one entry per vocabulary word, indicating whether that word appears; then we have $D=$ number of unique words as the number of features
+- Learn $P(x\mid y=0)$ and $P(x\mid y=1)$ for each word $x$ in the vocabulary, ie. what do class $0$ text features look like and what do class $1$ text features look like
+	- Recall though, if our vocabulary is size $D$ then each vector will be $\mathbf{x}\in \mathbb{R}^D$ and the number of parameters will be $2^{D+1}-1$; we resolve this with the Naive Bayes' assumption
+- During inference **flip the question around with Bayes’ Theorem** to classify a new review given a vector of occurrences
+
+**Naive Bayes:** assume that the word features are **conditionally independent**
+$$\begin{aligned}
+P(x_1, x_2, \dots, x_D \mid y) &= P(x_1 \mid y)\,P(x_2 \mid y)\,\cdots\,P(x_D\mid y) \\
+& = \prod_{j=1}^{D}P(x_j\mid y)
+\end{aligned}
+$$
+This is not the same as saying each $x_{i}$ and $x_{k}$ are marginally independent (they generally are not); it is saying that once you already know the class, learning whether one word appears tells you nothing more about whether another word appears (which is a **strong and false assumption**, but we will use it)
+- Then, each word becomes a Bernoulli RV $X_{j}$ with each conditional distribution $P(X_{j}\mid Y)$ having parameters $\theta_{j,c}$ for each $c\in \{ 0,1 \}$, for a total of $1+2D<2^{D+1}-1$ parameters or the set $\theta =\{ \theta_{Y} \}\cup\{ \theta_{j,c} \}_{j=1,c=0}^{j=D,c=1}$
+
+During **learning**, the model calculates the MLEs of each parameter to fully determine the conditional distributions
+- For small enough vocabularies and few enough classes, simply observing the occurrences of words per each class is possible
+
+In order for inference to classify a new review $\mathbf{x}$, we will need to apply Bayes’ rule to calculate $P(y=0\mid \mathbf{x})$ and $P(y=1\mid \mathbf{x})$ and choose the greater probability:
+$$
+\begin{aligned}
+\arg\max_{c \in \{0, 1\}} P(y = c \mid \mathbf{x}) &= \arg\max_{c \in \{0, 1\}} \frac{P(y = c) P(\mathbf{x} \mid y = c)}{P(\mathbf{x})} = \arg\max_{c \in \{0, 1\}} P(y = c) P(\mathbf{x} \mid y = c)
+\end{aligned}
+$$
+Where we use Naive Bayes' to calculate:
+$$
+\begin{aligned}
+P(\mathbf{x} \mid y = c) = P(x_1 \mid y =c) \, P(x_2 \mid y =c) \, \cdots \, P(x_D \mid y =c) = \prod_{j = 1}^D P(x_j \mid y = c)
+\end{aligned}
+$$
+One large drawback to this model
+- If any word $x_{j}$ in $\mathbf{x}$ is **never found** in a given class $y=a$ in the training data, then the MLE for that parameter is $\theta_{j,a}=0$ and equivalently $P(x_{j}\mid y=a)=0$ which sends the entire calculation $P(\mathbf{x} \mid y = a)=0$ if $x_{j}$ is **present** in our new input to be classified
+- Similarly, if any word $x_{j}$ in $\mathbf{x}$ is **always found** in a given class $y=b$, then the MLE for that parameter is $\theta_{j,b}=1$ and equivalently $1-P(x_{j}\mid y=b)=0$ which sends the entire calculation $P(\mathbf{x} \mid y = b)=0$ if $x_{j}$ is **not present** in our new input to be classified
+- The fix is to replace the hard MLE estimate with a MAP estimate using a Beta prior, which smooths every $\theta_{j,c}$ away from exact $0$s and $1$s using a priori pseudo-counts
+# <u>8: Gaussian Discriminant Analysis</u>
+## <u>Univariate GDA</u>
+If we want a generative classifier and assume that each class-conditional distribution is a Gaussian, then we obtain a **Gaussian Discriminant Analysis** model
+- Essentially, we fit a Gaussian per class from data (e.g. by maximum likelihood) then use Bayes’ Theorem to classify new points (e.g. pick the class with highest probability)
+
+As before we assume data $\mathcal{D}=\{ (x^{(1)}, c^{(1)}), (x^{(2)}, c^{(2)}), \dots, (x^{(N)}, c^{(N)}) \}$ where each $x$ is **iid** from some Gaussian with **sample mean** $\mu$ and **sample variance** $\sigma^2$, and the class $c$ is **binary**, then by doing the standard likelihood and log-likelihood derivations of MLEs we get:
+- $\mu_{\text{MLE}}=\mu$
+- $\sigma^2_{\text{MLE}}=\sigma^2$
+
+A GDA model is a generative model of the joint distribution of the feature and the class, ie. $p(x, c) = p(x \mid c)\cdot p(c)$
+- The Gaussian part of GDA means that we assume that given the class, the feature is drawn from a Gaussian distribution, so for each class $k\in{0,1}$ we have $p(x \mid c = k) = \mathcal{N}(x \,;\, \mu_k, \sigma_k^2)$ where $\mathcal{N}$ is the PDF of the Gaussian conditional distribution with class-specific mean and variance $\mu_k, \sigma_k^2$
+- As before, inference uses Bayes' to determine $p(c \mid x)$
+
+For learning this binary univariate GDA, we have $5$ parameters; $\theta$ for the class distribution, and $\mu_0, \sigma_0^2$ and $\mu_1, \sigma_k^1$
+- Once we have determined these parameters, we can overlay the two Gaussian distributions on one plane with $x$ on the $x$-axis and the $y$-axis as the PDF value; then we select the higher PDF at each value to be the prediction
+- For inference we calculate:
+$$
+\begin{aligned}
+& p(c=1 \mid x) = \frac{p(x \mid c=1)\,p(c=1)}{p(x \mid c=0)\,p(c=0) + p(x \mid c=1)\,p(c=1)}\propto p(x \mid c=1)\,p(c=1)
+\end{aligned}
+$$
+- For values $\geq 0.5$ we select $c=1$, otherwise $c=0$
+- The **decision boundary** is the value(s) of $x$ where the two terms in the denominator are equal, ie. where the two Gaussians (weighted by the class prior) give equal probabilities (in the binary univariate case the decision boundary is a point, since we have a single feature)
+## <u>Multivariate GDA</u>
+If we want a generative c
+

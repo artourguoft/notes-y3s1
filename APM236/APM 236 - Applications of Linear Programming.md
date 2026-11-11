@@ -191,13 +191,13 @@ Where $\mathbf{d}_{\mathbf{B}}$ are the components corresponding to column indic
 Basic directions are needed to know where we can move from a BFS while remaining feasible (satisfying all equalities), which explains the construction of basic directions:
 - $j$ is the nonbasic variable that we want to increase
 - All other nonbasic variables remain unchanged
-- The $d_\mathbf{B} = -\mathbf{B}^{-1}\mathbf{A}_j$ captures how all the basic variables must change so that the constraints remain satisfied, ie. we require that the changes in basic variables and the $j$th nonbasic variables cancel out $\mathbf{B}\mathbf{d}_\mathbf{B} + \mathbf{A}_{j}=\mathbf{0}$
+- The $\mathbf{d}_\mathbf{B} = -\mathbf{B}^{-1}\mathbf{A}_j$ captures how all the basic variables must change so that the constraints remain satisfied, ie. we require that the changes in basic variables and the $j$th nonbasic variables cancel out $\mathbf{B}\mathbf{d}_\mathbf{B} + \mathbf{A}_{j}=\mathbf{0}$
 
 Note, moving in a basic direction preserves the equality constraints $\mathbf{A}\mathbf{x}=\mathbf{b}$ but it **does not necessarily preserve the nonnegativity** constraints $\mathbf{x}\geq 0$, so to answer **which basic directions** at a given BFS $\mathbf{x}^*$ are **feasible directions**:
 - If $\mathbf{x}^*$ is **not degenerate**; then **all** basic directions at this point are feasible directions
 	- Recall, not degenerate implies $\mathbf{x}_{\mathbf{B}}>\mathbf{0}$, thus even if there are components of $\mathbf{d}_{\mathbf{B}}$ which are negative, we can still move some small scalar amount in the basic direction within which we have this $\mathbf{d}_{\mathbf{B}}$ while maintaining the nonnegativity constraints (and thus being a feasible direction)
 - If $\mathbf{x}^*$ is **degenerate**; it is possible that some basic directions are not feasible directions
-	- Recall, degenerate implies one or more basic variables are $0$ in $\mathbf{x}_{\mathbf{B}}$, thus if any basic direction $\mathbf{d}_{\mathbf{B}}$ has negative components at **one or more of the basic variable indices** which are equal to $0$ in $\mathbf{x}_{\mathbf{B}}$, then that basic direction is not a feasible direction
+	- Recall, degenerate implies one or more basic variables are $0$ in $\mathbf{x}_{\mathbf{B}}$, thus if **any** component of $\mathbf{d}_{\mathbf{B}}$ is negative at **one or more of the basic variable indices** which are equal to $0$ in $\mathbf{x}_{\mathbf{B}}$, then that basic direction is not a feasible direction
 # <u>Restated Extreme Point Theorem</u>
 **Extreme Point Theorem:** a polyhedron $P\subseteq \mathbb{R}^n$ contains a line if there is a point $\mathbf{x}_{0}\in P$ and a direction vector $\mathbf{0}\neq \mathbf{d}\in \mathbb{R}^n$ such that $\mathbf{x}_{0}+t\mathbf{d}\in P$ for all $t\in R$
 
