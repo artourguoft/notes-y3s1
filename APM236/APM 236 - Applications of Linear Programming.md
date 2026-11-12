@@ -137,11 +137,12 @@ Consider a **canonical** LPP $\mathbf{A}\mathbf{x}=\mathbf{b}$ where $\mathbf{A}
 	- If we cannot assume $\text{rank}(\mathbf{A})=m$, then do row-reduction of $\mathbf{A}$ to determine $\text{rank}(\mathbf{A})$ first
 - **Any** set of $m$ linearly independent columns of $\mathbf{A}$ forms a **basis** for $\mathbb{R}^m$ which is a basis matrix $\mathbf{B}\in\mathbb{R}^{m\times m}$, then for each $\mathbb{R}^{m}$ column in $\mathbf{B}$ the corresponding column index in $\mathbf{A}$ marks a **basic variable**, with the remaining $n-m$ columns of the original $\mathbf{A}$ marking **nonbasic variables**
 	- The nonbasic $x$ values in $\mathbf{x}$ are then set to $0$, from which it follows that $\leq m$ **components of any basic solution can be positive** and **the rest must be** $0$
-	- Then $\mathbf{A}\mathbf{x}=\mathbf{b}$ becomes equivalent to $\mathbf{B}\mathbf{x}_{\mathbf{B}}=\mathbf{b}$ where $\mathbf{x}_{\mathbf{B}}\in \mathbb{R}^m$ with nonbasic components removed, which is a system of $m$ equations in $m$ unknowns and thus has a **unique solution** $\mathbf{x}^*$ which we solve for by **row-reducing** $[\mathbf{B}|\mathbf{b}]$, and is called a **basic solution**
-		- Alternatively we can express this as $\mathbf{x}_{\mathbf{B}}=\mathbf{B}^{-1}\mathbf{b}$ and row-reduce the right hand side; note that basic solutions $\mathbf{x}^*$ given by these methods are also dimension $\mathbb{R}^m$, we have to **refill all nonbasic components with** $0$ to get the full $\mathbb{R}^n$ equivalent
+	- With these components of $\mathbf{x}$ set to $0$, $\mathbf{A}\mathbf{x}=\mathbf{b}$ becomes equivalent to $\mathbf{B}\mathbf{x}_{\mathbf{B}}=\mathbf{b}$ where $\mathbf{x}_{\mathbf{B}}\in \mathbb{R}^m$ with nonbasic components removed
+		- This is a system of $m$ equations in $m$ unknowns and thus has a **unique solution** which we solve for by **row-reducing** $[\mathbf{B}|\mathbf{b}]$; this is called a **basic solution**
+		- Alternatively we can express this as $\mathbf{x}_{\mathbf{B}}=\mathbf{B}^{-1}\mathbf{b}$ and row-reduce the right hand side; recall $\mathbf{x}_{\mathbf{B}}\in\mathbb{R}^m$, we have to **refill all nonbasic components with** $0$ to get the $\mathbb{R}^n$ equivalent
 		- The number of **distinct** basic solutions is **upper bounded** by $\binom{n}{m}$; the number of choices of $m$ columns from $n$ (so $\mathbf{A}$ may have less linearly independent sets of $m$ columns than this)
 		- Note, basic solutions are **not necessarily feasible solutions** because they do not account for the $\mathbf{x}\geq 0$ constraints; only a basic solution where **all basic components are nonnegative**, ie. $\mathbf{0}\leq \mathbf{x}_{\mathbf{B}}=\mathbf{B}^{-1}\mathbf{b}$, is called a **basic feasible solution** or BFS
-			- Once **all BFSs** have been identified, **truncate** these vectors to remove any possible slack variables and test the resulting solutions to determine the optimal solution
+			- Once **all BFSs** have been identified, **truncate** these vectors to remove any slack variables and compute the resulting solutions to determine the **optimal solution**
 Note that this method can **only** be used for LPPs in **canonical** form, but **any optimal solution to the canonical form** found as described above **is an optimal solution to the equivalent standard form** (to which slack variables were introduced for canonical form)
 
 Note, each basis matrix is $\mathbf{B}= [\mathbf{A}_{B(1)} \cdots \mathbf{A}_{B(m)}]$ where $B(1),B(2),\dots,B(m)$ return column indices of $\mathbf{A}$ corresponding to the basic variables chosen by this basis
@@ -181,25 +182,31 @@ Degeneracy becomes important in the simplex method, because it implies a **chang
 $$
 \begin{cases}
 d_j = 1 \\
-d_i = 0 & \text{all other nonbasic indices }i \\
-\mathbf{d}_\mathbf{B} = -\mathbf{B}^{-1}\mathbf{A}_j
+d_i = 0 & \text{nonbasic vars }\neq j \\
+\mathbf{d}_\mathbf{B} = -\mathbf{B}^{-1}\mathbf{A}_j & \text{basic vars}
 \end{cases}
 $$
-Where $\mathbf{d}_{\mathbf{B}}$ are the components corresponding to column indices of **basic variables**
-- It follows that each BFS has $n-m$ basic directions (assuming $\text{rank}(\mathbf{A})=m$)
+Where $\mathbf{d}_{\mathbf{B}}=[d_{B(1)} \cdots d_{B(m)}]$ is the vector of components corresponding to column indices of **basic variables**
+- It follows that each BFS has $n-m$ **basic directions** (assuming $\text{rank}(\mathbf{A})=m$)
 
 Basic directions are needed to know where we can move from a BFS while remaining feasible (satisfying all equalities), which explains the construction of basic directions:
 - $j$ is the nonbasic variable that we want to increase
 - All other nonbasic variables remain unchanged
-- The $\mathbf{d}_\mathbf{B} = -\mathbf{B}^{-1}\mathbf{A}_j$ captures how all the basic variables must change so that the constraints remain satisfied, ie. we require that the changes in basic variables and the $j$th nonbasic variables cancel out $\mathbf{B}\mathbf{d}_\mathbf{B} + \mathbf{A}_{j}=\mathbf{0}$
+- The $\mathbf{d}_\mathbf{B} = -\mathbf{B}^{-1}\mathbf{A}_j$ captures how all the basic variables must change so that the constraints remain satisfied
+	- This follows from us requiring $\mathbf{A}(\mathbf{x}+\theta \mathbf{d})=\mathbf{b}$ for feasibility, which implies $\mathbf{A}\mathbf{d}=\mathbf{B}\mathbf{d}_\mathbf{B} + \mathbf{A}_{j}=\mathbf{0}$, ie. we require that the changes in basic variables and the move $d_{j}=1$ in the $j$th nonbasic variable cancel out
 
 Note, moving in a basic direction preserves the equality constraints $\mathbf{A}\mathbf{x}=\mathbf{b}$ but it **does not necessarily preserve the nonnegativity** constraints $\mathbf{x}\geq 0$, so to answer **which basic directions** at a given BFS $\mathbf{x}^*$ are **feasible directions**:
 - If $\mathbf{x}^*$ is **not degenerate**; then **all** basic directions at this point are feasible directions
-	- Recall, not degenerate implies $\mathbf{x}_{\mathbf{B}}>\mathbf{0}$, thus even if there are components of $\mathbf{d}_{\mathbf{B}}$ which are negative, we can still move some small scalar amount in the basic direction within which we have this $\mathbf{d}_{\mathbf{B}}$ while maintaining the nonnegativity constraints (and thus being a feasible direction)
+	- Recall, non-degenerate implies $\mathbf{x}_{\mathbf{B}}>\mathbf{0}$, thus even if there are components of $\mathbf{d}_{\mathbf{B}}$ which are negative, we can still move some small scalar amount in the corresponding basic direction while maintaining the nonnegativity constraints (and thus being a feasible direction)
 - If $\mathbf{x}^*$ is **degenerate**; it is possible that some basic directions are not feasible directions
-	- Recall, degenerate implies one or more basic variables are $0$ in $\mathbf{x}_{\mathbf{B}}$, thus if **any** component of $\mathbf{d}_{\mathbf{B}}$ is negative at **one or more of the basic variable indices** which are equal to $0$ in $\mathbf{x}_{\mathbf{B}}$, then that basic direction is not a feasible direction
+	- Recall, degenerate implies one or more basic variables are $0$ in $\mathbf{x}_{\mathbf{B}}$, thus if **any** component of $\mathbf{d}_{\mathbf{B}}$ is negative at **one or more of the basic variable indices** which are also $0$ in $\mathbf{x}_{\mathbf{B}}$, then that basic direction is not a feasible direction; some nonnegativity constraints will necessarily be breached
 # <u>Reduced Cost</u>
-**Feasible Direction:** for
+**Reduced Cost:** for the $j$th basic direction $\mathbf{d}$ at a given BFS, the **rate of objective function change per step** (called reduced cost) in this direction is $\bar{c}_{j}=\mathbf{c}^\top\mathbf{d}=\mathbf{c}_{\mathbf{B}}^\top\mathbf{d}_{\mathbf{B}}+c_{j}=c_{j}-\mathbf{c}_{\mathbf{B}}^\top\mathbf{B}^{-1}\mathbf{A}_j$ where:
+- $\mathbf{c}_{\mathbf{B}}^\top$ is the coefficients vector corresponding to the basic variables at this BFS
+- $c_{j}$ is the coefficient corresponding to the nonbasic direction where $d_{j}=1$
+- Intuitively, this is the coefficient of the variable corresponding to the $j$th nonbasic variable minus the mitigating sum of the basic coefficient changes to maintain feasibility
+- Note, the reduced costs at basic variable indices at a point are $0$
+- The vector $\bar{\mathbf{c}}$ contains all reduced costs in all basic directions at the point
 # <u>Restated Extreme Point Theorem</u>
 **Extreme Point Theorem:** a polyhedron $P\subseteq \mathbb{R}^n$ contains a line if there is a point $\mathbf{x}_{0}\in P$ and a direction vector $\mathbf{0}\neq \mathbf{d}\in \mathbb{R}^n$ such that $\mathbf{x}_{0}+t\mathbf{d}\in P$ for all $t\in R$
 
