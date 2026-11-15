@@ -205,8 +205,10 @@ Note, moving in a basic direction preserves the equality constraints $\mathbf{A}
 - $\mathbf{c}_{\mathbf{B}}^\top$ is the coefficients vector corresponding to the basic variables at this BFS
 - $c_{j}$ is the coefficient corresponding to the nonbasic direction where $d_{j}=1$
 - Intuitively, this is the coefficient of the variable corresponding to the $j$th nonbasic variable minus the mitigating sum of the basic coefficient changes to maintain feasibility
-- Note, the reduced costs at basic variable indices at a point are $0$
-- The vector $\bar{\mathbf{c}}$ contains all reduced costs in all basic directions at the point
+- Note, the **reduced costs at basic variable indices** at a point are always $0$
+- The vector $\bar{\mathbf{c}}\in \mathbb{R}^{n-m}$ contains all reduced costs in all basic directions at the point
+
+It follows that if we want to maximize our objective function, for a BFS $\mathbf{x}$ and its associated basis matrix $\mathbf{B}$ and reduced cost vector $\bar{\mathbf{c}}$, then we have $\bar{\mathbf{c}}\leq 0 \iff \mathbf{x}$ is the optimal solution
 # <u>Restated Extreme Point Theorem</u>
 **Extreme Point Theorem:** a polyhedron $P\subseteq \mathbb{R}^n$ contains a line if there is a point $\mathbf{x}_{0}\in P$ and a direction vector $\mathbf{0}\neq \mathbf{d}\in \mathbb{R}^n$ such that $\mathbf{x}_{0}+t\mathbf{d}\in P$ for all $t\in R$
 

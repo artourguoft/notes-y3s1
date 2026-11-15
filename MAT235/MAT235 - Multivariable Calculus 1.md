@@ -145,7 +145,35 @@ Key algebraic properties of cross products:
 - $\mathbf{F}:\mathbb{R}^2\to \mathbb{R}^2$ where $\mathbf{F}(x,y)=f(x,y)\mathbf{i}+g(x,y)\mathbf{j}$
 - $\mathbf{F}:\mathbb{R}^3\to \mathbb{R}^3$ where $\mathbf{F}(x,y,z)=f(x,y,z)\mathbf{i}+g(x,y,z)\mathbf{j}+h(x,y,z)\mathbf{k}$
 
-From these forms, it is clear that **gradient fields** are vector fields, where the scalar functions in the definition are the partial derivatives in the components' directions
+From these forms, it is clear that **gradient fields** are vector fields, where the scalar functions in the definition are the partial derivatives in the components' directions:
+- $\nabla f(x,y,z)=\frac{\partial f}{\partial x}\mathbf{i}+\frac{\partial f}{\partial y}\mathbf{j}+\frac{\partial f}{\partial z}\mathbf{k}$
+### <u>[19.3]: Divergence of Vector Fields</u>
+Assume a vector field $\mathbf{F}(x,y,z)=f(x,y,z)\mathbf{i}+g(x,y,z)\mathbf{j}+h(x,y,z)\mathbf{k}$ and consider the gradient as an operator $\nabla:(\mathbb{R}^n\to \mathbb{R})\to \mathbb{R}^n$ where $\nabla=\frac{\partial}{\partial x}\mathbf{i}+\frac{\partial}{\partial y}\mathbf{j}+\frac{\partial}{\partial z}\mathbf{k}$
+
+
+**Curl:** the curl is the **vector field** $\text{curl}:\mathbb{R}^3\to \mathbb{R}^3$
+$$
+\begin{align}
+\text{curl}\mathbf{F}(x,y,z)&=\left(\frac{\partial h}{\partial y}-\frac{\partial g}{\partial z}\right)\mathbf{i}+\left(\frac{\partial f}{\partial z}-\frac{\partial h}{\partial x}\right)\mathbf{j}+\left(\frac{\partial g}{\partial x}-\frac{\partial f}{\partial y}\right)\mathbf{i} \\
+&=\nabla \times \mathbf{F}
+\end{align}
+$$
+**Curl-Free:** a vector field $\mathbf{F}$ is divergence-free or **irrotational** if $\text{curl}\mathbf{F}=\mathbf{0}$ everywhere on its domain
+
+With the graph of $\mathbf{F}$, we can determine the direction of the curl at a point with the right hand rule; curve fingers along the rotation at a point, then if thumb pointing upward curl is counterclockwise
+
+
+**Divergence:** the divergence is the **scalar** valued function $\text{div}:\mathbb{R}^3\to \mathbb{R}$
+$$
+\begin{align}
+\text{div}\mathbf{F}(x,y,z)&=\frac{\partial f}{\partial x}+\frac{\partial g}{\partial y}+\frac{\partial h}{\partial z} \\
+&=\nabla \cdot \mathbf{F}
+\end{align}
+
+$$
+**Divergence-Free:** a vector field $\mathbf{F}$ is divergence-free or a **solenoid** if $\text{div}\mathbf{F}=0$ everywhere on its domain
+
+With the graph of $\mathbf{F}$, we can determine the sign of divergence at a point by determining whether there is more outward flow than inward in each axis direction
 ## <u>14: Partial Derivatives</u>
 ### <u>14.1: Functions of Several Variables</u>
 A **function** $f$ **of two variables** is a rule that assigns to each ordered pair of real numbers $(x,y)$ in a set $D$, a unique real number denoted $f(x,y)$
@@ -508,4 +536,4 @@ Then evaluate points found in the previous two steps and compare their values as
 	- This gradient gives us a system of equations to solve for $(a,b)$ as a shortcut
 	- Note, endpoints of $g$ still have to be checked
 
-If the **constraint function is a closed and bounded** shape (ex. a circle like $x^2 + y^2 = 1$) then EVT guarantees that an absolute maximum and minimum must exist; in this case simply evaluate the objective function $f$ at all the points you found and classify the extrema by direct comparison
+If the **constraint function is a closed and bounded** shape (ex. a circle like $x^2 + y^2 = 1$) then EVT guarantees that an absolute maximum and minimum must exist; in this case simply evaluate the objective function $f$ at all the points you found and classify the extrema by direct comparison   
