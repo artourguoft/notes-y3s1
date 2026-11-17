@@ -327,8 +327,25 @@ $\theta$**-ratios:** for an LPP in canonical form, assume all BFSs are non-degen
 		- If $d_{i}<0$ for some $i$, recall any $x_{i}+\theta d_{i}\geq 0$ to be feasible so $\theta\leq -\frac{x_{i}}{d_{i}}$ which ties back to the formula above
 
 
-==For n variables and m independent equality constraints,
-Dimension=n−m
-provided the constraints are consistent and the nonnegativity constraints do not reduce the dimension further.
+Two-phase method:
+- Recall if initially $\mathbf{b}\not\geq \mathbf{0}$, then the initial basis of slack/surplus variables will not be a BFS because one of the components of this initial basic solution will be negative
+- Phase 1: introduce **artificial variables** $y_{i}\geq 0$ for each constraint, this makes the feasible set bigger (increases the dimension by 1)
+	- A vector $\mathbf{x}$ is a BFS to the original LPP iff $\frac{x}{y}=\frac{x}{0}$ (which is the original BFS with $0$ for the artificial variables) is a BFS for the LPP with artificial variables
+	- For the artificial LPP, choose the initial BFS $\frac{x}{y}=\frac{0}{b}$ which is the vector with all 0s except the components that are artificial variables which are $\mathbf{b}$ 
+		- Now this is a valid initial BFS for the simplex, but it is not of the form $\frac{x}{0}$ so it is not a valid BFS for the original LPP yet
+	- Auxiliary LPP: minimize $y_{1}+\dots+y_{m}$
+		- If we can get this to $0$ then all the artificial variables are $0$, and we get the desired form $\frac{x}{0}$
+		- If the min is $>0$ then there is no BFS to the original LPP
+		- Then first set $\min(y_{1}+\dots+y_{m})$ to $-\max(-y_{1}-\dots-y_{m})$, then re-express the artificial $y$ variables in terms of $x$s, then simplex with initial basis being the artificial variables
+		- When this simplex terminates we have a BFS of the form $\frac{x}{0}$ which we use as the initial basis for the original LPP simplex
+- Phase 2:
+	- Case 1: if there are no artificial variables as basic variables in the final tableau from artificial LPP
+		- Remove the columns with the artificial variables and replace the cost row with the original cost
+			- Ensure the original objective row now satisfies requirements of all 0s in basic columns, otherwise do more row reduction; this is a shortcut compared to just starting with the original tableau and the new basis
+	- Case 2: there are some artificial variables as basic variables; we ignore this case
+- If objective functions ever have decimal coefficients, just multiply them by some magnitude of 10 and divide back in the end
+
+
+==For n variables and m independent equality constraints, Dimension=n−m provided the constraints are consistent and the nonnegativity constraints do not reduce the dimension further.
 So, one equality in three variables gives a plane; two give a line; and three independent equalities give a point (before accounting for nonnegativity restrictions).==
 
