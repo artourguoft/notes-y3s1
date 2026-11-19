@@ -723,7 +723,7 @@ An artificial neuron takes an input vector $\mathbf{x}$ and computes a weighted 
 - The notation $m$-layer MLP implies $m-1$ hidden layers and an output layer; then input layer is indexed $0$ and the output layer is indexed $m$
 - $D^{(i)}$ is the number of units in the $i$th layer, then:
 	- Input layer is $\mathbf{a}^{(0)}\in \mathbb{R}^{D^{(0)}}$
-	- Weights matrix is $\mathbf{W}^{(i)}\in \mathbb{R}^{D^{(i)}\times D^{(i-1)}}$ where $W_{j,k}^{(i)}$ is the weight applied to the output of unit $k$ in layer $i-1$ to produce the output of unit $j$ in layer $i$
+	- Weights matrix is $\mathbf{W}^{(i)}\in \mathbb{R}^{D^{(i)}\times D^{(i-1)}}$ where $W_{j,k}^{(i)}\in \mathbb{R}$ is the weight applied to the output of unit $k$ in layer $i-1$ to produce the output of unit $j$ in layer $i$
 	- Bias vector $\mathbf{b}^{(i)}\in \mathbb{R}^{D^{(i)}}$ where $b_{j}^{(i)}$ is the bias of the $j$th unit 
 	- Pre-activations $\mathbf{z}^{(i)}\in \mathbb{R}^{D^{(i)}}$ where $z_{j}^{(i)}$ is the pre-activation of the $j$th unit and $\mathbf{z}^{(i)}=\mathbf{W}^{(i)}\mathbf{a}^{(i-1)}+\mathbf{b}^{(i)}$
 	- Activations are $\mathbf{a}^{(i)}\in \mathbb{R}^{D^{(i)}}$ where $a_{j}^{(i)}$ is the activation of the $j$th unit; these activations are computed as $f^{(i)}(\mathbf{W}^{(i)}\mathbf{a}^{(i-1)}+\mathbf{b^{(i)}})=f^{(i)}(\mathbf{z}^{(i)})=\mathbf{a}^{(i)}$ 
@@ -909,4 +909,5 @@ $$
 - Deriving single variable Gaussian MLEs, yes
 - Dw about derivation of multivariate Gaussian parameter MLEs, put formulas on aid sheet
 - Convert between eigenvector coordinate system 
+- Study the missing values project proposal question
 
