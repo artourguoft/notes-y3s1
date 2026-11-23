@@ -209,7 +209,7 @@ Note, moving in a basic direction preserves the equality constraints $\mathbf{A}
 - The vector $\bar{\mathbf{c}}\in \mathbb{R}^{n-m}$ contains all reduced costs in all basic directions at the point
 
 It follows that if we want to maximize our objective function, for a BFS $\mathbf{x}$ and its associated basis matrix $\mathbf{B}$ and reduced cost vector $\bar{\mathbf{c}}$, then we have $\bar{\mathbf{c}}\leq 0 \iff \mathbf{x}$ is the optimal solution
-# <u>Restated Extreme Point Theorem</u>
+# <u>Extreme Point Theorem Restated</u>
 **Extreme Point Theorem:** a polyhedron $P\subseteq \mathbb{R}^n$ contains a line if there is a point $\mathbf{x}_{0}\in P$ and a direction vector $\mathbf{0}\neq \mathbf{d}\in \mathbb{R}^n$ such that $\mathbf{x}_{0}+t\mathbf{d}\in P$ for all $t\in R$
 
 Theorem KB2.6: if $P$ has at least one extreme point $\iff$ $P$ does not contain a line
@@ -226,6 +226,17 @@ Theorem: consider an LPP to min $\mathbf{c}^{\top}\mathbf{x}$ constrained by $\m
 	- If it were not an extreme point of $P$, then we could write $\mathbf{x}^*=\lambda \mathbf{x}_{1}+(1-\lambda)\mathbf{x}_{2}\in P$ for some $\mathbf{x}^*\neq \mathbf{x}_{1}\neq \mathbf{x}_{2}\in P$ and $\lambda \in(0,1)$
 	- We know $m=\mathbf{c}^{\top}\mathbf{x}^*=\lambda(\mathbf{c}^{\top}\mathbf{x}_{1})+(1-\lambda)(\mathbf{c}^{\top}\mathbf{x}_{2})$, but that implies $\mathbf{c}^{\top}\mathbf{x}_{1}=\mathbf{c}^{\top}\mathbf{x}_{2}=m$ which implies $\mathbf{x}_{1},\mathbf{x}_{2}\in Q$, which implies $\mathbf{x}^*$ is not an extreme point of $Q$ which contradicts our initial assumption!
 This is different than the textbook statement which is incorrect!
+# <u>Theta Ratios</u>
+$\theta$**-ratios:** assume a maximization LPP in canonical form with all BFSs non-degenerate
+- Assume a BFS $\mathbf{x}^*$ with $j$th basic direction $\mathbf{d}$ where $\bar{c}_{j}>0$, recall this means that $\mathbf{x}^*$ is not an optimal solution, so we want to move in this basic direction
+- The $\theta$-ratio tells us how far we can go from $\mathbf{x}^*$ in the basic direction $\mathbf{d}$ while **remaining feasible**
+- Moving in direction $\mathbf{d}$ away from $\mathbf{x}^*$, the $x_{j}$ component changes while all other nonbasic components remain $0$
+- We want to move in direction $\mathbf{x}^*+\theta \mathbf{d}$ as far as we can while remaining feasible; ie. find the scalar such that $\theta=\max\{t>0:\mathbf{x}^*+t\mathbf{d}\in P \}$, where the resulting cost change is $\mathbf{c}^\top\theta\mathbf{d}=\bar{c}_{j}\theta$
+- Consider $\mathbf{A}\mathbf{x}^*=\mathbf{b}$ and $\mathbf{A}(\mathbf{x}^*+\theta \mathbf{d})=\mathbf{b}$, since we assumed non-degenerate $\mathbf{x}^*$ and basic direction $\mathbf{d}$
+	- Then, the only way $\mathbf{x}^*+\theta \mathbf{d}$ can become infeasible is if one its components becomes negative; because recall moving along a basic direction does not necessarily maintain the nonnegativity constraints!
+	- Case where $\mathbf{d}\geq \mathbf{0}$, then $\mathbf{x}^*+\theta \mathbf{d}\geq \mathbf{0}$ for all $\theta>0$, so $\theta=\infty$ since moving in this direction never becomes infeasible
+	- Case where $d_{i}<0$ for some component $i$, then for each component we require $x_{i}+\theta d_{i}\geq 0$ for feasibility; rearranging gives us $\theta\leq -\frac{x_{i}}{d_{i}}$ which must be satisfied for **all** such $i$
+		- It follows that the maximum move that remains feasible is the minimum of these upper bounds, so $\theta=\min_{\{ i:d_{i}<0 \}}\{ -\frac{x_{i}}{d_{i}} \}$
 # <u>Simplex Method</u>
 **Adjacent:** two extreme points in a set of feasible solutions $S$ are adjacent they have **all but one** in common in their **selection of basic variables**; ie. the selection of nonzero components differs in two places
 
@@ -300,31 +311,6 @@ Once there are **no negative coefficients remaining** in the objective function,
 - Cycling: In rare cases, the simplex method can return to a previously visited basis, potentially repeating indefinitely
 
 
-
-
-
-
-**jth Reduced Cost:**
-- Let $e_{1},\dots,e_{m}$ be the canonical basis of $\mathbb{R}^m$
-- Define the $i$th basic direction $D_{j}=e_{j}+d_{B(1)}\cdot e_{B(1)}+\dots+d_{B(m)}\cdot e_{B(m)}$
-	- Where $e_{B(1)},\dots,e_{B(m)}$ be the basis corresponding to the basic variable $x_{B(1)},\dots,x_{B(m)}$ and $(d_{B(1)}\dots d_{B(m)})^\top=-\mathbf{A}^{-1}\cdot \mathbf{A}_{j}$
-	- If $x_{j}$ is a nonbasic variable then the definitions coincide
-	- If $x_{j}$ is a basic variable then it is $\mathbf{0}$
-How much does the objective function improve when moving towards a basic direction:
-- Where $z=\mathbf{c}^\top\mathbf{x}$ for an extreme point $\mathbf{x}$, then take $\mathbf{x}\to \mathbf{x}+\theta D_{j}$, so the difference is $\mathbf{c}-D_{j}$
-- The jth reduced cost $\mathbf{c}_{j}=\mathbf{c}\cdot D_{j}=\mathbf{c}_{j}-\mathbf{c}_{B}\cdot \mathbf{A}_{B}^{-1}\mathbf{A}_{j}$
- - If every reduced cost entry is negative at an extreme point, then that point is a maximizer
-
-
-$\theta$**-ratios:** for an LPP in canonical form, assume all BFSs are non-degenerate, and assume a BFS $\mathbf{x}$ with $j$th basic direction $\mathbf{d}$
-- The ratio tells us how far we can go from $\mathbf{x}$ in a basic direction $\mathbf{d}$ while remaining feasible
-- Moving in direction $\mathbf{d}$ away from $\mathbf{x}$, the $x_{j}$ component changes while all other nonbasic variables remain $0$
-- We want to move as far as we can $\mathbf{x}+\theta \mathbf{d}$ while remaining feasible; ie. $\theta=\max\{t:\mathbf{x}+t\mathbf{d}\in P \}$
-	- Formula is $\theta=\min_{\{ i:d_{i}<0 \}}\{ -\frac{x_{i}}{d_{i}} \}$
-	- Consider $\mathbf{A}\mathbf{x}=\mathbf{b}$ and $\mathbf{A}(\mathbf{x}+\theta \mathbf{d})=\mathbf{b}$, then $\mathbf{A}\theta \mathbf{d}=\mathbf{0}$ which also implies $\mathbf{A}\mathbf{d}=\mathbf{0}$
-	- So only way $\mathbf{x}+\theta \mathbf{d}$ can become infeasible if one its components becomes negative
-		- Then in an unbounded polyhedron $\theta$ can be $\infty$, since $d_{i}\geq 0$ for all $i$
-		- If $d_{i}<0$ for some $i$, recall any $x_{i}+\theta d_{i}\geq 0$ to be feasible so $\theta\leq -\frac{x_{i}}{d_{i}}$ which ties back to the formula above
 
 
 Two-phase method:
