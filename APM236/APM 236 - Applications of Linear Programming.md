@@ -108,7 +108,8 @@ However, we can show that **any arbitrary LPP has an equivalent standard form**:
 
 Any LPP also has an **equivalent canonical form**:
 - In each inequality in the constraints we can introduce a **slack variable** $x_{n+j}$ where $j\in[1,m]$ per inequality, turning them into equalities and making the system of equations in up to $n+m$ unknowns, and introducing additional nonnegativity constraints (on each slack variable)
-	- Note, all slack variables must also be constrained to $x_{n+j}\geq 0$
+	- Note, all **slack variables must also be constrained to be nonnegative**; ie. to $x_{n+j}\geq 0$
+		- Thus, slack variables have coefficient  $1$ while **surplus variables** have coefficient $-1$
 	- The resulting coefficient matrix $\mathbf{A}$ is in $\mathbb{R}^{m\times(n+m)}$
 	- The resulting objective function becomes $f:\mathbb{R}^{m\times(n+m)}\to \mathbb{R}$ where the coefficients of the slack variables are $0$ (but **still count for the dimension** of the domain!)
 
@@ -309,26 +310,26 @@ Once there are **no negative coefficients remaining** in the objective function,
 ==Degeneracy becomes important in the simplex method, because it implies a **change of basis** can occur without moving to a different BFS
 - Stalling: The simplex method performs a pivot without improving the objective function
 - Cycling: In rare cases, the simplex method can return to a previously visited basis, potentially repeating indefinitely
-
-
-
-
-Two-phase method:
-- Recall if initially $\mathbf{b}\not\geq \mathbf{0}$, then the initial basis of slack/surplus variables will not be a BFS because one of the components of this initial basic solution will be negative
-- Phase 1: introduce **artificial variables** $y_{i}\geq 0$ for each constraint, this makes the feasible set bigger (increases the dimension by 1)
-	- A vector $\mathbf{x}$ is a BFS to the original LPP iff $\frac{x}{y}=\frac{x}{0}$ (which is the original BFS with $0$ for the artificial variables) is a BFS for the LPP with artificial variables
-	- For the artificial LPP, choose the initial BFS $\frac{x}{y}=\frac{0}{b}$ which is the vector with all 0s except the components that are artificial variables which are $\mathbf{b}$ 
-		- Now this is a valid initial BFS for the simplex, but it is not of the form $\frac{x}{0}$ so it is not a valid BFS for the original LPP yet
-	- Auxiliary LPP: minimize $y_{1}+\dots+y_{m}$
-		- If we can get this to $0$ then all the artificial variables are $0$, and we get the desired form $\frac{x}{0}$
-		- If the min is $>0$ then there is no BFS to the original LPP
-		- Then first set $\min(y_{1}+\dots+y_{m})$ to $-\max(-y_{1}-\dots-y_{m})$, then re-express the artificial $y$ variables in terms of $x$s, then simplex with initial basis being the artificial variables
-		- When this simplex terminates we have a BFS of the form $\frac{x}{0}$ which we use as the initial basis for the original LPP simplex
-- Phase 2:
-	- Case 1: if there are no artificial variables as basic variables in the final tableau from artificial LPP
+# <u>Two-Phase Method</u>
+Recall in Simplex, if initially $\mathbf{b}\not\geq \mathbf{0}$ then the initial basis of slack/surplus variables will not be a BFS because one of the components of this initial basic solution will be negative
+- We can resolve this issue with the two-phase method; first, we do all necessary negations and other transformations to ensure $\mathbf{b}\geq \mathbf{0}$
+- **Phase 1:** introduce **artificial variables** $y_{i}$ for each constraint, where each is constrained $y_{i}\geq 0$ for $i\in \{ 1,2,\dots,m \}$ and has $0$ coefficients in the objective function, so $\mathbf{y}\in \mathbb{R}^m$ and $\mathbf{y}\geq 0$
+	- This makes the feasible set bigger (increases the dimension by 1)
+	- A vector $\mathbf{x}$ is a BFS to the original LPP iff $[\mathbf{x}\;\mathbf{0}]^\top$, which is the original BFS with $y_{i}=0$ for all the artificial variables, is a BFS for the LPP with artificial variables
+	- For the artificial LPP, choose the initial BFS $[\mathbf{0}\;\mathbf{b}]^\top$ which is the vector with all 0 except the components that are artificial variables which are $\mathbf{b}$ 
+		- Now this basis is a valid initial BFS for Simplex, notice it is not of the form $[\mathbf{x}\;\mathbf{0}]^\top$ so it is not a valid BFS for the original LPP yet
+		- Auxiliary LPP: minimize $y_{1}+\dots+y_{m}$
+			- If we can get this to $0$ then all artificial variables are $\mathbf{y}=\mathbf{0}$, and we get the desired form $[\mathbf{x}\;\mathbf{0}]^\top$
+			- If the min is $>0$ then there is no BFS to the original LPP
+			- Then first set $\min(y_{1}+\dots+y_{m})$ to $-\max(-y_{1}-\dots-y_{m})$
+				- **Re-express this objective function's artificial variables** in terms of all the relevant $x_{i}$ based on constraints
+				- Simplex with initial basis being the artificial variables
+				- When this simplex terminates we have a BFS of the form $[\mathbf{x}\;\mathbf{0}]^\top$, from which we get a valid initial basis $\mathbf{x}$ for the original LPP
+- **Phase 2:**
+	- **Case 1:** if the Simplex above terminates with $\mathbf{y}=\mathbf{0}$
 		- Remove the columns with the artificial variables and replace the cost row with the original cost
 			- Ensure the original objective row now satisfies requirements of all 0s in basic columns, otherwise do more row reduction; this is a shortcut compared to just starting with the original tableau and the new basis
-	- Case 2: there are some artificial variables as basic variables; we ignore this case
+	- **Case 2:** if the Simplex above terminates with $\mathbf{y}\neq \mathbf{0}$; we ignore this case
 - If objective functions ever have decimal coefficients, just multiply them by some magnitude of 10 and divide back in the end
 
 

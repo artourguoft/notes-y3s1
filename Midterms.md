@@ -3,7 +3,7 @@
 - [x] MAT235: Mon, Oct 19, 7:10 - 8:40 pm
 - [x] CSC236:  Thur, Oct 22, 8:00 - 9:30 pm
 
-- [ ] CSC311:  Fri, Nov 20, 4:00 - 6:00 pm
+- [x] CSC311:  Fri, Nov 20, 4:00 - 6:00 pm
 - [ ] APM236: Wed, Nov 25, 6:15 - 7:45 pm
 - [ ] MAT235: Fri, Nov 27, 6:10 - 7:40 pm
 
