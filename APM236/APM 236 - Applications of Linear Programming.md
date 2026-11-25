@@ -151,11 +151,11 @@ Note, each basis matrix is $\mathbf{B}= [\mathbf{A}_{B(1)} \cdots \mathbf{A}_{B(
 **Every BFS is an extreme point** of the feasible set (and **every extreme point is a BFS**), whereas basic solutions that are infeasible are not extreme points since they are not in the feasible set at all
 # <u>Active Constraints and Degeneracy</u>
 **Active Constraint:** for a polyhedron $P\subseteq \mathbb{R}^n$ defined by some set of $m$ equalities and inequalities, if a point $\mathbf{x}^*\in \mathbb{R}^n$ satisfies $\mathbf{a}_{i}^\top\mathbf{x}^*=b_{i}$ for some $1\leq i\leq m$, then the $i$th constraint is **active at** $\mathbf{x}^*$
-- Note the standard $x_{j}\geq 0$ inequalities for $1\leq j\leq n$ are counted as separate individual constraints here
-- It follows that if $n$ constraints are active at $\mathbf{x}^*$ and all these active constraints are linearly independent, then $\mathbf{x}^*$ solves the system of linear equations in $n$ unknowns defined by this set of equations
+- Note the $n$ standard nonnegativity constraints are counted as separate individual constraints here, but similarly if $\mathbf{x}^*$ satisfies $x_{j}= 0$ for some $1\leq j\leq n$, then the $j$th constraint is active at $\mathbf{x}^*$
+- It follows that if $n$ total constraints are active at $\mathbf{x}^*$ and they are linearly independent, then $\mathbf{x}^*$ solves the system of linear equations in $n$ unknowns defined by this set of equations
 	- Recall from linear algebra that such a system has a unique solution iff these $n$ equations are linearly independent (coefficient vectors are not scalar multiples of each other)
-	- For $m<n$ active constraints there **cannot be a unique solution**
-	- For $m>n$ **at least** $n$ of the active constraints must be linearly independent for a unique solution
+	- With $m<n$ active constraints, the associated $\mathbf{x}^*$ **cannot be a unique solution**
+	- With $m>n$ **at least** $n$ of the active constraints must be linearly independent for a unique solution
 		- If $>n$ constraints are active, refer to definition of degeneracy below
 
 Let $\mathbf{x}^*\in P$ and $I=\{ i:\mathbf{a}_{i}^\top \mathbf{x}^*=b_{i}\}$, ie. the set of row indices of active constraints at $\mathbf{x}^*$, then the following statements are **equivalent**
@@ -167,11 +167,11 @@ A point $\mathbf{x}\in P$ is a **BFS** if it meets **any/all of these conditions
 - Intuitively, BFSs are extreme points and thus must be unique solutions rather than parameterized solutions (hyperplanes)
 
 
-**Degeneracy:** a BFS (refer to definition above) $\mathbf{x}^*\in P$ is **degenerate** if $|I=\{ i:\mathbf{a}_{i}^\top \mathbf{x}^*=b_{i}\}|>n$, ie. if there are more than $n$ active constraints
-- If $P$ is defined in **canonical** form rather than general form, ie. $P=\{ \mathbf{x}\in \mathbb{R}^n:\mathbf{A}\mathbf{x}=\mathbf{b}\wedge x_{1},x_{2},\dots x_{n}\geq 0 \}$, where $\mathbf{A}\in \mathbb{R}^{m\times n}$ and $\text{rank}(\mathbf{A})=m$ meaning there are $m$ linearly independent rows, there is a simple way to determine if BFS is degenerate:
+**Degeneracy:** a BFS (refer to definition above) $\mathbf{x}^*\in P$ is **degenerate** if $|I=\{ i:\mathbf{a}_{i}^\top \mathbf{x}^*=b_{i}\}|>n$, ie. if there are **more than** $n$ active constraints
+- If $P$ is defined specifically in **canonical** form $P=\{ \mathbf{x}\in \mathbb{R}^n:\mathbf{A}\mathbf{x}=\mathbf{b}\wedge x_{1},x_{2},\dots x_{n}\geq 0 \}$ where $\mathbf{A}\in \mathbb{R}^{m\times n}$ and $\text{rank}(\mathbf{A})=m$, then there is a simple way to determine if BFS is degenerate:
 	- Let $\mathbf{x}^*\in P$ be a BFS, then $\mathbf{x}^*$ is **degenerate iff any of the basic variables** of the BFS $\mathbf{x}^*$ are $0$
 		- Each BFS has $m$ basic variables, and the other $n-m$ nonbasic variables are set to $0$
-		- Then there are $m$ active constraints from $\mathbf{A}\mathbf{x}^*=\mathbf{b}$ by definition of BFS, and $n$ more active constraints from the nonnegativity constraints on the nonbasic variables, for a total of $m+(n-m)=n$
+		- Then there are $m$ active constraints from $\mathbf{A}\mathbf{x}^*=\mathbf{b}$ by definition of BFS, and $n-m$ more active constraints from the nonnegativity constraints on the nonbasic variables, for a total of $m+(n-m)=n$
 			- Thus, if **any basic variables are also** $0$, their nonnegativity constraints become active and immediately $|I|>n$ which is the definition of degeneracy
 
 Degeneracy becomes important in the simplex method, because it implies a **change of basis** can occur without moving to a different BFS
@@ -188,7 +188,7 @@ d_i = 0 & \text{nonbasic vars }\neq j \\
 \end{cases}
 $$
 Where $\mathbf{d}_{\mathbf{B}}=[d_{B(1)} \cdots d_{B(m)}]$ is the vector of components corresponding to column indices of **basic variables**
-- It follows that each BFS has $n-m$ **basic directions** (assuming $\text{rank}(\mathbf{A})=m$)
+- It follows that **each BFS has** $n-m$ **basic directions** (assuming $\text{rank}(\mathbf{A})=m$)
 
 Basic directions are needed to know where we can move from a BFS while remaining feasible (satisfying all equalities), which explains the construction of basic directions:
 - $j$ is the nonbasic variable that we want to increase
@@ -198,7 +198,7 @@ Basic directions are needed to know where we can move from a BFS while remaining
 
 Note, moving in a basic direction preserves the equality constraints $\mathbf{A}\mathbf{x}=\mathbf{b}$ but it **does not necessarily preserve the nonnegativity** constraints $\mathbf{x}\geq 0$, so to answer **which basic directions** at a given BFS $\mathbf{x}^*$ are **feasible directions**:
 - If $\mathbf{x}^*$ is **not degenerate**; then **all** basic directions at this point are feasible directions
-	- Recall, non-degenerate implies $\mathbf{x}_{\mathbf{B}}>\mathbf{0}$, thus even if there are components of $\mathbf{d}_{\mathbf{B}}$ which are negative, we can still move some small scalar amount in the corresponding basic direction while maintaining the nonnegativity constraints (and thus being a feasible direction)
+	- Recall, non-degenerate implies $\mathbf{x}_{\mathbf{B}}>\mathbf{0}$, thus even if there are components of $\mathbf{d}_{\mathbf{B}}$ which are negative, we can still move **some** small scalar amount in the corresponding basic direction while maintaining the nonnegativity constraints (and thus being a feasible direction)
 - If $\mathbf{x}^*$ is **degenerate**; it is possible that some basic directions are not feasible directions
 	- Recall, degenerate implies one or more basic variables are $0$ in $\mathbf{x}_{\mathbf{B}}$, thus if **any** component of $\mathbf{d}_{\mathbf{B}}$ is negative at **one or more of the basic variable indices** which are also $0$ in $\mathbf{x}_{\mathbf{B}}$, then that basic direction is not a feasible direction; some nonnegativity constraints will necessarily be breached
 # <u>Reduced Cost</u>
@@ -213,12 +213,12 @@ It follows that if we want to maximize our objective function, for a BFS $\mathb
 # <u>Extreme Point Theorem Restated</u>
 **Extreme Point Theorem:** a polyhedron $P\subseteq \mathbb{R}^n$ contains a line if there is a point $\mathbf{x}_{0}\in P$ and a direction vector $\mathbf{0}\neq \mathbf{d}\in \mathbb{R}^n$ such that $\mathbf{x}_{0}+t\mathbf{d}\in P$ for all $t\in R$
 
-Theorem KB2.6: if $P$ has at least one extreme point $\iff$ $P$ does not contain a line
+**Theorem KB2.6:** if $P$ has at least one extreme point $\iff$ $P$ does not contain a line
 - Intuitively, lines extend infinitely in two directions so this follows; ex. a halfspace is a polyhedron that contains an infinite number of lines parallel to its boundary, and it does not have any extreme points
 	- Consider why a halfspace cannot be put into standard or canonical form
 	- The first quadrant is a polyhedron that does not contain any lines, and it does have an extreme point at the origin
 
-Theorem: consider an LPP to min $\mathbf{c}^{\top}\mathbf{x}$ constrained by $\mathbf{x}\in P$ where $P$ is a polyhedron and suppose $P$ has at least one extreme point and that an optimal solution exists, then there is an optimal solution which is an extreme point
+**Theorem:** consider an LPP to min $\mathbf{c}^{\top}\mathbf{x}$ constrained by $\mathbf{x}\in P$ where $P$ is a polyhedron and suppose $P$ has at least one extreme point and that an optimal solution exists, then there is an optimal solution which is an extreme point
 - Let $Q$ be the set of all optimal solutions
 - Express $P$ in the form $P=\{ \mathbf{x}\in \mathbb{R}^n:\mathbf{A}\mathbf{x}\leq \mathbf{b} \}$
 - Let $m$ be the minimum, then $Q=\{ \mathbf{x}\in \mathbb{R}^n:\mathbf{A}\mathbf{x}\leq \mathbf{b}\wedge \mathbf{c}^{\top}\mathbf{x}=m \}$ and $Q$ is a polyhedron
@@ -228,16 +228,16 @@ Theorem: consider an LPP to min $\mathbf{c}^{\top}\mathbf{x}$ constrained by $\m
 	- We know $m=\mathbf{c}^{\top}\mathbf{x}^*=\lambda(\mathbf{c}^{\top}\mathbf{x}_{1})+(1-\lambda)(\mathbf{c}^{\top}\mathbf{x}_{2})$, but that implies $\mathbf{c}^{\top}\mathbf{x}_{1}=\mathbf{c}^{\top}\mathbf{x}_{2}=m$ which implies $\mathbf{x}_{1},\mathbf{x}_{2}\in Q$, which implies $\mathbf{x}^*$ is not an extreme point of $Q$ which contradicts our initial assumption!
 This is different than the textbook statement which is incorrect!
 # <u>Theta Ratios</u>
-$\theta$**-ratios:** assume a maximization LPP in canonical form with all BFSs non-degenerate
+$\theta$**-ratios:** assume a maximization LPP in canonical form with all BFSs non-degenerate (so we know all basic directions are feasible directions)
 - Assume a BFS $\mathbf{x}^*$ with $j$th basic direction $\mathbf{d}$ where $\bar{c}_{j}>0$, recall this means that $\mathbf{x}^*$ is not an optimal solution, so we want to move in this basic direction
-- The $\theta$-ratio tells us how far we can go from $\mathbf{x}^*$ in the basic direction $\mathbf{d}$ while **remaining feasible**
-- Moving in direction $\mathbf{d}$ away from $\mathbf{x}^*$, the $x_{j}$ component changes while all other nonbasic components remain $0$
+- The $\theta$-ratio tells us **how far** we can go from $\mathbf{x}^*$ in the basic direction $\mathbf{d}$ while **remaining feasible**
+- Recall, moving in direction $\mathbf{d}$ away from $\mathbf{x}^*$, the $x_{j}$ component changes while all other nonbasic components remain $0$
 - We want to move in direction $\mathbf{x}^*+\theta \mathbf{d}$ as far as we can while remaining feasible; ie. find the scalar such that $\theta=\max\{t>0:\mathbf{x}^*+t\mathbf{d}\in P \}$, where the resulting cost change is $\mathbf{c}^\top\theta\mathbf{d}=\bar{c}_{j}\theta$
 - Consider $\mathbf{A}\mathbf{x}^*=\mathbf{b}$ and $\mathbf{A}(\mathbf{x}^*+\theta \mathbf{d})=\mathbf{b}$, since we assumed non-degenerate $\mathbf{x}^*$ and basic direction $\mathbf{d}$
 	- Then, the only way $\mathbf{x}^*+\theta \mathbf{d}$ can become infeasible is if one its components becomes negative; because recall moving along a basic direction does not necessarily maintain the nonnegativity constraints!
-	- Case where $\mathbf{d}\geq \mathbf{0}$, then $\mathbf{x}^*+\theta \mathbf{d}\geq \mathbf{0}$ for all $\theta>0$, so $\theta=\infty$ since moving in this direction never becomes infeasible
-	- Case where $d_{i}<0$ for some component $i$, then for each component we require $x_{i}+\theta d_{i}\geq 0$ for feasibility; rearranging gives us $\theta\leq -\frac{x_{i}}{d_{i}}$ which must be satisfied for **all** such $i$
-		- It follows that the maximum move that remains feasible is the minimum of these upper bounds, so $\theta=\min_{\{ i:d_{i}<0 \}}\{ -\frac{x_{i}}{d_{i}} \}$
+		- **Case 1:** where $\mathbf{d}_{\mathbf{B}}\geq \mathbf{0}$, then $\mathbf{x}^*+\theta \mathbf{d}\geq \mathbf{0}$ for all $\theta>0$, so $\theta=\infty$ since moving in this direction never becomes infeasible
+		- **Case 2:** where $d_{i}<0$ for some component $i$ of $\mathbf{d}_{\mathbf{B}}$, then for each such component must check $x_{i}+\theta d_{i}\geq 0$ for feasibility; rearranging gives us $\theta\leq -\frac{x_{i}}{d_{i}}$ which must be satisfied for **all** such $i$
+			- It follows that the maximum scalar $\theta$ of $\mathbf{d}$ that remains feasible is the minimum of these upper bounds; ie. $\theta=\min_{\{ i:d_{i}<0 \}}\{ -\frac{x_{i}}{d_{i}} \}$
 # <u>Simplex Method</u>
 **Adjacent:** two extreme points in a set of feasible solutions $S$ are adjacent they have **all but one** in common in their **selection of basic variables**; ie. the selection of nonzero components differs in two places
 
