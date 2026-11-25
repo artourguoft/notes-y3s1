@@ -206,6 +206,7 @@ Note, moving in a basic direction preserves the equality constraints $\mathbf{A}
 - $\mathbf{c}_{\mathbf{B}}^\top$ is the coefficients vector corresponding to the basic variables at this BFS
 - $c_{j}$ is the coefficient corresponding to the nonbasic direction where $d_{j}=1$
 - Intuitively, this is the coefficient of the variable corresponding to the $j$th nonbasic variable minus the mitigating sum of the basic coefficient changes to maintain feasibility
+	- Ie. the change in the objective when $x_{i}$ increases by $1$
 - Note, the **reduced costs at basic variable indices** at a point are always $0$
 - The vector $\bar{\mathbf{c}}\in \mathbb{R}^{n-m}$ contains all reduced costs in all basic directions at the point
 
@@ -312,7 +313,7 @@ Once there are **no negative coefficients remaining** in the objective function,
 - Cycling: In rare cases, the simplex method can return to a previously visited basis, potentially repeating indefinitely
 # <u>Two-Phase Method</u>
 Recall in Simplex, if initially $\mathbf{b}\not\geq \mathbf{0}$ then the initial basis of slack/surplus variables will not be a BFS because one of the components of this initial basic solution will be negative
-- We can resolve this issue with the two-phase method; first, we do all necessary negations and other transformations to ensure $\mathbf{b}\geq \mathbf{0}$
+- We can resolve this issue with the two-phase method; first, we do all necessary negations and introductions of surplus / slack variables to ensure **canonical form** and $\mathbf{b}\geq \mathbf{0}$
 - **Phase 1:** introduce **artificial variables** $y_{i}$ for each constraint, where each is constrained $y_{i}\geq 0$ for $i\in \{ 1,2,\dots,m \}$ and has $0$ coefficients in the objective function, so $\mathbf{y}\in \mathbb{R}^m$ and $\mathbf{y}\geq 0$
 	- This makes the feasible set bigger (increases the dimension by 1)
 	- A vector $\mathbf{x}$ is a BFS to the original LPP iff $[\mathbf{x}\;\mathbf{0}]^\top$, which is the original BFS with $y_{i}=0$ for all the artificial variables, is a BFS for the LPP with artificial variables
@@ -320,7 +321,7 @@ Recall in Simplex, if initially $\mathbf{b}\not\geq \mathbf{0}$ then the initial
 		- Now this basis is a valid initial BFS for Simplex, notice it is not of the form $[\mathbf{x}\;\mathbf{0}]^\top$ so it is not a valid BFS for the original LPP yet
 		- Auxiliary LPP: minimize $y_{1}+\dots+y_{m}$
 			- If we can get this to $0$ then all artificial variables are $\mathbf{y}=\mathbf{0}$, and we get the desired form $[\mathbf{x}\;\mathbf{0}]^\top$
-			- If the min is $>0$ then there is no BFS to the original LPP
+			- If the **auxiliary minimum** is $>0$ then there is **no BFS** to the original LPP
 			- Then first set $\min(y_{1}+\dots+y_{m})$ to $-\max(-y_{1}-\dots-y_{m})$
 				- **Re-express this objective function's artificial variables** in terms of all the relevant $x_{i}$ based on constraints
 				- Simplex with initial basis being the artificial variables
